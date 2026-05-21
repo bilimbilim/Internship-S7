@@ -1,0 +1,69 @@
+{
+  "_description": "Schéma du payload envoyé par PCB Inspector vers Make. Chaque champ correspond à un module Make.",
+
+  "timestamp":       "2024-01-15T14:32:00Z",
+  "batch_id":        "LOT-2024-001",
+  "fichier":         "carte_inspection_001.jpg",
+  "chaine_contexte": "Ligne 3 — ASUS B550 — Shift matin",
+
+  "statut":          "nok",
+  "score_aoi":       62,
+  "score_gemini":    58,
+  "nb_anomalies":    3,
+  "nb_critiques":    1,
+
+  "message":         "1 composant absent détecté, 2 décalages modérés",
+  "recommandation":  "Retirer la carte — vérification manuelle du condensateur U12",
+  "description_visuelle": "La carte inspectée présente un pad vide en zone centrale-gauche...",
+
+  "yolo": {
+    "nb_composants_ref":  24,
+    "nb_composants_insp": 23,
+    "detections_ref": [
+      {"id": 0, "label": "IC", "confidence": 0.97, "bbox": [120, 80, 240, 160], "center": [180, 120]}
+    ],
+    "detections_insp": [
+      {"id": 0, "label": "IC", "confidence": 0.95, "bbox": [118, 82, 238, 162], "center": [178, 122]}
+    ]
+  },
+
+  "anomalies_opencv": [
+    {
+      "type":          "ABSENT",
+      "severite":      "critical",
+      "composant":     "CAP_ELEC",
+      "description":   "Condensateur attendu en position (340, 210) — non trouvé",
+      "position_ref":  [0.53, 0.41],
+      "position_insp": null,
+      "bbox_insp":     null,
+      "bbox_ref":      [310, 180, 370, 240],
+      "decalage":      0
+    }
+  ],
+
+  "anomalies": [
+    {
+      "type":        "ABSENT",
+      "severite":    "critical",
+      "composant":   "CAP_ELEC",
+      "description": "Condensateur électrolytique absent en zone centrale. Pad vide visible. Bloque la mise sous tension.",
+      "source":      "both",
+      "bbox_insp":   null
+    },
+    {
+      "type":        "DÉCALÉ",
+      "severite":    "medium",
+      "composant":   "RES",
+      "description": "Résistance décalée de 3.2% par rapport à son empreinte. Soudure à vérifier.",
+      "source":      "opencv",
+      "bbox_insp":   [420, 310, 460, 330]
+    }
+  ],
+
+  "images": {
+    "inspection_annotee": "<base64 JPEG>",
+    "reference_annotee":  "<base64 JPEG>"
+  },
+
+  "log_qualite": "2024-01-15 14:32:00 UTC\nBatch: LOT-2024-001\nFichier: carte_001.jpg\nComposants: 24 REF / 23 INSP\nAnomalies: 3 dont 1 critique(s)\nScore AOI: 62/100\nStatut: NOK\n────────────────────────────────────────"
+}

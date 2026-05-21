@@ -1,0 +1,14 @@
+{
+  "OAuth.pdf": {
+    "hash": "486800cc5a98f7db46c70b19fc613d9a",
+    "path": "rag_space/documents\\OAuth.pdf"
+  },
+  "Deconv.pdf": {
+    "hash": "294af0167290f3fec3e0427a37dbbb93",
+    "path": "rag_space/documents\\Deconv.pdf"
+  },
+  "Debruitage.pdf": {
+    "hash": "513682ba132670f1d7d14f92ee680909",
+    "path": "rag_space/documents\\Debruitage.pdf"
+  }
+}

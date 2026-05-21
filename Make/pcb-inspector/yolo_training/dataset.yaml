@@ -1,0 +1,14 @@
+path: ./dataset
+train: images/train
+val: images/val
+
+nc: 7
+
+names:
+  0: Short_circuit
+  1: damged
+  2: lack_of_part
+  3: miss_welding
+  4: redundant
+  5: slug
+  6: spillover

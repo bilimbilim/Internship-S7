@@ -1,0 +1,14 @@
+artifact_uri: file:C:/Users/yayaa/Downloads/pcb-inspector/pcb-inspector/yolo_training/runs/mlflow/600708082596012025/4a5027ccd41f43a2983523696d0294f2/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '600708082596012025'
+lifecycle_stage: active
+run_id: 4a5027ccd41f43a2983523696d0294f2
+run_name: pcb_detector
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778875779645
+status: 1
+tags: []
+user_id: yayaa

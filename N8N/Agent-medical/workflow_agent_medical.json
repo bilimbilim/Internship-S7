@@ -1,0 +1,297 @@
+{
+  "name": "Agent IA - Analyse Documents Médicaux Patients",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "analyse-document",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "webhook-reception",
+      "name": "Webhook - Réception Document",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "notes": "Point d'entrée : reçoit le fichier PDF/image et les infos patient depuis l'interface web"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.file_type }}",
+              "rightValue": "application/pdf",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ]
+        }
+      },
+      "id": "check-file-type",
+      "name": "Est un PDF ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5001/ocr",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "file_base64", "value": "={{ $json.body.file_base64 }}" },
+            { "name": "language", "value": "fra" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ocr-tool",
+      "name": "OCR - Extraction Texte",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [640, 200],
+      "notes": "Tesseract OCR via microservice local. Extrait le texte brut du PDF ou de l'image scannée."
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\nreturn [{ json: { extracted_text: body.text_content, patient_id: body.patient_id, patient_age: body.patient_age || null, doc_type_hint: body.doc_type_hint || 'inconnu' } }];"
+      },
+      "id": "prepare-text",
+      "name": "Préparer le texte (non-PDF)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 400],
+      "notes": "Pour les fichiers texte ou images déjà lisibles, on prépare directement les données."
+    },
+    {
+      "parameters": {
+        "jsCode": "const ocrResult = $input.first().json;\nconst originalBody = $('Webhook - Réception Document').first().json.body;\nreturn [{ json: { extracted_text: ocrResult.text, patient_id: originalBody.patient_id, patient_age: originalBody.patient_age || null, doc_type_hint: originalBody.doc_type_hint || 'inconnu' } }];"
+      },
+      "id": "merge-ocr",
+      "name": "Fusionner résultat OCR",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [860, 200]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un agent IA médical spécialisé dans l'aide aux patients. Tu reçois un document médical (ordonnance, résultats d'analyses, compte rendu) et tu dois :\n\n1. Identifier le type de document\n2. Extraire toutes les informations importantes\n3. Détecter les valeurs hors normes ou termes complexes\n4. Produire une explication claire en langage accessible pour un patient non médecin\n5. Identifier si une alerte médecin est nécessaire (valeur critique)\n\nInformations patient :\n- ID : {{ $json.patient_id }}\n- Âge : {{ $json.patient_age || 'non renseigné' }}\n\nDocument à analyser :\n{{ $json.extracted_text }}\n\nRéponds UNIQUEMENT en JSON valide avec cette structure exacte :\n{\n  \"document_type\": \"ordonnance | résultats_analyses | compte_rendu | autre\",\n  \"resume_simple\": \"Résumé en 2-3 phrases simples pour le patient\",\n  \"elements_cles\": [\n    { \"terme_medical\": \"...\", \"explication_simple\": \"...\", \"valeur\": \"...\", \"norme\": \"...\", \"statut\": \"normal | élevé | bas | critique | info\" }\n  ],\n  \"conseils_patient\": [\"conseil 1\", \"conseil 2\"],\n  \"alerte_medecin\": { \"necessaire\": true/false, \"raison\": \"...\", \"urgence\": \"faible | modérée | élevée\" },\n  \"questions_possibles\": [\"Question que le patient pourrait poser 1\", \"Question 2\", \"Question 3\"]\n}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Tu es un assistant médical IA bienveillant. Tu ne poses JAMAIS de diagnostic. Tu expliques, rassures, et orientes. Tu utilises toujours un langage simple et empathique. En cas de doute, tu recommandes de consulter le médecin."
+        }
+      },
+      "id": "ai-agent",
+      "name": "Agent IA - Analyse Médicale",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [1080, 300],
+      "notes": "Cœur du projet : l'agent IA analyse le document et produit une explication structurée pour le patient."
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.2,
+          "maxTokens": 2000
+        }
+      },
+      "id": "openai-model",
+      "name": "GPT-4o",
+      "type": "@n8n/n8n-nodes-langchain.lmOpenAi",
+      "typeVersion": 1.2,
+      "position": [1080, 480],
+      "notes": "Modèle LLM. Remplaçable par Claude (Anthropic) ou un modèle local via Ollama."
+    },
+    {
+      "parameters": {
+        "jsCode": "const agentOutput = $input.first().json.output;\nlet parsed;\ntry {\n  const clean = agentOutput.replace(/```json|```/g, '').trim();\n  parsed = JSON.parse(clean);\n} catch(e) {\n  parsed = { error: true, raw: agentOutput };\n}\nconst webhook = $('Webhook - Réception Document').first().json.body;\nreturn [{ json: { ...parsed, patient_id: webhook.patient_id, timestamp: new Date().toISOString(), doc_filename: webhook.filename || 'document.pdf' } }];"
+      },
+      "id": "parse-agent-output",
+      "name": "Parser réponse agent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "analyses",
+        "columns": "patient_id, document_type, resume_simple, elements_cles, conseils_patient, alerte_medecin, questions_possibles, doc_filename, created_at",
+        "additionalFields": {}
+      },
+      "id": "supabase-save",
+      "name": "Supabase - Sauvegarder analyse",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1520, 300],
+      "notes": "Stockage persistant dans Supabase. L'interface web récupère ensuite via l'API Supabase."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{ $json.alerte_medecin.necessaire }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "equals" }
+            }
+          ]
+        }
+      },
+      "id": "check-alert",
+      "name": "Alerte nécessaire ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1740, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "agent@clinique.fr",
+        "toEmail": "medecin@clinique.fr",
+        "subject": "=🚨 Alerte patient {{ $json.patient_id }} — {{ $json.alerte_medecin.urgence === 'élevée' ? 'URGENTE' : 'À vérifier' }}",
+        "emailType": "html",
+        "message": "=<h2>Alerte détectée par l'agent IA</h2><p><strong>Patient :</strong> {{ $json.patient_id }}</p><p><strong>Document :</strong> {{ $json.doc_filename }}</p><p><strong>Niveau d'urgence :</strong> {{ $json.alerte_medecin.urgence }}</p><p><strong>Raison :</strong> {{ $json.alerte_medecin.raison }}</p><p><strong>Résumé :</strong> {{ $json.resume_simple }}</p><hr/><p style='color:#888;font-size:12px'>Généré automatiquement par l'Agent IA Médical — {{ $json.timestamp }}</p>"
+      },
+      "id": "email-alert",
+      "name": "Email alerte médecin",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1960, 200],
+      "notes": "Envoi automatique d'un email au médecin référent si valeur critique détectée."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, analysis_id: $('Supabase - Sauvegarder analyse').first().json.id, document_type: $json.document_type, resume_simple: $json.resume_simple, elements_cles: $json.elements_cles, conseils_patient: $json.conseils_patient, alerte_medecin: $json.alerte_medecin, questions_possibles: $json.questions_possibles, timestamp: $json.timestamp }) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Access-Control-Allow-Origin", "value": "*" }]
+          }
+        }
+      },
+      "id": "webhook-response",
+      "name": "Réponse Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1960, 380],
+      "notes": "Renvoie le résultat complet à l'interface web Next.js en JSON."
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chat-patient",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-chat",
+      "name": "Webhook - Question Patient",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 620],
+      "notes": "Endpoint séparé pour le chat : le patient pose une question sur son document déjà analysé."
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": "public",
+        "table": "analyses",
+        "filterType": "manual",
+        "filters": {
+          "conditions": [{ "keyName": "id", "condition": "eq", "keyValue": "={{ $json.body.analysis_id }}" }]
+        },
+        "limit": 1
+      },
+      "id": "supabase-get",
+      "name": "Supabase - Récupérer analyse",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [420, 620]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un assistant médical bienveillant. Un patient te pose une question sur son document médical.\n\nContexte du document analysé :\n{{ JSON.stringify($json) }}\n\nQuestion du patient : {{ $('Webhook - Question Patient').first().json.body.question }}\n\nRéponds de façon claire, simple, rassurante. Maximum 3 phrases. Ne pose jamais de diagnostic. Si la question dépasse tes capacités, dis de consulter le médecin.",
+        "options": {
+          "systemMessage": "Tu es un assistant médical IA. Tu expliques en langage simple. Tu ne poses jamais de diagnostic. Tu restes toujours empathique et bienveillant."
+        }
+      },
+      "id": "ai-chat",
+      "name": "Agent IA - Répondre question",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [640, 620]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": { "temperature": 0.4, "maxTokens": 500 }
+      },
+      "id": "openai-chat",
+      "name": "GPT-4o (chat)",
+      "type": "@n8n/n8n-nodes-langchain.lmOpenAi",
+      "typeVersion": 1.2,
+      "position": [640, 780]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, answer: $json.output, timestamp: new Date().toISOString() }) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Access-Control-Allow-Origin", "value": "*" }]
+          }
+        }
+      },
+      "id": "webhook-chat-response",
+      "name": "Réponse Chat",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [860, 620]
+    }
+  ],
+  "connections": {
+    "Webhook - Réception Document": { "main": [[{ "node": "Est un PDF ?", "type": "main", "index": 0 }]] },
+    "Est un PDF ?": {
+      "main": [
+        [{ "node": "OCR - Extraction Texte", "type": "main", "index": 0 }],
+        [{ "node": "Préparer le texte (non-PDF)", "type": "main", "index": 0 }]
+      ]
+    },
+    "OCR - Extraction Texte": { "main": [[{ "node": "Fusionner résultat OCR", "type": "main", "index": 0 }]] },
+    "Fusionner résultat OCR": { "main": [[{ "node": "Agent IA - Analyse Médicale", "type": "main", "index": 0 }]] },
+    "Préparer le texte (non-PDF)": { "main": [[{ "node": "Agent IA - Analyse Médicale", "type": "main", "index": 0 }]] },
+    "Agent IA - Analyse Médicale": { "main": [[{ "node": "Parser réponse agent", "type": "main", "index": 0 }]] },
+    "GPT-4o": { "ai_languageModel": [[{ "node": "Agent IA - Analyse Médicale", "type": "ai_languageModel", "index": 0 }]] },
+    "Parser réponse agent": { "main": [[{ "node": "Supabase - Sauvegarder analyse", "type": "main", "index": 0 }]] },
+    "Supabase - Sauvegarder analyse": { "main": [[{ "node": "Alerte nécessaire ?", "type": "main", "index": 0 }]] },
+    "Alerte nécessaire ?": {
+      "main": [
+        [{ "node": "Email alerte médecin", "type": "main", "index": 0 }],
+        [{ "node": "Réponse Webhook", "type": "main", "index": 0 }]
+      ]
+    },
+    "Email alerte médecin": { "main": [[{ "node": "Réponse Webhook", "type": "main", "index": 0 }]] },
+    "Webhook - Question Patient": { "main": [[{ "node": "Supabase - Récupérer analyse", "type": "main", "index": 0 }]] },
+    "Supabase - Récupérer analyse": { "main": [[{ "node": "Agent IA - Répondre question", "type": "main", "index": 0 }]] },
+    "Agent IA - Répondre question": { "main": [[{ "node": "Réponse Chat", "type": "main", "index": 0 }]] },
+    "GPT-4o (chat)": { "ai_languageModel": [[{ "node": "Agent IA - Répondre question", "type": "ai_languageModel", "index": 0 }]] }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": ["IA", "Santé", "Agent", "Stage"],
+  "meta": {
+    "description": "Workflow complet d'analyse de documents médicaux par un agent IA pour patients. Inclut OCR, analyse LLM, sauvegarde Supabase, alertes email médecin et chat patient.",
+    "templateCredsSetupCompleted": false
+  }
+}

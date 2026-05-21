@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recrutement</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#F5F5F3;color:#1a1a1a;font-size:14px}
+.app{padding:1.25rem;max-width:1400px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:8px}
+.topbar h1{font-size:16px;font-weight:500}
+.topbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.int-badge{display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid #ddd;color:#555;background:#fff}
+.int-dot{width:6px;height:6px;border-radius:50%}
+.connected{color:#1D9E75}
+.disconnected{color:#A32D2D}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.stat{background:#fff;border-radius:8px;padding:12px 14px;border:0.5px solid #e5e5e5}
+.stat-label{font-size:11px;color:#888;margin-bottom:4px}
+.stat-value{font-size:22px;font-weight:500}
+.pipeline{display:flex;margin-bottom:1.25rem;overflow-x:auto;gap:0}
+.stage{flex:1;min-width:90px;background:#fff;border:0.5px solid #e5e5e5;padding:10px 12px;position:relative}
+.stage:not(:last-child)::after{content:'';position:absolute;right:-9px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:8px solid #e5e5e5;z-index:2}
+.stage:first-child{border-radius:8px 0 0 8px}
+.stage:last-child{border-radius:0 8px 8px 0}
+.stage-label{font-size:11px;color:#888;margin-bottom:4px}
+.stage-count{font-size:18px;font-weight:500}
+.stage-bar-bg{height:3px;border-radius:2px;background:#eee;margin-top:6px}
+.layout{display:grid;grid-template-columns:1fr 340px;gap:12px;align-items:start}
+.table-wrap{background:#fff;border:0.5px solid #e5e5e5;border-radius:10px;overflow:hidden}
+.table-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #e5e5e5}
+.table-title{font-size:14px;font-weight:500}
+.filter-bar{display:flex;gap:6px;padding:8px 14px;border-bottom:0.5px solid #e5e5e5;flex-wrap:wrap}
+.fb{font-size:11px;padding:3px 9px;border-radius:20px;border:0.5px solid #e5e5e5;background:transparent;cursor:pointer;color:#888}
+.fb.active{background:#f0f0f0;color:#1a1a1a;font-weight:500}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+th{text-align:left;padding:8px 14px;color:#888;font-weight:400;border-bottom:0.5px solid #e5e5e5;background:#fafafa}
+td{padding:8px 14px;border-bottom:0.5px solid #e5e5e5;color:#1a1a1a;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr.selected td{background:#f9f9f9}
+tr:not(.header-row):hover td{background:#fafafa;cursor:pointer}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
+.b-retenu{background:#EAF3DE;color:#3B6D11}
+.b-entretien{background:#FAEEDA;color:#854F0B}
+.b-refuse{background:#FCEBEB;color:#A32D2D}
+.b-attente{background:#F1EFE8;color:#5F5E5A}
+.b-recrute{background:#EAF3DE;color:#27500A}
+.avatar{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px;flex-shrink:0}
+.name-cell{display:flex;align-items:center}
+.btn{background:transparent;border:0.5px solid #ccc;border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer;color:#1a1a1a}
+.btn:hover{background:#f5f5f5}
+.btn-primary{background:#534AB7;color:#fff;border-color:#534AB7}
+.btn-primary:hover{background:#3C3489}
+.btn-success{background:#1D9E75;color:#fff;border-color:#1D9E75;font-size:12px;padding:5px 12px;border-radius:7px;cursor:pointer}
+.btn-success:hover{background:#0F6E56}
+.btn-danger{background:#A32D2D;color:#fff;border-color:#A32D2D;font-size:12px;padding:5px 12px;border-radius:7px;cursor:pointer}
+.btn-danger:hover{background:#791F1F}
+.btn-sm{padding:4px 8px;font-size:11px}
+.detail-panel{background:#fff;border:0.5px solid #e5e5e5;border-radius:10px;overflow:hidden}
+.detail-placeholder{padding:2rem;text-align:center;color:#aaa;font-size:13px}
+.dp-header{padding:14px 16px;border-bottom:0.5px solid #e5e5e5}
+.dp-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;margin-bottom:10px}
+.dp-name{font-size:15px;font-weight:500}
+.dp-role{font-size:12px;color:#888;margin-top:2px}
+.dp-score-bar{height:6px;border-radius:3px;background:#eee;margin:8px 0 4px}
+.section{padding:12px 16px;border-bottom:0.5px solid #e5e5e5}
+.section-title{font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.ia-summary{font-size:12px;color:#1a1a1a;line-height:1.6;background:#f9f9f9;border-radius:7px;padding:10px}
+.email-item{font-size:12px;padding:6px 0;border-bottom:0.5px solid #eee;display:flex;align-items:flex-start;gap:8px}
+.email-item:last-child{border-bottom:none}
+.email-dir{font-size:10px;padding:2px 6px;border-radius:20px;flex-shrink:0;margin-top:1px}
+.cal-item{display:flex;align-items:center;gap:10px;font-size:12px;padding:6px 0}
+.cal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dp-actions{padding:12px 16px;display:flex;gap:6px;flex-wrap:wrap}
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.sync-status{font-size:11px;color:#888;padding:0 4px}
+.loading-row td{text-align:center;color:#aaa;padding:24px}
+.error-banner{background:#FCEBEB;color:#A32D2D;font-size:12px;padding:8px 14px;border-bottom:0.5px solid #f0c0c0;display:none}
+@media(max-width:768px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="topbar">
+    <h1>Recrutement</h1>
+    <div class="topbar-actions">
+      <span class="sync-status" id="sync-status"></span>
+      <div class="integrations" style="display:flex;gap:6px">
+        <div class="int-badge"><span class="int-dot" style="background:#EA4335"></span>Gmail <span class="connected" id="gmail-status">connecté</span></div>
+        <div class="int-badge"><span class="int-dot" style="background:#4285F4"></span>Calendar <span class="connected" id="cal-status">connecté</span></div>
+      </div>
+      <button class="btn btn-primary" id="sync-btn" onclick="syncData()">Synchroniser</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Candidatures reçues</div><div class="stat-value" id="s-total">—</div></div>
+    <div class="stat"><div class="stat-label">Retenus par IA</div><div class="stat-value" style="color:#1D9E75" id="s-retenu">—</div></div>
+    <div class="stat"><div class="stat-label">Entretiens</div><div class="stat-value" style="color:#BA7517" id="s-entretien">—</div></div>
+    <div class="stat"><div class="stat-label">Refusés</div><div class="stat-value" style="color:#A32D2D" id="s-refuse">—</div></div>
+  </div>
+
+  <div class="pipeline">
+    <div class="stage"><div class="stage-label">Email reçu</div><div class="stage-count" id="p-email">—</div><div class="stage-bar-bg"><div id="pb-email" style="height:3px;border-radius:2px;background:#378ADD;width:100%"></div></div></div>
+    <div class="stage"><div class="stage-label">Analyse IA</div><div class="stage-count" id="p-ia">—</div><div class="stage-bar-bg"><div id="pb-ia" style="height:3px;border-radius:2px;background:#7F77DD;width:100%"></div></div></div>
+    <div class="stage"><div class="stage-label">Retenus</div><div class="stage-count" id="p-retenu">—</div><div class="stage-bar-bg"><div id="pb-retenu" style="height:3px;border-radius:2px;background:#1D9E75;width:0%"></div></div></div>
+    <div class="stage"><div class="stage-label">Entretiens</div><div class="stage-count" id="p-entretien">—</div><div class="stage-bar-bg"><div id="pb-entretien" style="height:3px;border-radius:2px;background:#EF9F27;width:0%"></div></div></div>
+    <div class="stage"><div class="stage-label">Recrutés</div><div class="stage-count" id="p-recrute">—</div><div class="stage-bar-bg"><div id="pb-recrute" style="height:3px;border-radius:2px;background:#639922;width:0%"></div></div></div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="table-wrap">
+        <div class="error-banner" id="error-banner">⚠ Impossible de joindre n8n. Vérifiez que votre workflow est actif.</div>
+        <div class="table-header">
+          <span class="table-title">Candidatures</span>
+          <input type="text" id="search" placeholder="Rechercher..." style="font-size:12px;padding:4px 8px;width:160px;border:0.5px solid #ddd;border-radius:5px;outline:none" oninput="renderTable()">
+        </div>
+        <div class="filter-bar">
+          <button class="fb active" onclick="setFilter('tous',this)">Tous</button>
+          <button class="fb" onclick="setFilter('retenu',this)">Retenus</button>
+          <button class="fb" onclick="setFilter('entretien',this)">Entretiens</button>
+          <button class="fb" onclick="setFilter('attente',this)">En attente</button>
+          <button class="fb" onclick="setFilter('refuse',this)">Refusés</button>
+        </div>
+        <table>
+          <thead><tr class="header-row">
+            <th style="width:36%">Candidat</th>
+            <th style="width:26%">Poste</th>
+            <th style="width:16%">Statut</th>
+            <th style="width:12%">Score IA</th>
+            <th style="width:10%">Action RH</th>
+          </tr></thead>
+          <tbody id="tbody">
+            <tr class="loading-row"><td colspan="5">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="detail-panel" class="detail-panel">
+      <div class="detail-placeholder">
+        <div style="font-size:28px;margin-bottom:8px">👤</div>
+        Cliquez sur un candidat<br>pour voir sa fiche détaillée
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+const N8N_SYNC_URL   = 'http://localhost:5678/webhook/sync';
+const N8N_ACTION_URL = 'http://localhost:5678/webhook/validation';
+
+const statusLabels = {
+  retenu:   ['b-retenu',   'Retenu'],
+  entretien:['b-entretien','Entretien'],
+  attente:  ['b-attente',  'En attente'],
+  refuse:   ['b-refuse',   'Refusé'],
+  recrute:  ['b-recrute',  'Recruté']
+};
+
+let candidates = [];
+let currentFilter = 'tous';
+let selectedId = null;
+
+function toast(msg, ok=true){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = ok ? '#1a1a1a' : '#A32D2D';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+function updateStats(){
+  const total      = candidates.length;
+  const retenu     = candidates.filter(c=>c.statut==='retenu'||c.statut==='entretien'||c.statut==='recrute').length;
+  const entretien  = candidates.filter(c=>c.statut==='entretien').length;
+  const refuse     = candidates.filter(c=>c.statut==='refuse').length;
+  const recrute    = candidates.filter(c=>c.statut==='recrute').length;
+
+  document.getElementById('s-total').textContent     = total;
+  document.getElementById('s-retenu').textContent    = retenu;
+  document.getElementById('s-entretien').textContent = entretien;
+  document.getElementById('s-refuse').textContent    = refuse;
+
+  document.getElementById('p-email').textContent     = total;
+  document.getElementById('p-ia').textContent        = total;
+  document.getElementById('p-retenu').textContent    = retenu;
+  document.getElementById('p-entretien').textContent = entretien;
+  document.getElementById('p-recrute').textContent   = recrute;
+
+  if(total > 0){
+    document.getElementById('pb-retenu').style.width    = Math.round(retenu/total*100)+'%';
+    document.getElementById('pb-entretien').style.width = Math.round(entretien/total*100)+'%';
+    document.getElementById('pb-recrute').style.width   = Math.round(recrute/total*100)+'%';
+  }
+}
+
+function normalizeCandidates(raw){
+  let arr = [];
+  if(Array.isArray(raw)) arr = raw;
+  else if(raw && Array.isArray(raw.candidates)) arr = raw.candidates;
+  else if(raw && Array.isArray(raw.data)) arr = raw.data;
+  else return [];
+
+  // n8n retourne souvent { json: { ... } } — on extrait le json
+  return arr.map((item, index) => {
+    const d = item.json || item;
+    return {
+      id:        d.id || index,
+      name:      d.candidatNom || d.CandidatNom || d.nom || d.name || '—',
+      email:     d.candidatEmail || d.email || '',
+      poste:     d.sujetEmail || d.poste || '',
+      statut:    (d.statut || 'attente').toLowerCase(),
+      score:     parseInt(d.score || 0),
+      ia:        d.ia || d.analyseIA || '',
+      emails:    d.emails || [],
+      events:    d.events || []
+    };
+  });
+}
+
+async function syncData(){
+  const btn = document.getElementById('sync-btn');
+  const statusEl = document.getElementById('sync-status');
+  btn.textContent = 'Synchro…';
+  btn.disabled = true;
+  statusEl.textContent = '';
+  document.getElementById('error-banner').style.display = 'none';
+  document.getElementById('tbody').innerHTML = '<tr class="loading-row"><td colspan="5">Chargement depuis n8n…</td></tr>';
+
+  try {
+    const res = await fetch(N8N_SYNC_URL, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    candidates = normalizeCandidates(json);
+    if(candidates.length === 0) throw new Error('Aucun candidat reçu');
+    updateStats();
+    renderTable();
+    const now = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+    statusEl.textContent = 'Mis à jour à ' + now;
+    toast('✓ ' + candidates.length + ' candidat(s) chargé(s)');
+  } catch(err){
+    document.getElementById('error-banner').style.display = 'block';
+    document.getElementById('tbody').innerHTML = '<tr class="loading-row"><td colspan="5" style="color:#A32D2D">Erreur de connexion à n8n — ' + err.message + '</td></tr>';
+    toast('Impossible de joindre n8n : ' + err.message, false);
+  } finally {
+    btn.textContent = 'Synchroniser';
+    btn.disabled = false;
+  }
+}
+
+async function sendDecision(email, nom, decision, btn){
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    const res = await fetch(N8N_ACTION_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ candidatEmail: email, candidatNom: nom, decision: decision })
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    // Mettre à jour le statut localement
+    const c = candidates.find(x => x.email === email);
+    if(c){
+      c.statut = decision === 'accepte' ? 'entretien' : 'refuse';
+      updateStats();
+      renderTable();
+      if(selectedId === c.id) showDetail(c.id);
+    }
+    toast('✓ Décision envoyée à n8n — email en cours d\'envoi');
+  } catch(err){
+    toast('Erreur envoi n8n : ' + err.message, false);
+    btn.disabled = false;
+    btn.textContent = decision === 'accepte' ? '✓' : '✗';
+  }
+}
+
+function setFilter(f, btn){
+  currentFilter = f;
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function renderTable(){
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const filtered = candidates.filter(c => {
+    const matchFilter = currentFilter === 'tous' || c.statut === currentFilter;
+    const matchSearch = !q || (c.name||c.nom||'').toLowerCase().includes(q) || (c.poste||'').toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+
+  if(filtered.length === 0){
+    document.getElementById('tbody').innerHTML = '<tr class="loading-row"><td colspan="5">Aucun candidat trouvé</td></tr>';
+    return;
+  }
+
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = filtered.map(c => {
+    const name  = c.name || c.nom || '—';
+    const email = c.email || '';
+    const poste = c.poste || c.position || '—';
+    const score = c.score || c.scoreIA || 0;
+    const ini   = c.initials || name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const avBg  = c.avBg  || '#EEEDFE';
+    const avFg  = c.avFg  || '#534AB7';
+    const [cls, label] = statusLabels[c.statut] || ['b-attente','En attente'];
+    const sc = score >= 80 ? '#1D9E75' : score >= 60 ? '#BA7517' : '#A32D2D';
+    const sel = c.id === selectedId ? 'selected' : '';
+
+    // Boutons action RH uniquement si statut "retenu" ou "attente"
+    let actionHtml = '';
+    if(c.statut === 'retenu' || c.statut === 'attente'){
+      actionHtml = `
+        <button class="btn-success" title="Accepter — envoyer convocation" onclick="event.stopPropagation();sendDecision('${email}','${name.replace(/'/g,"\\'")}','accepte',this)">✓</button>
+        <button class="btn-danger"  title="Refuser — envoyer email refus"  onclick="event.stopPropagation();sendDecision('${email}','${name.replace(/'/g,"\\'")}','refuse',this)" style="margin-left:4px">✗</button>`;
+    } else {
+      actionHtml = `<span style="font-size:11px;color:#bbb">—</span>`;
+    }
+
+    return `<tr class="${sel}" onclick="showDetail(${c.id||candidates.indexOf(c)})">
+      <td><div class="name-cell"><span class="avatar" style="background:${avBg};color:${avFg}">${ini}</span><span style="overflow:hidden;text-overflow:ellipsis">${name}</span></div></td>
+      <td style="color:#888;font-size:12px">${poste}</td>
+      <td><span class="badge ${cls}">${label}</span></td>
+      <td style="font-weight:500;color:${sc}">${score ? score+'%' : '—'}</td>
+      <td style="white-space:nowrap">${actionHtml}</td>
+    </tr>`;
+  }).join('');
+}
+
+function showDetail(id){
+  selectedId = id;
+  renderTable();
+  const c = candidates.find(x => (x.id||candidates.indexOf(x)) === id);
+  if(!c) return;
+
+  const name  = c.name || c.nom || '—';
+  const email = c.email || '—';
+  const poste = c.poste || c.position || '—';
+  const score = c.score || c.scoreIA || 0;
+  const ini   = c.initials || name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const avBg  = c.avBg || '#EEEDFE';
+  const avFg  = c.avFg || '#534AB7';
+  const [cls, label] = statusLabels[c.statut] || ['b-attente','En attente'];
+  const sc = score >= 80 ? '#1D9E75' : score >= 60 ? '#BA7517' : '#A32D2D';
+  const barW = score + '%';
+
+  const ia = c.ia || c.analyseIA || c.analyse || 'Aucune analyse disponible.';
+
+  const emailsHtml = (c.emails || []).map(e => {
+    const sent = e.dir === 'envoyé' || e.direction === 'sent';
+    return `<div class="email-item">
+      <span class="email-dir" style="background:${sent?'#E6F1FB':'#EEEDFE'};color:${sent?'#185FA5':'#3C3489'}">${e.dir||e.direction||'—'}</span>
+      <div><div style="line-height:1.4">${e.obj||e.subject||'—'}</div><div style="color:#aaa;font-size:11px">${e.date||''}</div></div>
+    </div>`;
+  }).join('') || '<div style="font-size:12px;color:#aaa">Aucun email</div>';
+
+  const eventsHtml = (c.events || []).length
+    ? (c.events||[]).map(ev => `
+        <div class="cal-item">
+          <div class="cal-dot" style="background:#4285F4"></div>
+          <div style="flex:1">
+            <div>${ev.titre||ev.title||'Événement'}</div>
+            <div style="color:#aaa;font-size:11px">${ev.date||''}</div>
+          </div>
+          ${ev.link ? `<a href="${ev.link}" style="font-size:11px;color:#185FA5;text-decoration:none">Ouvrir</a>` : ''}
+        </div>`).join('')
+    : '<div style="font-size:12px;color:#aaa">Aucun événement planifié</div>';
+
+  let actionsBtns = '';
+  if(c.statut === 'retenu' || c.statut === 'attente'){
+    actionsBtns = `
+      <button class="btn-success" onclick="sendDecision('${email}','${name.replace(/'/g,"\\'")}','accepte',this)">✓ Convoquer</button>
+      <button class="btn-danger"  onclick="sendDecision('${email}','${name.replace(/'/g,"\\'")}','refuse',this)">✗ Refuser</button>`;
+  } else {
+    actionsBtns = `<span style="font-size:12px;color:#aaa">Décision déjà envoyée</span>`;
+  }
+
+  document.getElementById('detail-panel').innerHTML = `
+    <div class="dp-header">
+      <div class="dp-avatar" style="background:${avBg};color:${avFg}">${ini}</div>
+      <div class="dp-name">${name}</div>
+      <div class="dp-role">${poste} — <span class="badge ${cls}">${label}</span></div>
+      <div style="font-size:11px;color:#aaa;margin-top:4px">${email}</div>
+      <div class="dp-score-bar"><div style="width:${barW};height:6px;border-radius:3px;background:${sc}"></div></div>
+      <div style="font-size:11px;color:${sc};font-weight:500">Score IA : ${score}%</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Analyse IA</div>
+      <div class="ia-summary">${ia}</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Emails (Gmail)</div>
+      ${emailsHtml}
+    </div>
+    <div class="section">
+      <div class="section-title">Google Calendar</div>
+      ${eventsHtml}
+    </div>
+    <div class="dp-actions">${actionsBtns}</div>`;
+}
+
+// Chargement automatique au démarrage
+syncData();
+</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LLMOps — VeilleTech</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 2rem; color: #333; }
+  h1   { color: #2c3e50; }
+  .summary { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .kpi { background: #f0f4ff; border-radius: 8px; padding: 1rem 1.5rem; min-width: 140px; }
+  .kpi .val { font-size: 2rem; font-weight: bold; color: #2c3e50; }
+  .kpi .lbl { font-size: 0.85rem; color: #666; }
+  .cards { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.5rem; min-width: 180px; }
+  .card h3 { margin: 0 0 .5rem; color: #555; font-size: 1rem; }
+  .card p  { margin: .2rem 0; font-size: .9rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  th { background: #2c3e50; color: #fff; padding: 6px 8px; text-align: left; }
+  td { padding: 4px 8px; border-bottom: 1px solid #eee; }
+  tr:hover td { background: #f9f9f9; }
+</style>
+</head>
+<body>
+<h1>LLMOps — VeilleTech</h1>
+<p>Généré le : <b>2026-04-29 11:41:28</b>
+   &nbsp;|&nbsp; 4 runs au total</p>
+
+<div class="summary">
+  <div class="kpi"><div class="val">50.0%</div><div class="lbl">Taux de succès</div></div>
+  <div class="kpi"><div class="val">52984.4 ms</div><div class="lbl">Latence moyenne</div></div>
+  <div class="kpi"><div class="val">0</div><div class="lbl">Tokens totaux</div></div>
+  <div class="kpi"><div class="val">1.00</div><div class="lbl">Qualité moyenne</div></div>
+</div>
+
+<h2>Par étape</h2>
+<div class="cards">
+        <div class="card">
+          <h3>summarize</h3>
+          <p>Appels : <b>2</b></p>
+          <p>Taux d'échec : <b>100.0%</b></p>
+          <p>Latence moy : <b>99484.3 ms</b></p>
+          <p>Qualité : <b style="color:#dc3545">0.000</b></p>
+        </div>
+        <div class="card">
+          <h3>rename</h3>
+          <p>Appels : <b>2</b></p>
+          <p>Taux d'échec : <b>0.0%</b></p>
+          <p>Latence moy : <b>6484.4 ms</b></p>
+          <p>Qualité : <b style="color:#28a745">1.000</b></p>
+        </div></div>
+
+<h2>Détail des runs</h2>
+<table>
+<tr>
+  <th>Timestamp</th><th>OK</th><th>Étape</th><th>Cluster</th><th>Modèle</th>
+  <th>Latence</th><th>Tokens</th><th>Retries</th><th>Qualité</th><th>Notes</th><th>Erreur</th>
+</tr>
+
+        <tr style="background:#d4edda">
+          <td>2026-04-28T10:48:32</td>
+          <td>✓</td>
+          <td>rename</td>
+          <td>0</td>
+          <td>llama3</td>
+          <td>6663.5 ms</td>
+          <td>0 + 0</td>
+          <td>0</td>
+          <td>1.0</td>
+          <td title="OK">OK</td>
+          <td style="color:#c00"></td>
+        </tr>
+        <tr style="background:#f8d7da">
+          <td>2026-04-28T10:46:49</td>
+          <td>✗</td>
+          <td>summarize</td>
+          <td>0</td>
+          <td>llama3</td>
+          <td>103697.8 ms</td>
+          <td>0 + 0</td>
+          <td>0</td>
+          <td>0.0</td>
+          <td title=""></td>
+          <td style="color:#c00">Expecting value: line 1 column 1 (char 0)</td>
+        </tr>
+        <tr style="background:#d4edda">
+          <td>2026-04-28T10:27:35</td>
+          <td>✓</td>
+          <td>rename</td>
+          <td>0</td>
+          <td>llama3</td>
+          <td>6305.4 ms</td>
+          <td>0 + 0</td>
+          <td>0</td>
+          <td>1.0</td>
+          <td title="OK">OK</td>
+          <td style="color:#c00"></td>
+        </tr>
+        <tr style="background:#f8d7da">
+          <td>2026-04-28T10:25:59</td>
+          <td>✗</td>
+          <td>summarize</td>
+          <td>0</td>
+          <td>llama3</td>
+          <td>95270.8 ms</td>
+          <td>0 + 0</td>
+          <td>0</td>
+          <td>0.0</td>
+          <td title=""></td>
+          <td style="color:#c00">Expecting value: line 1 column 1 (char 0)</td>
+        </tr>
+</table>
+</body>
+</html>

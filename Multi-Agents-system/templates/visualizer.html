@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Multi-Agent Live Monitor</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: #0f172a;
+    font-family: Segoe UI, sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 40px;
+}
+
+h1 {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+button {
+    padding: 14px 32px;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover { background: #1d4ed8; }
+
+/* ── Layout SVG ── */
+.canvas {
+    position: relative;
+    width: 860px;
+    height: 340px;
+}
+
+svg.arrows {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+}
+
+/* ── Noeuds ── */
+.node {
+    position: absolute;
+    width: 150px;
+    height: 70px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: #1e293b;
+    border: 2px solid #334155;
+    transition: all 0.4s ease;
+    gap: 4px;
+}
+
+.node .icon { font-size: 1.3rem; }
+
+.node.active {
+    background: #2563eb;
+    border-color: #3b82f6;
+    box-shadow: 0 0 28px #3b82f6;
+    transform: scale(1.07);
+}
+.node.done {
+    background: #15803d;
+    border-color: #22c55e;
+    box-shadow: 0 0 12px #22c55e55;
+}
+.node.skipped {
+    background: #1e293b;
+    border-color: #475569;
+    opacity: 0.4;
+}
+
+/* Positions */
+#PERCEPTION   { top: 135px; left: 0px;   }
+#ANALYSE      { top: 135px; left: 220px; }
+#agent_email    { top: 30px;  left: 440px; }
+#agent_calendar { top: 240px; left: 440px; }
+#END          { top: 135px; left: 680px; }
+
+/* ── Flèches SVG ── */
+path.arrow-path {
+    fill: none;
+    stroke: #334155;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    transition: stroke 0.4s, filter 0.4s;
+}
+path.arrow-path.active {
+    stroke: #3b82f6;
+    filter: drop-shadow(0 0 6px #3b82f6);
+}
+path.arrow-path.done {
+    stroke: #22c55e;
+}
+
+/* ── Badge conditionnel ── */
+.badge {
+    position: absolute;
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+#badge-email    { top: 68px;  left: 370px; background: #1d4ed8; color: white; }
+#badge-calendar { top: 252px; left: 356px; background: #7c3aed; color: white; }
+
+/* ── Log ── */
+#log {
+    font-size: 0.8rem;
+    color: #64748b;
+    height: 20px;
+    letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+
+<h1> Multi-Agent Live Monitor</h1>
+<button onclick="runAgent()">▶ Lancer l'agent</button>
+
+<div class="canvas">
+
+    <!-- Flèches SVG -->
+    <svg class="arrows">
+        <!-- PERCEPTION → ANALYSE -->
+        <path id="arr-pa" class="arrow-path"
+              d="M 150,170 L 220,170"
+              marker-end="url(#arrow)"/>
+
+        <!-- ANALYSE → agent_email -->
+        <path id="arr-ae" class="arrow-path"
+              d="M 370,155 C 400,155 410,65 440,65"/>
+
+        <!-- ANALYSE → agent_calendar -->
+        <path id="arr-ac" class="arrow-path"
+              d="M 370,185 C 400,185 410,275 440,275"/>
+
+        <!-- agent_email → END -->
+        <path id="arr-ee" class="arrow-path"
+              d="M 590,65 C 620,65 650,155 680,155"/>
+
+        <!-- agent_calendar → END -->
+        <path id="arr-ce" class="arrow-path"
+              d="M 590,275 C 620,275 650,185 680,185"/>
+
+        <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8"
+                    refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#334155"/>
+            </marker>
+        </defs>
+    </svg>
+
+    <!-- Noeuds -->
+    <div class="node" id="PERCEPTION">
+        <span class="icon"></span>PERCEPTION
+    </div>
+    <div class="node" id="ANALYSE">
+        <span class="icon"></span>ANALYSE
+    </div>
+    <div class="node" id="agent_email">
+        <span class="icon"></span>AGENT EMAIL
+    </div>
+    <div class="node" id="agent_calendar">
+        <span class="icon"></span>AGENT CALENDAR
+    </div>
+    <div class="node" id="END">
+        <span class="icon"></span>END
+    </div>
+
+    <!-- Badges conditionnels -->
+    <span class="badge" id="badge-email">EMAIL</span>
+    <span class="badge" id="badge-calendar">CALENDAR</span>
+
+</div>
+
+<div id="log">En attente...</div>
+
+<script>
+const socket = new WebSocket("ws://127.0.0.1:9000/ws");
+
+const arrowMap = {
+    "PERCEPTION":     ["arr-pa"],
+    "ANALYSE":        ["arr-ae", "arr-ac"],
+    "agent_email":    ["arr-ee"],
+    "agent_calendar": ["arr-ce"],
+};
+
+function resetWorkflow() {
+    document.querySelectorAll(".node").forEach(n => {
+        n.classList.remove("active", "done", "skipped");
+    });
+    document.querySelectorAll(".arrow-path").forEach(a => {
+        a.classList.remove("active", "done");
+        a.setAttribute("stroke", "#334155");
+    });
+    document.getElementById("log").textContent = "En attente...";
+}
+
+function activateNode(name) {
+    const node = document.getElementById(name);
+    if (!node) return;
+
+    node.classList.add("active");
+
+    // Flèches entrantes
+    if (arrowMap[name]) {
+        arrowMap[name].forEach(id => {
+            const arr = document.getElementById(id);
+            if (arr) arr.classList.add("active");
+        });
+    }
+
+    setTimeout(() => {
+        node.classList.remove("active");
+        node.classList.add("done");
+        if (arrowMap[name]) {
+            arrowMap[name].forEach(id => {
+                const arr = document.getElementById(id);
+                if (arr) { arr.classList.remove("active"); arr.classList.add("done"); }
+            });
+        }
+    }, 700);
+}
+
+function runAgent() {
+    resetWorkflow();
+    socket.send(JSON.stringify({ action: "run" }));
+    document.getElementById("log").textContent = "Pipeline en cours...";
+}
+
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+
+    if (data.node) {
+        document.getElementById("log").textContent = `→ Nœud actif : ${data.node}`;
+        activateNode(data.node);
+
+        // Griser l'agent non utilisé
+        if (data.node === "agent_email") {
+            setTimeout(() => {
+                document.getElementById("agent_calendar").classList.add("skipped");
+            }, 400);
+        }
+        if (data.node === "agent_calendar") {
+            setTimeout(() => {
+                document.getElementById("agent_email").classList.add("skipped");
+            }, 400);
+        }
+    }
+
+    if (data.node === "END") {
+        document.getElementById("log").textContent = " Pipeline terminé !";
+        setTimeout(resetWorkflow, 3000);
+    }
+
+    if (data.error) {
+        document.getElementById("log").textContent = " Erreur : " + data.error;
+    }
+};
+</script>
+
+</body>
+</html>

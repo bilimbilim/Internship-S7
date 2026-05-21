@@ -1,0 +1,1180 @@
+{
+  "name": "Recrutement",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 8-17 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "6b4c25a0-850a-47c1-b22e-4ce034548cde",
+      "name": "Déclencheur Email (toutes les heures)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3984,
+        -304
+      ],
+      "notes": "Déclenche la vérification des nouveaux emails de candidature tous les jours ouvrés à 8h. Vous pouvez aussi remplacer ce nœud par un Gmail Trigger pour un déclenchement en temps réel."
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 1,
+        "simple": false,
+        "filters": {
+          "q": "subject:(candidature OR candidat OR CV OR application)"
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "id": "ea5fe408-81f5-4c00-b8bf-5cb6cd96779f",
+      "name": "Lire emails candidatures (Gmail)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -3648,
+        -304
+      ],
+      "webhookId": "94739de5-c54c-4a5f-87ab-22ca54b7302b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "544w3i1xrBDNGKPp",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Récupère tous les emails non lus contenant les mots-clés de recrutement. Adaptez le filtre 'q' selon vos besoins."
+    },
+    {
+      "parameters": {
+        "jsCode": "const emails = $input.all();\nconst results = [];\n\nfor (const email of emails) {\n  const data = email.json;\n  \n  // 🔹 Récupération du champ \"from\"\n  const fromStr = String(data.headers?.from || data.from || '');\n\n  // 🔹 Extraction EMAIL\n  const emailMatch = fromStr.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/);\n  const candidatEmail = emailMatch ? emailMatch[1] : '';\n\n  // 🔹 Nettoyage NOM (ULTRA ROBUSTE)\n  let cleaned = fromStr\n    .replace(/^From:\\s*/i, '') // enlève \"From:\"\n    .replace(/\"/g, '')         // enlève guillemets\n    .trim();\n\n  // Si format \"Nom <email>\"\n  if (cleaned.includes('<')) {\n    cleaned = cleaned.split('<')[0].trim();\n  }\n\n  // Si encore vide → fallback email\n  const candidatNom = cleaned || (candidatEmail ? candidatEmail.split('@')[0] : '');\n\n  // 🔹 Pièces jointes\n  const attachments = email.binary ? Object.values(email.binary) : [];\n\n  const cvAttachments = attachments.filter(a => \n    a.fileName && (\n      a.fileName.toLowerCase().includes('cv') || \n      a.mimeType === 'application/pdf' || \n      a.mimeType === 'application/msword' ||\n      a.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'\n    )\n  );\n\n  // 🔹 Résultat final\n  results.push({\n    json: {\n      emailId: data.id || '',\n      candidatNom,\n      candidatEmail,\n      sujetEmail: data.subject || '',\n      corpsEmail: data.text || data.snippet || '',\n      dateReception: data.date || new Date().toISOString(),\n      aCV: cvAttachments.length > 0,\n      nbPiecesJointes: cvAttachments.length,\n      source: 'email'\n    },\n    binary: email.binary \n  });\n}\n\nreturn results;"
+      },
+      "id": "ba4e96b2-2057-4801-b01c-786642dc0df5",
+      "name": "Extraire infos candidature",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3328,
+        -304
+      ],
+      "notes": "Extrait automatiquement le nom, email, sujet et détecte la présence d'un CV en pièce jointe."
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  \n  const raw = item.json.output;\n\n  let parsed;\n\n  try {\n    parsed = JSON.parse(raw);\n  } catch (e) {\n    parsed = {\n      candidatNom: \"inconnu\",\n      candidatEmail: \"inconnu\",\n      sujetEmail: \"inconnu\",\n      score: 0,\n      statut: \"attente\",\n      ia: \"Erreur parsing IA\"\n    };\n  }\n\n  results.push({\n    json: {\n      candidatNom: parsed.candidatNom,\n      candidatEmail: parsed.candidatEmail,\n      sujetEmail: parsed.sujetEmail,\n\n      score: parsed.score,\n      statut: parsed.statut,\n      ia: parsed.ia\n    }\n  });\n}\n\nreturn results;"
+      },
+      "id": "2726e81e-38ad-470e-b1cf-0d55baa8dee1",
+      "name": "Parser résultat IA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2624,
+        -304
+      ],
+      "notes": "Parse la réponse JSON de l'IA et fusionne avec les données du candidat."
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json.body.candidatEmail}}",
+        "subject": "=Réponse à votre candidature — {{$json.body.candidatEmail}}",
+        "message": "=<p>Bonjour Réponse à votre candidature — {{$json.body.candidatEmail}},</p>\n\n<p>Nous avons bien reçu votre candidature et nous vous remercions de l'intérêt que vous portez à notre entreprise.</p>\n\n<p>Après examen attentif de votre dossier, nous avons le regret de vous informer que votre profil ne correspond pas aux critères recherchés pour ce poste.</p>\n\n<p>Nous conservons votre candidature dans notre base de données et n'hésiterons pas à vous recontacter si une opportunité correspondant à votre profil se présente.</p>\n\n<p>Nous vous souhaitons bonne chance dans vos recherches.</p>\n\n<p>Cordialement,<br>L'équipe RH</p>",
+        "options": {}
+      },
+      "id": "e0bd36b9-cf94-4b3c-a744-676943fea8bf",
+      "name": "Envoyer email de refus",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -2272,
+        32
+      ],
+      "webhookId": "ce390f7c-20aa-4de3-a19b-b729a0dfcaa6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "544w3i1xrBDNGKPp",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Email de refus automatique et personnalisé. Adaptez le texte selon votre charte RH."
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro",
+          "mode": "list",
+          "cachedResultName": "Candidats_IA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "candidatEmail": "={{$json.candidatEmail}}",
+            "score": "={{$json.score}}",
+            "statut": "={{$json.statut}}",
+            "ia": "={{$json.ia}}",
+            "sujetEmail": "={{$json.sujetEmail}}",
+            "candidatNom ": "={{$json.candidatNom}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "candidatNom ",
+              "displayName": "candidatNom ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "candidatEmail",
+              "displayName": "candidatEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "statut",
+              "displayName": "statut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ia",
+              "displayName": "ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sujetEmail",
+              "displayName": "sujetEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "13857b8d-29fd-4e23-8d27-4cafe752243f",
+      "name": "Enregistrer candidat qualifié (Sheets)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        -2352,
+        -304
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BLRGaXi2ungkPVgI",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Enregistre les candidats qualifiés dans l'onglet 'Candidats' avec statut 'Qualifié'."
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json.body.candidatEmail}}",
+        "subject": "=Votre candidature — Invitation à un entretien",
+        "message": "=<p>Bonjour {{$json.body.candidatEmail}},</p>\n\n<p>Nous avons étudié avec attention votre candidature et sommes heureux de vous informer qu'elle a retenu notre intérêt.</p>\n\n<p>Nous souhaiterions vous rencontrer pour un premier entretien afin d'échanger sur votre parcours et le poste.</p>\n\n<p>Merci de nous indiquer vos disponibilités pour la semaine prochaine en répondant à cet email, ou en choisissant directement un créneau via ce lien : <a href='YOUR_CALENDLY_LINK'>Réserver un entretien</a></p>\n\n<p>À très bientôt,<br>L'équipe RH</p>",
+        "options": {}
+      },
+      "id": "2ebfe152-cb5b-4986-8767-be58b70e0645",
+      "name": "Inviter à un entretien",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -2272,
+        288
+      ],
+      "webhookId": "af51a2ce-aaaa-41e6-98ad-9fb92e334333",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "544w3i1xrBDNGKPp",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Email d'invitation à l'entretien. Remplacez YOUR_CALENDLY_LINK par votre lien Calendly ou Google Meet."
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "mombobilimbilim@gmail.com",
+          "mode": "id"
+        },
+        "start": "={{ DateTime.now().plus({ days: 7 }).startOf('day').plus({ hours: 10 }).toISO() }}",
+        "end": "={{ DateTime.now().plus({ days: 7 }).startOf('day').plus({ hours: 11 }).toISO() }}",
+        "additionalFields": {
+          "attendees": [
+            "={{$('Webhook').item.json.body.candidatEmail}}"
+          ],
+          "description": "=Bonjour,\n\nNous avons le plaisir de vous inviter à un entretien pour votre candidature.\n\nMerci de confirmer votre présence en répondant à cette invitation.\n\nCordialement,\nL'équipe RH",
+          "location": "Google Meet (lien envoyé automatiquement)",
+          "summary": "=Entretien — {{$('Webhook').item.json.body.candidatNom}}"
+        }
+      },
+      "id": "54a5287a-9af8-4efa-ad8b-a22bc8e3b6c1",
+      "name": "Créer event Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -2016,
+        288
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "2IkzNJhbd51pc2Z2",
+          "name": "Google Calendar account"
+        }
+      },
+      "notes": "Crée automatiquement un événement dans Google Calendar J+7 à 10h. Ajustez la date selon votre logique métier."
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un recruteur expert spécialisé en Data Science, intelligence artificielle et traitement du signal.\n\nVoici l’offre de stage :\n\nNous recherchons un stagiaire en ingénierie biomédicale avec des compétences en intelligence artificielle, traitement du signal et imagerie médicale.\n\nCompétences attendues :\n- Python\n- Machine Learning / Deep Learning\n- Traitement du signal\n- Analyse d’images médicales\n- Connaissances en systèmes de santé ou e-santé\n\nSoft skills :\n- Autonomie\n- Esprit analytique\n- Communication claire\n- Motivation\n\n---\n\nAnalyse le candidat suivant :\n\nNom : {{$json.candidatNom}}\nEmail : {{$json.candidatEmail}}\n\nEmail du candidat :\n{{$json.corpsEmail}}\n\nTu as accès aux documents suivants :\n- CV (PDF)\n- Lettre de motivation (PDF)\n\n---\n\nInstructions :\n\n1. Analyse le CV et la lettre\n2. Compare le profil avec l’offre de stage\n3. Évalue :\n   - compétences techniques\n   - projets réalisés\n   - expérience (y compris stages)\n   - pertinence du profil\n   - motivation\n\n---\n\nIMPORTANT :\n\n- Considère les stages comme des expériences professionnelles réelles\n- Les projets techniques (machine learning, deep learning, traitement du signal, imagerie médicale) sont très importants\n- Un étudiant avec plusieurs projets solides doit être valorisé même sans longue expérience\n- Valorise fortement toute expérience en IA, data ou traitement du signal\n- Évalue le potentiel du candidat, pas uniquement les années d’expérience\n- Ne pénalise pas un profil junior pertinent pour un stage\n\n---\n\nRépartition du score :\n\n- Compétences techniques : 40%\n- Projets et réalisations : 30%\n- Expérience (stages inclus) : 20%\n- Motivation et cohérence : 10%\n\n---\n\nIMPORTANT :\n\nTu dois répondre STRICTEMENT en JSON avec CE FORMAT EXACT :\n\n{\n\"candidatNom\": \"{{$json.candidatNom}}\",\n\"candidatEmail\": \"{{$json.candidatEmail}}\",\n\"sujetEmail\": \"{{$json.sujetEmail}}\",\n  \"score\": number,\n  \"statut\": \"retenu\" | \"refuse\" | \"attente\",\n  \"ia\": \"résumé clair et professionnel du candidat en 4 à 6 lignes\"\n}\n\n---\n\nRègles de décision :\n\n- score >= 75 → \"retenu\"\n- score entre 50 et 74 → \"attente\"\n- score < 50 → \"refuse\"\n\n---\n\nContraintes :\n\n- Ne rajoute aucun texte en dehors du JSON\n- Pas d’explication hors JSON\n- Le champ \"ia\" doit être directement affichable dans une interface recruteur\n- Le résumé doit être synthétique, objectif et utile pour une prise de décision rapide\n- Mentionne explicitement les compétences clés, projets et expériences pertinentes",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -3056,
+        -304
+      ],
+      "id": "2f6c4a41-b476-4ef9-87dc-fcf374100cc6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "validation",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2800,
+        160
+      ],
+      "id": "f1c42684-b3be-401b-986b-16959e32c55f",
+      "name": "Webhook",
+      "webhookId": "8e4ffddd-193d-4983-a9c3-223123c93b5e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "cond-refus",
+              "leftValue": "={{ $json.body.decision }}",
+              "rightValue": "refuse",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6e087ef8-9265-4c8e-8828-28e8e0283be9",
+      "name": "Refus définitif ?1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -2544,
+        160
+      ],
+      "notes": "Sous-branche : TRUE = email de refus envoyé, FALSE = dossier mis en attente pour examen."
+    },
+    {
+      "parameters": {
+        "path": "sync",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -4000,
+        176
+      ],
+      "id": "692a8ce7-febd-4cca-92bc-92a054cb14b2",
+      "name": "Webhook1",
+      "webhookId": "8e4ffddd-193d-4983-a9c3-223123c93b5e"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro",
+          "mode": "list",
+          "cachedResultName": "Candidats_IA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "96b1ab2e-6296-4e0f-bfde-033000eae376",
+      "name": "Enregistrer candidat qualifié (Sheets)1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        -3712,
+        176
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BLRGaXi2ungkPVgI",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Enregistre les candidats qualifiés dans l'onglet 'Candidats' avec statut 'Qualifié'."
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const data = item.json;\n\n  return {\n    id: data.id || Math.random(),\n\n    name: data.CandidatNom \n       || data.candidatNom \n       || data[\"CandidatNom\"] \n       || Object.values(data)[1] \n       || \"NOM\",\n\n    email: data.candidatEmail || \"\",\n\n    poste: (data.sujetEmail || \"\")\n      .replace(/candidature\\s*[:\\-–]\\s*/i, '')\n      .replace(/tr\\s*[:\\-–]\\s*/i, '')\n      .trim() || \"Non défini\",\n\n    statut: (data.statut || \"attente\").toLowerCase(),\n\n    score: parseInt(data.score || 0),\n\n    analyseIA: data.ia || \"\",\n\n    emails: [],\n    events: []\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3504,
+        176
+      ],
+      "id": "a90785f2-f4e7-45ef-98df-85a2e594eea9",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -3248,
+        176
+      ],
+      "id": "db742119-3042-4fa4-b7a1-dba6343d2431",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro",
+          "mode": "list",
+          "cachedResultName": "Candidats_IA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "candidatEmail": "={{$('Webhook').item.json.body.candidatEmail}}",
+            "statut": "={{$('Webhook').item.json.body.decision === 'accepte' ? 'entretien' : 'refuse'}}"
+          },
+          "matchingColumns": [
+            "candidatEmail"
+          ],
+          "schema": [
+            {
+              "id": "candidatNom ",
+              "displayName": "candidatNom ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "candidatEmail",
+              "displayName": "candidatEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "statut",
+              "displayName": "statut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ia",
+              "displayName": "ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sujetEmail",
+              "displayName": "sujetEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2032,
+        32
+      ],
+      "id": "5aa0acd2-e559-42a8-bdde-69517e4ad055",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BLRGaXi2ungkPVgI",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro",
+          "mode": "list",
+          "cachedResultName": "Candidats_IA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "candidatEmail": "={{$('Webhook').item.json.body.candidatEmail}}",
+            "statut": "={{$('Webhook').item.json.body.decision === 'accepte' ? 'entretien' : 'refuse'}}"
+          },
+          "matchingColumns": [
+            "candidatEmail"
+          ],
+          "schema": [
+            {
+              "id": "candidatNom ",
+              "displayName": "candidatNom ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "candidatEmail",
+              "displayName": "candidatEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "statut",
+              "displayName": "statut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ia",
+              "displayName": "ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sujetEmail",
+              "displayName": "sujetEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1744,
+        288
+      ],
+      "id": "69d8e97f-e8eb-4a94-9bdd-739cff87b98b",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BLRGaXi2ungkPVgI",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -3056,
+        -48
+      ],
+      "id": "d63a3d60-a5af-4db9-b168-d65edca18693",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "DkWNfuLIe2qT6z3b",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "attachment_0",
+        "name": "={{$json.candidatNom}}_CV.pdf",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1EDX1IBd0p5iKc3X_7c0cidMa3ryfxriv",
+          "mode": "list",
+          "cachedResultName": "CV_Candidats",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1EDX1IBd0p5iKc3X_7c0cidMa3ryfxriv"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3264,
+        -496
+      ],
+      "id": "b5c6b854-91eb-41a3-a99a-cdf01d7c5f84",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "hg2bnea5aGlLG8lZ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const emails = $input.all();\nconst results = [];\n\nfor (const email of emails) {\n  const data = email.json;\n  \n  // 🔹 Récupération du champ \"from\"\n  const fromStr = String(data.headers?.from || data.from || '');\n\n  // 🔹 Extraction EMAIL\n  const emailMatch = fromStr.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/);\n  const candidatEmail = emailMatch ? emailMatch[1] : '';\n\n  // 🔹 Nettoyage NOM (ULTRA ROBUSTE)\n  let cleaned = fromStr\n    .replace(/^From:\\s*/i, '') // enlève \"From:\"\n    .replace(/\"/g, '')         // enlève guillemets\n    .trim();\n\n  // Si format \"Nom <email>\"\n  if (cleaned.includes('<')) {\n    cleaned = cleaned.split('<')[0].trim();\n  }\n\n  // Si encore vide → fallback email\n  const candidatNom = cleaned || (candidatEmail ? candidatEmail.split('@')[0] : '');\n\n  // 🔹 Pièces jointes\n  const attachments = email.binary ? Object.values(email.binary) : [];\n\n  const cvAttachments = attachments.filter(a => \n    a.fileName && (\n      a.fileName.toLowerCase().includes('cv') || \n      a.mimeType === 'application/pdf' || \n      a.mimeType === 'application/msword' ||\n      a.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'\n    )\n  );\n\n  // 🔹 Résultat final\n  results.push({\n    json: {\n      emailId: data.id || '',\n      candidatNom,\n      candidatEmail,\n      sujetEmail: data.subject || '',\n      corpsEmail: data.text || data.snippet || '',\n      dateReception: data.date || new Date().toISOString(),\n      aCV: cvAttachments.length > 0,\n      nbPiecesJointes: cvAttachments.length,\n      source: 'email'\n    },\n    binary: email.binary \n  });\n}\n\nreturn results;"
+      },
+      "id": "1521ccd4-6b94-4c27-9c6f-636e9e32e19e",
+      "name": "Extraire infos candidature1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3488,
+        -496
+      ],
+      "notes": "Extrait automatiquement le nom, email, sujet et détecte la présence d'un CV en pièce jointe."
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "upload-cv",
+        "options": {
+          "binaryPropertyName": "file"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -3504,
+        560
+      ],
+      "id": "abb4aa41-0833-4d3c-b442-c8706996ce79",
+      "name": "Webhook2",
+      "webhookId": "49662fe7-f9ba-4c07-8aa4-20cb34807a3d"
+    },
+    {
+      "parameters": {
+        "jsCode": "const emails = $input.all();\nconst results = [];\n\nfor (const email of emails) {\n  const data = email.json;\n\n  // ✅ PRIORITÉ AU FORMULAIRE (interface)\n  let candidatNom = data.body?.candidatNom || \"\";\n  let candidatEmail = data.body?.candidatEmail || \"\";\n  let sujetEmail = data.body?.poste || data.body?.sujetEmail || \"\";\n\n  // ✅ SI PAS DE FORM → fallback EMAIL\n  if (!candidatEmail) {\n    const fromStr = String(data.headers?.from || data.from || '');\n\n    const emailMatch = fromStr.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/);\n    candidatEmail = emailMatch ? emailMatch[1] : '';\n\n    const nameMatch = fromStr.match(/^\"?([^\"<]+)\"?\\s*</);\n    candidatNom = nameMatch \n      ? nameMatch[1].trim() \n      : (candidatEmail ? candidatEmail.split('@')[0] : '');\n  }\n\n  // ✅ Pièces jointes\n  const attachments = email.binary ? Object.values(email.binary) : [];\n\n  const cvAttachments = attachments.filter(a => \n    a.fileName && (\n      a.fileName.toLowerCase().includes('cv') || \n      a.mimeType === 'application/pdf' || \n      a.mimeType === 'application/msword' ||\n      a.mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'\n    )\n  );\n\n  results.push({\n    json: {\n      emailId: data.id || '',\n      candidatNom,\n      candidatEmail,\n      sujetEmail,\n      corpsEmail: data.body?.message || data.text || data.snippet || '',\n      dateReception: new Date().toISOString(),\n      aCV: cvAttachments.length > 0,\n      nbPiecesJointes: cvAttachments.length,\n      source: data.body ? 'formulaire' : 'email'\n    },\n    binary: email.binary \n  });\n}\n\nreturn results;"
+      },
+      "id": "ec12d923-db22-4a1e-b5aa-e993249c2c29",
+      "name": "Extraire infos candidature2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3280,
+        560
+      ],
+      "notes": "Extrait automatiquement le nom, email, sujet et détecte la présence d'un CV en pièce jointe."
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un recruteur expert spécialisé en Data Science, intelligence artificielle et traitement du signal.\n\nVoici l’offre de stage :\n\nNous recherchons un stagiaire en ingénierie biomédicale avec des compétences en intelligence artificielle, traitement du signal et imagerie médicale.\n\nCompétences attendues :\n- Python\n- Machine Learning / Deep Learning\n- Traitement du signal\n- Analyse d’images médicales\n- Connaissances en systèmes de santé ou e-santé\n\nSoft skills :\n- Autonomie\n- Esprit analytique\n- Communication claire\n- Motivation\n\n---\n\nAnalyse le candidat suivant :\n\nNom : {{$json.candidatNom}}\nEmail : {{$json.candidatEmail}}\n\nEmail du candidat :\n{{$json.corpsEmail}}\n\nTu as accès aux documents suivants :\n- CV (PDF)\n- Lettre de motivation (PDF)\n\n---\n\nInstructions :\n\n1. Analyse le CV et la lettre\n2. Compare le profil avec l’offre de stage\n3. Évalue :\n   - compétences techniques\n   - projets réalisés\n   - expérience (y compris stages)\n   - pertinence du profil\n   - motivation\n\n---\n\nIMPORTANT :\n\n- Considère les stages comme des expériences professionnelles réelles\n- Les projets techniques (machine learning, deep learning, traitement du signal, imagerie médicale) sont très importants\n- Un étudiant avec plusieurs projets solides doit être valorisé même sans longue expérience\n- Valorise fortement toute expérience en IA, data ou traitement du signal\n- Évalue le potentiel du candidat, pas uniquement les années d’expérience\n- Ne pénalise pas un profil junior pertinent pour un stage\n\n---\n\nRépartition du score :\n\n- Compétences techniques : 40%\n- Projets et réalisations : 30%\n- Expérience (stages inclus) : 20%\n- Motivation et cohérence : 10%\n\n---\n\nIMPORTANT :\n\nTu dois répondre STRICTEMENT en JSON avec CE FORMAT EXACT :\n\n{\n\"candidatNom\": \"{{$json.candidatNom}}\",\n\"candidatEmail\": \"{{$json.candidatEmail}}\",\n\"sujetEmail\": \"{{$json.sujetEmail}}\",\n  \"score\": number,\n  \"statut\": \"retenu\" | \"refuse\" | \"attente\",\n  \"ia\": \"résumé clair et professionnel du candidat en 4 à 6 lignes\"\n}\n\n---\n\nRègles de décision :\n\n- score >= 75 → \"retenu\"\n- score entre 50 et 74 → \"attente\"\n- score < 50 → \"refuse\"\n\n---\n\nContraintes :\n\n- Ne rajoute aucun texte en dehors du JSON\n- Pas d’explication hors JSON\n- Le champ \"ia\" doit être directement affichable dans une interface recruteur\n- Le résumé doit être synthétique, objectif et utile pour une prise de décision rapide\n- Mentionne explicitement les compétences clés, projets et expériences pertinentes",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -3056,
+        560
+      ],
+      "id": "a0cbfafe-570c-42d0-b68b-e1a72683764f",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -3056,
+        800
+      ],
+      "id": "1ddf9956-ba77-4c0a-9917-71466e30c724",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "DkWNfuLIe2qT6z3b",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  \n  const raw = item.json.output;\n\n  let parsed;\n\n  try {\n    parsed = JSON.parse(raw);\n  } catch (e) {\n    parsed = {\n      candidatNom: \"inconnu\",\n      candidatEmail: \"inconnu\",\n      sujetEmail: \"inconnu\",\n      score: 0,\n      statut: \"attente\",\n      ia: \"Erreur parsing IA\"\n    };\n  }\n\n  results.push({\n    json: {\n      candidatNom: parsed.candidatNom,\n      candidatEmail: parsed.candidatEmail,\n      sujetEmail: parsed.sujetEmail,\n\n      score: parsed.score,\n      statut: parsed.statut,\n      ia: parsed.ia\n    }\n  });\n}\n\nreturn results;"
+      },
+      "id": "ef771b07-2987-48ac-a32c-e5b5cfd260bf",
+      "name": "Parser résultat IA1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2720,
+        560
+      ],
+      "notes": "Parse la réponse JSON de l'IA et fusionne avec les données du candidat."
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro",
+          "mode": "list",
+          "cachedResultName": "Candidats_IA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "candidatEmail": "={{$json.candidatEmail}}",
+            "score": "={{$json.score}}",
+            "statut": "={{$json.statut}}",
+            "ia": "={{$json.ia}}",
+            "sujetEmail": "={{$json.sujetEmail}}",
+            "candidatNom ": "={{$json.candidatNom}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "candidatNom ",
+              "displayName": "candidatNom ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "candidatEmail",
+              "displayName": "candidatEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "statut",
+              "displayName": "statut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ia",
+              "displayName": "ia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sujetEmail",
+              "displayName": "sujetEmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "cd8e0784-48e3-4bf0-ad1c-8879a136aa1f",
+      "name": "Enregistrer candidat qualifié (Sheets)2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        -2448,
+        560
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BLRGaXi2ungkPVgI",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Enregistre les candidats qualifiés dans l'onglet 'Candidats' avec statut 'Qualifié'."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Déclencheur Email (toutes les heures)": {
+      "main": [
+        [
+          {
+            "node": "Lire emails candidatures (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lire emails candidatures (Gmail)": {
+      "main": [
+        [
+          {
+            "node": "Extraire infos candidature",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extraire infos candidature1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser résultat IA": {
+      "main": [
+        [
+          {
+            "node": "Enregistrer candidat qualifié (Sheets)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enregistrer candidat qualifié (Sheets)": {
+      "main": [
+        []
+      ]
+    },
+    "Inviter à un entretien": {
+      "main": [
+        [
+          {
+            "node": "Créer event Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer event Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire infos candidature": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Parser résultat IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Refus définitif ?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Refus définitif ?1": {
+      "main": [
+        [
+          {
+            "node": "Envoyer email de refus",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Inviter à un entretien",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Enregistrer candidat qualifié (Sheets)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enregistrer candidat qualifié (Sheets)1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer email de refus": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire infos candidature1": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook2": {
+      "main": [
+        [
+          {
+            "node": "Extraire infos candidature2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire infos candidature2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Parser résultat IA1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser résultat IA1": {
+      "main": [
+        [
+          {
+            "node": "Enregistrer candidat qualifié (Sheets)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enregistrer candidat qualifié (Sheets)2": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "162345b3-0d83-431e-9bef-c858b7927c0e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "009416c51d28fd4ac923d050652b2fed56dee3677b6e970cd49f64257b7083c4"
+  },
+  "id": "fiesMswOXmv9bNnd",
+  "tags": [
+    {
+      "updatedAt": "2026-04-09T10:40:55.027Z",
+      "createdAt": "2026-04-09T10:40:55.027Z",
+      "id": "TrzgrZVuv3Fr4tNg",
+      "name": "IA"
+    },
+    {
+      "updatedAt": "2026-04-09T10:40:55.300Z",
+      "createdAt": "2026-04-09T10:40:55.300Z",
+      "id": "W5sbP1B4VSiKkFc7",
+      "name": "RH"
+    },
+    {
+      "updatedAt": "2026-04-09T10:40:55.243Z",
+      "createdAt": "2026-04-09T10:40:55.243Z",
+      "id": "jm9REyN2bwu1DPFt",
+      "name": "Recrutement"
+    }
+  ]
+}

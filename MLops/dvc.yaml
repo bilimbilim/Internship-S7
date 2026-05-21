@@ -1,0 +1,8 @@
+stages:
+  train:
+    cmd: python DPE.py
+    deps:
+    - DPE.py
+    - data/DPE.csv
+    outs:
+    - models/dpe_model.pkl

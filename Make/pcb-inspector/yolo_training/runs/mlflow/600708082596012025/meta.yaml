@@ -1,0 +1,7 @@
+artifact_location: file:C:/Users/yayaa/Downloads/pcb-inspector/pcb-inspector/yolo_training/runs/mlflow/600708082596012025
+creation_time: 1778875777884
+experiment_id: '600708082596012025'
+last_update_time: 1778875777884
+lifecycle_stage: active
+name: runs\train
+workspace: default

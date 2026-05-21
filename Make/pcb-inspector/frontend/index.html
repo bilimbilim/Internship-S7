@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCB Inspector — AOI System</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #080b0f;
+    --bg2:     #0e1217;
+    --bg3:     #141920;
+    --bg4:     #1a2028;
+    --border:  #1c2330;
+    --border2: #243040;
+    --border3: #2e3d50;
+    --green:   #00e5a0;
+    --green2:  #00ffc0;
+    --green-dim:  #00e5a010;
+    --green-dim2: #00e5a020;
+    --red:     #ff3b4e;
+    --red-dim: #ff3b4e10;
+    --red-dim2:#ff3b4e20;
+    --amber:   #f59e0b;
+    --amber-dim:#f59e0b10;
+    --blue:    #3b82f6;
+    --blue-dim:#3b82f610;
+    --cyan:    #06b6d4;
+    --text:    #dde4f0;
+    --text2:   #6b7a99;
+    --text3:   #2e3d50;
+    --mono:    'Space Mono', monospace;
+    --sans:    'DM Sans', sans-serif;
+    --radius:  10px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content:'';
+    position:fixed; top:0; left:0; right:0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), var(--cyan), transparent);
+    z-index: 100;
+    animation: scanline 4s ease-in-out infinite;
+  }
+  @keyframes scanline { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+  .layout {
+    position: relative; z-index:1;
+    display: grid;
+    grid-template-columns: 270px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 24px 0;
+    display: flex; flex-direction: column;
+    position: sticky; top:0; height:100vh;
+    overflow-y: auto;
+  }
+  .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
+  .logo-mark {
+    width:36px; height:36px;
+    border: 1.5px solid var(--green); border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:12px; position:relative;
+  }
+  .logo-mark::before {
+    content:''; width:10px; height:10px;
+    border: 1.5px solid var(--green); border-radius:2px;
+    transform: rotate(45deg);
+  }
+  .logo-mark::after {
+    content:''; position:absolute;
+    width:5px; height:5px; background:var(--green);
+    border-radius:50%; top:3px; right:3px;
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+  .sidebar-logo h1 { font-family:var(--mono); font-size:14px; font-weight:700; letter-spacing:.5px; }
+  .sidebar-logo p  { font-size:11px; color:var(--text2); margin-top:2px; line-height:1.4; }
+
+  .sidebar-section { padding:16px 20px; border-bottom:1px solid var(--border); }
+  .sidebar-section-title {
+    font-family:var(--mono); font-size:10px; color:var(--text3);
+    letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px;
+  }
+
+  .config-field { margin-bottom:10px; }
+  .config-field label {
+    display:block; font-family:var(--mono); font-size:10px;
+    color:var(--text2); margin-bottom:5px; letter-spacing:.5px;
+  }
+  .config-field input, .config-field textarea {
+    width:100%; background:var(--bg3); border:1px solid var(--border2);
+    border-radius:6px; padding:7px 10px;
+    font-family:var(--mono); font-size:11px; color:var(--text);
+    outline:none; transition:border-color .2s; resize:none;
+  }
+  .config-field input:focus, .config-field textarea:focus { border-color:var(--green); }
+  .config-field input::placeholder, .config-field textarea::placeholder { color:var(--text3); }
+
+  .toggle-row {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:8px;
+  }
+  .toggle-row span { font-size:12px; color:var(--text2); }
+  .toggle {
+    width:36px; height:20px; background:var(--bg4);
+    border:1px solid var(--border2); border-radius:10px;
+    cursor:pointer; position:relative; transition:all .2s; flex-shrink:0;
+  }
+  .toggle::after {
+    content:''; position:absolute;
+    width:12px; height:12px; background:var(--text3);
+    border-radius:50%; top:3px; left:3px; transition:all .2s;
+  }
+  .toggle.on { background:var(--green-dim2); border-color:var(--green); }
+  .toggle.on::after { background:var(--green); left:19px; }
+
+  /* Pipeline steps */
+  .pipeline-steps { display:flex; flex-direction:column; gap:0; }
+  .pipeline-step {
+    display:flex; align-items:center; gap:10px;
+    padding:8px 0; position:relative;
+  }
+  .pipeline-step:not(:last-child)::after {
+    content:''; position:absolute; left:11px; top:28px;
+    width:1px; height:calc(100% - 16px); background:var(--border2);
+  }
+  .step-dot {
+    width:22px; height:22px; border-radius:50%;
+    border:1.5px solid var(--border2); background:var(--bg3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-family:var(--mono); color:var(--text3);
+    flex-shrink:0; transition:all .3s;
+  }
+  .step-dot.active { border-color:var(--amber); color:var(--amber); background:var(--amber-dim); animation: pulse-dot 1.2s ease-in-out infinite; }
+  .step-dot.done   { border-color:var(--green); color:var(--green); background:var(--green-dim); }
+  .step-dot.error  { border-color:var(--red);   color:var(--red);   background:var(--red-dim);   }
+  @keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 0 #f59e0b30} 50%{box-shadow:0 0 0 4px #f59e0b20} }
+  .step-label { font-size:12px; color:var(--text2); }
+  .step-label.active { color:var(--amber); }
+  .step-label.done   { color:var(--green); }
+
+  /* Score */
+  .score-display { text-align:center; padding:16px 0 8px; }
+  .score-number {
+    font-family:var(--mono); font-size:42px; font-weight:700;
+    color:var(--green); line-height:1; transition:color .5s;
+  }
+  .score-number.bad  { color:var(--red); }
+  .score-number.warn { color:var(--amber); }
+  .score-label { font-size:11px; color:var(--text2); margin-top:4px; }
+  .score-bar { height:4px; background:var(--border2); border-radius:2px; margin-top:10px; overflow:hidden; }
+  .score-bar-fill {
+    height:100%; border-radius:2px; background:var(--green);
+    width:0%; transition:width 1s ease, background .5s;
+  }
+  .score-bar-fill.bad  { background:var(--red); }
+  .score-bar-fill.warn { background:var(--amber); }
+
+  /* ── MAIN ── */
+  .main { padding:32px; display:flex; flex-direction:column; gap:20px; }
+  .main-header { display:flex; align-items:center; justify-content:space-between; }
+  .main-title { font-family:var(--mono); font-size:13px; color:var(--text2); letter-spacing:1px; }
+  .status-pill {
+    display:flex; align-items:center; gap:6px;
+    font-family:var(--mono); font-size:10px;
+    color:var(--green); background:var(--green-dim);
+    border:1px solid #00e5a040; border-radius:20px; padding:4px 12px;
+  }
+  .status-pill::before {
+    content:''; width:5px; height:5px; background:var(--green);
+    border-radius:50%; animation:blink 1.5s ease-in-out infinite;
+  }
+
+  /* Upload grid */
+  .upload-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .upload-card {
+    border:1.5px dashed var(--border2); border-radius:var(--radius);
+    background:var(--bg2); padding:28px 20px;
+    text-align:center; cursor:pointer;
+    transition:all .2s; position:relative; overflow:hidden;
+  }
+  .upload-card:hover, .upload-card.drag-over {
+    border-color:var(--green); background:var(--green-dim);
+  }
+  .upload-card.has-ref   { border-color:var(--blue); background:var(--blue-dim); border-style:solid; }
+  .upload-card.has-insp  { border-color:var(--cyan); background:#06b6d410;       border-style:solid; }
+  .upload-card input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+  .upload-card-icon {
+    font-size:11px; font-family:var(--mono); font-weight:700;
+    color:var(--text3); letter-spacing:1.5px; margin-bottom:10px; display:block;
+  }
+  .upload-card-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .upload-card-sub   { font-size:11px; color:var(--text2); }
+  .upload-badge {
+    position:absolute; top:10px; right:10px;
+    font-family:var(--mono); font-size:9px;
+    padding:2px 8px; border-radius:4px; font-weight:700;
+  }
+  .badge-ref   { background:var(--blue); color:#fff; }
+  .badge-insp  { background:var(--cyan); color:#000; }
+
+  /* Compare */
+  .compare-wrap { display:none; gap:16px; }
+  .compare-wrap.visible { display:grid; grid-template-columns:1fr 1fr; }
+  .preview-card { border:1px solid var(--border); border-radius:var(--radius); background:var(--bg2); overflow:hidden; }
+  .preview-card-header {
+    padding:8px 14px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .preview-card-header span { font-family:var(--mono); font-size:10px; color:var(--text2); letter-spacing:.5px; }
+  .preview-card-header button { background:none; border:none; color:var(--text3); font-size:12px; cursor:pointer; transition:color .2s; }
+  .preview-card-header button:hover { color:var(--red); }
+  .img-container { position:relative; background:var(--bg3); }
+  .img-container img { width:100%; max-height:300px; object-fit:contain; display:block; }
+  .annotated-img { width:100%; max-height:300px; object-fit:contain; display:none; }
+  .annotated-img.visible { display:block; }
+  .img-toggle-btn {
+    position:absolute; bottom:8px; right:8px;
+    font-family:var(--mono); font-size:9px;
+    background:var(--bg4); border:1px solid var(--border2);
+    color:var(--text2); padding:3px 8px; border-radius:4px;
+    cursor:pointer; transition:all .2s; z-index:10;
+  }
+  .img-toggle-btn:hover { border-color:var(--green); color:var(--green); }
+
+  /* Analyze button */
+  .analyze-btn {
+    width:100%; padding:15px;
+    background:var(--green); color:#000;
+    font-family:var(--mono); font-size:13px; font-weight:700;
+    border:none; border-radius:var(--radius);
+    cursor:pointer; transition:all .2s;
+    letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .analyze-btn:hover:not(:disabled) { background:var(--green2); transform:translateY(-1px); }
+  .analyze-btn:disabled { background:var(--border2); color:var(--text3); cursor:not-allowed; }
+  .analyze-btn .spinner {
+    display:none; width:14px; height:14px;
+    border:2px solid #00000040; border-top-color:#000;
+    border-radius:50%; animation:spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .analyze-btn.loading .spinner { display:block; }
+
+  /* Stats bar */
+  .stats-bar {
+    display:none; grid-template-columns:repeat(4,1fr);
+    gap:12px;
+  }
+  .stats-bar.visible { display:grid; }
+  .stat-card {
+    background:var(--bg2); border:1px solid var(--border);
+    border-radius:8px; padding:12px 16px; text-align:center;
+  }
+  .stat-num { font-family:var(--mono); font-size:24px; font-weight:700; }
+  .stat-num.green  { color:var(--green); }
+  .stat-num.red    { color:var(--red); }
+  .stat-num.amber  { color:var(--amber); }
+  .stat-num.blue   { color:var(--blue); }
+  .stat-label { font-size:10px; color:var(--text2); margin-top:4px; font-family:var(--mono); }
+
+  /* Result panel */
+  .result-panel { display:none; border-radius:var(--radius); overflow:hidden; animation:slideUp .3s ease; }
+  @keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .result-panel.visible { display:block; }
+  .result-header {
+    padding:14px 20px; display:flex; align-items:center;
+    gap:12px; border-bottom:1px solid transparent;
+  }
+  .result-header.ok   { background:var(--green-dim2); border-color:#00e5a040; border-radius:var(--radius) var(--radius) 0 0; }
+  .result-header.nok  { background:var(--red-dim2);   border-color:#ff3b4e40; border-radius:var(--radius) var(--radius) 0 0; }
+  .result-header.warn { background:var(--amber-dim);  border-color:#f59e0b40; border-radius:var(--radius) var(--radius) 0 0; }
+  .result-icon  { font-family:var(--mono); font-size:18px; }
+  .result-title { font-family:var(--mono); font-size:13px; font-weight:700; }
+  .result-header.ok  .result-title { color:var(--green); }
+  .result-header.nok .result-title { color:var(--red); }
+  .result-header.warn .result-title { color:var(--amber); }
+  .result-meta { margin-left:auto; display:flex; gap:8px; align-items:center; }
+  .meta-badge {
+    font-family:var(--mono); font-size:10px;
+    padding:3px 10px; border-radius:20px;
+  }
+  .meta-badge.green  { background:var(--green-dim); border:1px solid #00e5a040; color:var(--green); }
+  .meta-badge.red    { background:var(--red-dim);   border:1px solid #ff3b4e40; color:var(--red); }
+  .meta-badge.amber  { background:var(--amber-dim); border:1px solid #f59e0b40; color:var(--amber); }
+  .meta-badge.blue   { background:var(--blue-dim);  border:1px solid #3b82f640; color:var(--blue); }
+
+  .result-body {
+    background:var(--bg2); border:1px solid var(--border);
+    border-top:none; border-radius:0 0 var(--radius) var(--radius); padding:16px 20px;
+  }
+
+  /* Tabs */
+  .result-tabs { display:flex; gap:0; margin-bottom:16px; border-bottom:1px solid var(--border); }
+  .result-tab {
+    font-family:var(--mono); font-size:10px; color:var(--text2);
+    padding:6px 14px; cursor:pointer; border-bottom:2px solid transparent;
+    letter-spacing:.5px; transition:all .2s;
+  }
+  .result-tab.active { color:var(--green); border-bottom-color:var(--green); }
+  .result-tab:hover  { color:var(--text); }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* Defect list */
+  .defect-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .defect-item {
+    display:grid; grid-template-columns:auto auto 1fr auto;
+    align-items:center; gap:10px;
+    padding:10px 14px; background:var(--bg3);
+    border:1px solid var(--border); border-radius:8px;
+    font-size:13px; transition:border-color .2s;
+  }
+  .defect-item:hover { border-color:var(--border3); }
+  .defect-item.sev-critical { border-color:#ff3b4e40; }
+  .defect-item.sev-low      { border-color:#f59e0b20; }
+  .defect-tag {
+    font-family:var(--mono); font-size:9px;
+    padding:2px 8px; border-radius:4px;
+    white-space:nowrap; font-weight:700;
+  }
+  .tag-ABSENT    { background:var(--red);    color:#fff; }
+  .tag-DECALE    { background:var(--amber);  color:#000; }
+  .tag-ROTATION  { background:#7c3aed;       color:#fff; }
+  .tag-TAILLE    { background:var(--cyan);   color:#000; }
+  .tag-SOUDURE   { background:#be185d;       color:#fff; }
+  .tag-PCB       { background:#059669;       color:#fff; }
+  .tag-INCONNU   { background:var(--border3);color:var(--text); }
+  .defect-severity {
+    font-family:var(--mono); font-size:9px;
+    padding:2px 8px; border-radius:4px;
+    background:var(--bg4); color:var(--text2);
+    border:1px solid var(--border2);
+  }
+  .defect-severity.critical { color:var(--red);   border-color:#ff3b4e40; }
+  .defect-severity.low      { color:var(--amber); border-color:#f59e0b40; }
+  .defect-info .defect-name { color:var(--text); font-weight:500; font-size:13px; }
+  .defect-info .defect-desc { color:var(--text2); font-size:12px; line-height:1.5; margin-top:2px; }
+  .defect-source {
+    font-family:var(--mono); font-size:9px; color:var(--text3);
+    padding:2px 6px; background:var(--bg4); border-radius:3px;
+  }
+
+  /* Description visuelle */
+  .visual-desc {
+    background:var(--bg3); border:1px solid var(--border);
+    border-radius:8px; padding:14px; font-size:13px;
+    color:var(--text2); line-height:1.7; white-space:pre-wrap;
+  }
+
+  /* YOLO details */
+  .yolo-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .yolo-list { display:flex; flex-direction:column; gap:4px; }
+  .yolo-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:5px 10px; background:var(--bg3);
+    border-radius:6px; font-size:11px;
+  }
+  .yolo-item span:first-child { font-family:var(--mono); color:var(--text); }
+  .yolo-conf { font-family:var(--mono); font-size:10px; color:var(--green); }
+  .yolo-section-title {
+    font-family:var(--mono); font-size:10px; color:var(--text2);
+    letter-spacing:.5px; margin-bottom:6px;
+  }
+
+  /* Recommandation */
+  .reco-box {
+    margin-top:12px; padding:10px 14px;
+    background:var(--amber-dim); border:1px solid #f59e0b30;
+    border-radius:8px; font-size:12px; color:var(--amber);
+    font-family:var(--mono);
+  }
+  .reco-box::before { content:'RECOMMANDATION — '; }
+
+  /* Webhook */
+  .webhook-bar {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 16px; background:var(--bg2);
+    border:1px solid var(--border); border-radius:var(--radius);
+    font-size:12px; color:var(--text2);
+  }
+  .webhook-bar .dot { width:6px; height:6px; border-radius:50%; background:var(--text3); flex-shrink:0; }
+  .webhook-bar.sent  { color:var(--green); border-color:#00e5a030; background:var(--green-dim); }
+  .webhook-bar.sent  .dot { background:var(--green); animation:blink 1.5s ease-in-out 3; }
+  .webhook-bar.error { color:var(--red);   border-color:#ff3b4e30; background:var(--red-dim); }
+  .webhook-bar.error .dot { background:var(--red); }
+
+  /* Log */
+  .log-block { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+  .log-header {
+    padding:8px 16px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .log-header span { font-family:var(--mono); font-size:10px; color:var(--text2); letter-spacing:1px; }
+  .log-header button { font-family:var(--mono); font-size:9px; color:var(--text3); background:none; border:none; cursor:pointer; }
+  .log-lines {
+    padding:10px 16px; font-family:var(--mono); font-size:11px;
+    color:var(--text2); line-height:1.9;
+    max-height:160px; overflow-y:auto; min-height:50px;
+  }
+  .log-lines .ok   { color:var(--green); }
+  .log-lines .err  { color:var(--red); }
+  .log-lines .info { color:var(--amber); }
+  .log-lines .dim  { color:var(--text3); }
+  .log-lines .blue { color:var(--blue); }
+  .log-lines .cyan { color:var(--cyan); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"></div>
+      <h1>PCB Inspector</h1>
+      <p>YOLO + OpenCV + Gemini<br>Contrôle qualité AOI</p>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Score AOI</div>
+      <div class="score-display">
+        <div class="score-number" id="score-num">—</div>
+        <div class="score-label">en attente d'analyse</div>
+        <div class="score-bar"><div class="score-bar-fill" id="score-bar"></div></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Pipeline</div>
+      <div class="pipeline-steps">
+        <div class="pipeline-step">
+          <div class="step-dot" id="dot-upload">1</div>
+          <span class="step-label" id="lbl-upload">Upload images</span>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-dot" id="dot-yolo">2</div>
+          <span class="step-label" id="lbl-yolo">YOLO détection</span>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-dot" id="dot-opencv">3</div>
+          <span class="step-label" id="lbl-opencv">OpenCV comparaison</span>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-dot" id="dot-gemini">4</div>
+          <span class="step-label" id="lbl-gemini">Gemini analyse</span>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-dot" id="dot-make">5</div>
+          <span class="step-label" id="lbl-make">Envoi Make</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Configuration</div>
+      <div class="config-field">
+        <label>URL BACKEND</label>
+        <input type="text" id="backend-url" value="http://localhost:8000" />
+      </div>
+      <div class="config-field">
+        <label>CLE GEMINI</label>
+        <input type="password" id="gemini-key" placeholder="AIza..." />
+      </div>
+      <div class="config-field">
+        <label>WEBHOOK MAKE</label>
+        <input type="text" id="webhook-url" placeholder="https://hook.make.com/..." />
+      </div>
+      <div class="config-field">
+        <label>ID LOT</label>
+        <input type="text" id="batch-id" placeholder="LOT-2024-001" />
+      </div>
+      <div class="config-field">
+        <label>CONTEXTE CHAINE (optionnel)</label>
+        <input type="text" id="chain-context" placeholder="ex: ASUS B550, Shift matin..." />
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Options</div>
+      <div class="toggle-row">
+        <span>Comparaison reference</span>
+        <div class="toggle on" id="toggle-ref" onclick="toggleRef()"></div>
+      </div>
+      <div class="toggle-row">
+        <span>Envoi webhook Make</span>
+        <div class="toggle on" id="toggle-webhook" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle-row">
+        <span>Annotations sur image</span>
+        <div class="toggle on" id="toggle-annot" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="main-header">
+      <span class="main-title">INSPECTION PCB — AOI SYSTEM</span>
+      <div class="status-pill" id="status-pill">SYSTEME PRET</div>
+    </div>
+
+    <!-- Upload -->
+    <div class="upload-grid" id="upload-grid">
+      <div class="upload-card" id="drop-ref">
+        <input type="file" id="file-ref" accept="image/*">
+        <span class="upload-card-icon">REF</span>
+        <div class="upload-card-title">Carte de reference</div>
+        <div class="upload-card-sub">Image conforme de reference</div>
+      </div>
+      <div class="upload-card" id="drop-insp">
+        <input type="file" id="file-insp" accept="image/*">
+        <span class="upload-card-icon">PCB</span>
+        <div class="upload-card-title">Carte a inspecter</div>
+        <div class="upload-card-sub">Photo a analyser</div>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="compare-wrap" id="compare-wrap">
+      <div class="preview-card" id="preview-ref">
+        <div class="preview-card-header">
+          <span>REFERENCE</span>
+          <button onclick="resetRef()">Supprimer</button>
+        </div>
+        <div class="img-container">
+          <img id="ref-img" src="" alt="Reference">
+          <img id="ref-annotated" class="annotated-img" src="" alt="Reference annotee">
+          <button class="img-toggle-btn" id="ref-toggle" onclick="toggleAnnotated('ref')" style="display:none">Voir annotations</button>
+        </div>
+      </div>
+      <div class="preview-card" id="preview-insp">
+        <div class="preview-card-header">
+          <span id="insp-filename">A INSPECTER</span>
+          <button onclick="resetInsp()">Supprimer</button>
+        </div>
+        <div class="img-container">
+          <img id="insp-img" src="" alt="Inspection">
+          <img id="insp-annotated" class="annotated-img" src="" alt="Inspection annotee">
+          <button class="img-toggle-btn" id="insp-toggle" onclick="toggleAnnotated('insp')" style="display:none">Voir annotations</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat-card">
+        <div class="stat-num blue" id="stat-ref">—</div>
+        <div class="stat-label">COMPOSANTS REF</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num cyan" id="stat-insp">—</div>
+        <div class="stat-label">COMPOSANTS INSP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num red" id="stat-crit">—</div>
+        <div class="stat-label">ANOMALIES CRITIQUES</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num amber" id="stat-total">—</div>
+        <div class="stat-label">ANOMALIES TOTALES</div>
+      </div>
+    </div>
+
+    <button class="analyze-btn" id="analyze-btn" disabled onclick="lancerPipeline()">
+      <span class="spinner"></span>
+      <span class="btn-text">Lancer l'inspection</span>
+    </button>
+
+    <!-- Result -->
+    <div class="result-panel" id="result-panel">
+      <div class="result-header" id="result-header">
+        <span class="result-icon" id="result-icon"></span>
+        <span class="result-title" id="result-title"></span>
+        <div class="result-meta" id="result-meta"></div>
+      </div>
+      <div class="result-body" id="result-body"></div>
+    </div>
+
+    <!-- Webhook bar -->
+    <div class="webhook-bar" id="webhook-bar" style="display:none">
+      <div class="dot"></div>
+      <span id="webhook-msg"></span>
+    </div>
+
+    <!-- Log -->
+    <div class="log-block">
+      <div class="log-header">
+        <span>LOG PIPELINE</span>
+        <button onclick="document.getElementById('log').innerHTML=''">effacer</button>
+      </div>
+      <div class="log-lines" id="log"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let refFile = null, inspFile = null;
+let annotatedMode = { ref: false, insp: false };
+
+// ── TOGGLE REF MODE ───────────────────────────────────────────────────────
+function toggleRef() {
+  const toggle = document.getElementById('toggle-ref');
+  toggle.classList.toggle('on');
+  const withRef = toggle.classList.contains('on');
+  const dropRef = document.getElementById('drop-ref');
+  const previewRef = document.getElementById('preview-ref');
+
+  if (withRef) {
+    dropRef.style.display = '';
+    if (refFile) previewRef.style.display = '';
+  } else {
+    dropRef.style.display = 'none';
+    previewRef.style.display = 'none';
+    resetRef();
+  }
+  updateUploadGrid();
+}
+
+function updateUploadGrid() {
+  const withRef = document.getElementById('toggle-ref').classList.contains('on');
+  const grid = document.getElementById('upload-grid');
+  grid.style.gridTemplateColumns = withRef ? '1fr 1fr' : '1fr';
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────────────
+function setupDrop(zone, input, kind) {
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('image/')) loadFile(f, kind);
+  });
+  input.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0], kind); });
+}
+
+function loadFile(file, kind) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    if (kind === 'ref') {
+      refFile = file;
+      document.getElementById('ref-img').src = ev.target.result;
+      document.getElementById('drop-ref').classList.add('has-ref');
+      document.getElementById('drop-ref').querySelector('.upload-card-title').textContent = file.name;
+      log('blue', `[REF] ${file.name}`);
+    } else {
+      inspFile = file;
+      document.getElementById('insp-img').src = ev.target.result;
+      document.getElementById('insp-filename').textContent = `INSPECTION — ${file.name}`;
+      document.getElementById('drop-insp').classList.add('has-insp');
+      document.getElementById('drop-insp').querySelector('.upload-card-title').textContent = file.name;
+      log('cyan', `[INSP] ${file.name}`);
+    }
+    updateUI();
+  };
+  reader.readAsDataURL(file);
+}
+
+setupDrop(document.getElementById('drop-ref'),  document.getElementById('file-ref'),  'ref');
+setupDrop(document.getElementById('drop-insp'), document.getElementById('file-insp'), 'insp');
+
+function updateUI() {
+  const withRef = document.getElementById('toggle-ref').classList.contains('on');
+  document.getElementById('analyze-btn').disabled = !inspFile;
+
+  const compareWrap = document.getElementById('compare-wrap');
+  const previewRef  = document.getElementById('preview-ref');
+  const previewInsp = document.getElementById('preview-insp');
+
+  if (inspFile || refFile) {
+    compareWrap.classList.add('visible');
+  }
+
+  previewRef.style.display  = (refFile && withRef) ? '' : 'none';
+  previewInsp.style.display = inspFile ? '' : 'none';
+
+  if (!inspFile && !refFile) {
+    compareWrap.classList.remove('visible');
+  }
+
+  if (inspFile) setStep('upload', 'done');
+}
+
+function resetRef() {
+  refFile = null;
+  document.getElementById('ref-img').src = '';
+  document.getElementById('ref-annotated').src = '';
+  document.getElementById('ref-annotated').classList.remove('visible');
+  document.getElementById('ref-toggle').style.display = 'none';
+  document.getElementById('file-ref').value = '';
+  document.getElementById('drop-ref').classList.remove('has-ref');
+  document.getElementById('drop-ref').querySelector('.upload-card-title').textContent = 'Carte de reference';
+  annotatedMode.ref = false;
+  updateUI();
+}
+
+function resetInsp() {
+  inspFile = null;
+  document.getElementById('insp-img').src = '';
+  document.getElementById('insp-img').style.display = 'block';
+  document.getElementById('insp-annotated').src = '';
+  document.getElementById('insp-annotated').classList.remove('visible');
+  document.getElementById('insp-toggle').style.display = 'none';
+  document.getElementById('file-insp').value = '';
+  document.getElementById('drop-insp').classList.remove('has-insp');
+  document.getElementById('drop-insp').querySelector('.upload-card-title').textContent = 'Carte a inspecter';
+  document.getElementById('insp-filename').textContent = 'A INSPECTER';
+  document.getElementById('result-panel').classList.remove('visible');
+  document.getElementById('stats-bar').classList.remove('visible');
+  document.getElementById('webhook-bar').style.display = 'none';
+  document.getElementById('score-num').textContent = '—';
+  document.getElementById('score-bar').style.width = '0%';
+  annotatedMode.insp = false;
+  setStep('upload', 'active');
+  ['yolo','opencv','gemini','make'].forEach(s => setStep(s, ''));
+  updateUI();
+}
+
+function toggleAnnotated(kind) {
+  const raw  = document.getElementById(`${kind}-img`);
+  const ann  = document.getElementById(`${kind}-annotated`);
+  const btn  = document.getElementById(`${kind}-toggle`);
+  annotatedMode[kind] = !annotatedMode[kind];
+  if (annotatedMode[kind]) {
+    raw.style.display = 'none';
+    ann.classList.add('visible');
+    btn.textContent = 'Voir original';
+  } else {
+    raw.style.display = 'block';
+    ann.classList.remove('visible');
+    btn.textContent = 'Voir annotations';
+  }
+}
+
+// ── PIPELINE ──────────────────────────────────────────────────────────────
+async function lancerPipeline() {
+  const backendUrl = document.getElementById('backend-url').value.trim().replace(/\/$/, '');
+  const geminiKey  = document.getElementById('gemini-key').value.trim();
+  const webhookUrl = document.getElementById('webhook-url').value.trim();
+  const batchId    = document.getElementById('batch-id').value.trim();
+  const chainCtx   = document.getElementById('chain-context').value.trim();
+  const withRef    = document.getElementById('toggle-ref').classList.contains('on');
+  const withWebhook = document.getElementById('toggle-webhook').classList.contains('on');
+
+  if (!inspFile) { log('err', 'Aucune image a inspecter'); return; }
+  if (!geminiKey) { log('err', 'Cle Gemini manquante'); return; }
+
+  const btn = document.getElementById('analyze-btn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.querySelector('.btn-text').textContent = 'Pipeline en cours';
+  document.getElementById('result-panel').classList.remove('visible');
+  document.getElementById('webhook-bar').style.display = 'none';
+  document.getElementById('stats-bar').classList.remove('visible');
+
+  // Reset pipeline
+  ['yolo','opencv','gemini','make'].forEach(s => setStep(s, ''));
+
+  try {
+    // ── Build FormData ─────────────────────────────────────────────────────
+    const fd = new FormData();
+    fd.append('image_inspect', inspFile);
+    if (withRef && refFile) fd.append('image_ref', refFile);
+    fd.append('gemini_key',    geminiKey);
+    fd.append('webhook_url',   withWebhook ? webhookUrl : '');
+    fd.append('batch_id',      batchId);
+    fd.append('chain_context', chainCtx);
+
+    // ── YOLO ──────────────────────────────────────────────────────────────
+    setStep('yolo', 'active');
+    log('info', '[YOLO] Detection des composants...');
+
+    // ── OpenCV ────────────────────────────────────────────────────────────
+    // Ces étapes sont gérées côté backend — on affiche pendant l'appel
+    setTimeout(() => {
+      if (document.getElementById('dot-yolo').classList.contains('active')) {
+        setStep('yolo', 'done');
+        setStep('opencv', 'active');
+        log('ok', '[YOLO] Detection terminee');
+        log('info', '[OPENCV] Comparaison geometrique...');
+      }
+    }, 2000);
+
+    setTimeout(() => {
+      if (document.getElementById('dot-opencv').classList.contains('active')) {
+        setStep('opencv', 'done');
+        setStep('gemini', 'active');
+        log('ok', '[OPENCV] Comparaison terminee');
+        log('info', '[GEMINI] Analyse visuelle 2 passes...');
+      }
+    }, 4000);
+
+    // ── Appel API ─────────────────────────────────────────────────────────
+    const resp = await fetch(`${backendUrl}/analyze`, {
+      method: 'POST',
+      body:   fd
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({ error: `HTTP ${resp.status}` }));
+      throw new Error(err.error || err.detail?.error || `HTTP ${resp.status}`);
+    }
+
+    const data = await resp.json();
+
+    // ── Affichage pipeline ─────────────────────────────────────────────────
+    setStep('yolo',   'done');
+    setStep('opencv', 'done');
+    setStep('gemini', 'done');
+
+    // Log backend
+    if (data.logs) data.logs.forEach(l => log('dim', l));
+    log('ok', '[GEMINI] Analyse terminee');
+
+    // ── Images annotees ────────────────────────────────────────────────────
+    const showAnnot = document.getElementById('toggle-annot').classList.contains('on');
+    if (showAnnot && data.images?.inspection_annotee) {
+      const src = 'data:image/jpeg;base64,' + data.images.inspection_annotee;
+      document.getElementById('insp-annotated').src = src;
+      document.getElementById('insp-toggle').style.display = 'block';
+      // Auto-switch vers annotee
+      document.getElementById('insp-img').style.display = 'none';
+      document.getElementById('insp-annotated').classList.add('visible');
+      document.getElementById('insp-toggle').textContent = 'Voir original';
+      annotatedMode.insp = true;
+    }
+    if (showAnnot && data.images?.reference_annotee) {
+      const src = 'data:image/jpeg;base64,' + data.images.reference_annotee;
+      document.getElementById('ref-annotated').src = src;
+      document.getElementById('ref-toggle').style.display = 'block';
+    }
+
+    // ── Stats ─────────────────────────────────────────────────────────────
+    const anomalies = data.anomalies || [];
+    const critiques = anomalies.filter(a => a.severite === 'critical').length;
+    document.getElementById('stat-ref').textContent   = data.yolo?.nb_ref  ?? '—';
+    document.getElementById('stat-insp').textContent  = data.yolo?.nb_insp ?? '—';
+    document.getElementById('stat-crit').textContent  = critiques;
+    document.getElementById('stat-total').textContent = anomalies.length;
+    document.getElementById('stats-bar').classList.add('visible');
+
+    // ── Score ──────────────────────────────────────────────────────────────
+    const score = data.score_aoi ?? 100;
+    afficherScore(score);
+
+    // ── Résultat ───────────────────────────────────────────────────────────
+    afficherResultat(data);
+
+    // ── Webhook ────────────────────────────────────────────────────────────
+    const bar = document.getElementById('webhook-bar');
+    if (data.webhook) {
+      bar.style.display = 'flex';
+      if (data.webhook.ok) {
+        bar.className = 'webhook-bar sent';
+        document.getElementById('webhook-msg').textContent =
+          `Rapport envoye a Make — Batch ${batchId || 'auto'} — ${anomalies.length} anomalie(s) transmise(s)`;
+        setStep('make', 'done');
+        log('ok', '[MAKE] Webhook OK');
+      } else {
+        bar.className = 'webhook-bar error';
+        document.getElementById('webhook-msg').textContent = `Echec webhook : ${data.webhook.error}`;
+        setStep('make', 'error');
+        log('err', `[MAKE] Echec : ${data.webhook.error}`);
+      }
+    } else {
+      setStep('make', 'done');
+    }
+
+  } catch(e) {
+    log('err', `[ERREUR] ${e.message}`);
+    ['yolo','opencv','gemini'].forEach(s => {
+      if (document.getElementById(`dot-${s}`).classList.contains('active'))
+        setStep(s, 'error');
+    });
+  }
+
+  btn.disabled = false;
+  btn.classList.remove('loading');
+  btn.querySelector('.btn-text').textContent = 'Analyser a nouveau';
+}
+
+// ── AFFICHAGE RÉSULTAT ────────────────────────────────────────────────────
+function afficherResultat(data) {
+  const panel  = document.getElementById('result-panel');
+  const header = document.getElementById('result-header');
+  const icon   = document.getElementById('result-icon');
+  const title  = document.getElementById('result-title');
+  const meta   = document.getElementById('result-meta');
+  const body   = document.getElementById('result-body');
+
+  const anomalies = data.anomalies || [];
+  const critiques = anomalies.filter(a => a.severite === 'critical').length;
+  const ok = data.statut === 'ok' && anomalies.length === 0;
+
+  if (ok) {
+    header.className = 'result-header ok';
+    icon.textContent  = 'OK';
+    title.textContent = 'Carte conforme — aucune anomalie detectee';
+    meta.innerHTML = `<span class="meta-badge green">SCORE ${data.score_aoi}/100</span>`;
+  } else {
+    header.className  = critiques > 0 ? 'result-header nok' : 'result-header warn';
+    icon.textContent  = critiques > 0 ? 'NOK' : 'WARN';
+    title.textContent = `${anomalies.length} anomalie(s) detectee(s)`;
+    meta.innerHTML = `
+      <span class="meta-badge ${critiques > 0 ? 'red' : 'amber'}">${critiques} CRITIQUE(S)</span>
+      <span class="meta-badge amber">${anomalies.length - critiques} AUTRE(S)</span>
+      <span class="meta-badge blue">AOI ${data.score_aoi}/100</span>`;
+  }
+
+  // Build tabs
+  const yolo = data.yolo || {};
+  body.innerHTML = `
+    <div class="result-tabs">
+      <div class="result-tab active" onclick="switchTab(this,'tab-anomalies')">Anomalies (${anomalies.length})</div>
+      <div class="result-tab" onclick="switchTab(this,'tab-visuel')">Description visuelle</div>
+      <div class="result-tab" onclick="switchTab(this,'tab-yolo')">YOLO (${(yolo.nb_ref||0)} / ${(yolo.nb_insp||0)})</div>
+    </div>
+
+    <div class="tab-content active" id="tab-anomalies">
+      ${anomalies.length === 0
+        ? `<p style="color:var(--text2);font-size:13px;line-height:1.6">${data.message || 'Aucune anomalie detectee.'}</p>`
+        : `<ul class="defect-list">
+            ${anomalies.map(a => {
+              const tag = (a.type || 'INCONNU').replace('É','E').replace('DÉCALÉ','DECALE');
+              return `<li class="defect-item sev-${a.severite || 'medium'}">
+                <span class="defect-tag tag-${tag}">${a.type || 'DEFAUT'}</span>
+                <span class="defect-severity ${a.severite === 'critical' ? 'critical' : a.severite === 'low' ? 'low' : ''}">${(a.severite||'medium').toUpperCase()}</span>
+                <div class="defect-info">
+                  <div class="defect-name">${a.composant || 'Composant inconnu'}</div>
+                  <div class="defect-desc">${a.description || ''}</div>
+                </div>
+                <span class="defect-source">${a.source || 'auto'}</span>
+              </li>`;
+            }).join('')}
+           </ul>
+           ${data.recommandation ? `<div class="reco-box">${data.recommandation}</div>` : ''}`
+      }
+    </div>
+
+    <div class="tab-content" id="tab-visuel">
+      <div class="visual-desc">${data.description_visuelle || 'Description non disponible.'}</div>
+    </div>
+
+    <div class="tab-content" id="tab-yolo">
+      <div class="yolo-grid">
+        <div>
+          <div class="yolo-section-title">REFERENCE — ${yolo.nb_ref || 0} composant(s)</div>
+          <div class="yolo-list">
+            ${(yolo.detections_ref || []).map(d =>
+              `<div class="yolo-item">
+                <span>${d.label}</span>
+                <span class="yolo-conf">${(d.confidence*100).toFixed(0)}%</span>
+              </div>`
+            ).join('') || '<div style="color:var(--text3);font-size:12px">Aucune reference chargee</div>'}
+          </div>
+        </div>
+        <div>
+          <div class="yolo-section-title">INSPECTION — ${yolo.nb_insp || 0} composant(s)</div>
+          <div class="yolo-list">
+            ${(yolo.detections_insp || []).map(d =>
+              `<div class="yolo-item">
+                <span>${d.label}</span>
+                <span class="yolo-conf">${(d.confidence*100).toFixed(0)}%</span>
+              </div>`
+            ).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  panel.classList.add('visible');
+}
+
+function switchTab(el, tabId) {
+  el.parentElement.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  el.closest('.result-body').querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+}
+
+// ── SCORE ─────────────────────────────────────────────────────────────────
+function afficherScore(score) {
+  const num = document.getElementById('score-num');
+  const bar = document.getElementById('score-bar');
+  num.textContent = score;
+  if (score >= 85)      { num.className = 'score-number';      bar.className = 'score-bar-fill'; }
+  else if (score >= 60) { num.className = 'score-number warn';  bar.className = 'score-bar-fill warn'; }
+  else                  { num.className = 'score-number bad';   bar.className = 'score-bar-fill bad'; }
+  bar.style.width = score + '%';
+}
+
+// ── PIPELINE STEPS ────────────────────────────────────────────────────────
+function setStep(id, state) {
+  const dot = document.getElementById('dot-' + id);
+  const lbl = document.getElementById('lbl-' + id);
+  if (!dot) return;
+  dot.className = 'step-dot' + (state ? ' ' + state : '');
+  lbl.className = 'step-label' + (state === 'active' || state === 'done' ? ' ' + state : '');
+}
+
+// ── LOG ───────────────────────────────────────────────────────────────────
+function log(type, msg) {
+  const el  = document.getElementById('log');
+  const cls = {ok:'ok',err:'err',info:'info',dim:'dim',blue:'blue',cyan:'cyan'}[type]||'dim';
+  const time = new Date().toLocaleTimeString('fr-FR');
+  el.innerHTML += `<span class="${cls}">[${time}] ${msg}</span>\n`;
+  el.scrollTop = el.scrollHeight;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+setStep('upload', 'active');
+log('dim', 'Systeme initialise — YOLO + OpenCV + Gemini');
+log('dim', 'En attente des images...');
+// Applique l'état initial du toggle REF
+toggleRef();
+toggleRef(); // double appel pour rester dans l'état ON par défaut
+</script>
+</body>
+</html>

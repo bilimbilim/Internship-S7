@@ -1,0 +1,393 @@
+{
+  "name": "Veille Newsletter — Pédagogie & IA",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 7 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "d5cd0732-d9f3-491a-8bc6-eb834f599c48",
+      "name": "Chaque lundi 7h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3488,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normaliser les données de chaque source RSS\nconst items = $input.all();\nconst seen = new Set();\nconst results = [];\n\nconst today = new Date();\nconst oneWeekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);\n\nfor (const item of items) {\n  const d = item.json;\n\n  // Extraire titre, lien, date selon la source\n  const titre = d.title || d.name || d.subject || '';\n  const lien = d.link || d.url || d.guid || '';\n  const description = d.content || d.contentSnippet || d.summary || d.description || d.selftext || '';\n  const dateStr = d.pubDate || d.isoDate || d.created_utc || d.published || '';\n  const source = d.feedUrl || d.subreddit || 'inconnu';\n\n  if (!titre || !lien) continue;\n\n  // Dédupliquer par lien\n  const key = lien.toLowerCase().trim();\n  if (seen.has(key)) continue;\n  seen.add(key);\n\n  // Filtrer les articles trop anciens (> 7 jours)\n  if (dateStr) {\n    const pubDate = new Date(dateStr);\n    if (!isNaN(pubDate.getTime()) && pubDate < oneWeekAgo) continue;\n  }\n\n  results.push({\n    json: {\n      titre: titre.substring(0, 200),\n      lien,\n      description: description.replace(/<[^>]*>/g, '').substring(0, 600),\n      source,\n      datePublication: dateStr || new Date().toISOString()\n    }\n  });\n}\n\nreturn results.slice(0, 40); // Max 40 articles par run"
+      },
+      "id": "b43cfa28-9b0a-4b1f-828b-0c7b3aea0858",
+      "name": "Normaliser & dédupliquer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2400,
+        256
+      ],
+      "notes": "Normalise les champs de toutes les sources, supprime les doublons par URL, et filtre les articles de plus de 7 jours. Limite à 40 articles max pour ne pas exploser le budget IA."
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    const parsed = JSON.parse(item.json.output);\n\n    for (const article of parsed) {\n      results.push({\n        json: article\n      });\n    }\n\n  } catch (e) {\n    // ignore si erreur\n  }\n}\n\nreturn results;"
+      },
+      "id": "0c36ee1d-0604-465a-8777-d11048baecca",
+      "name": "Parser fiches & trier par score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1664,
+        256
+      ],
+      "notes": "Parse la réponse JSON de Claude, récupère les métadonnées originales, et trie les fiches par score d'intérêt décroissant. Garde les 15 meilleures fiches pour la newsletter."
+    },
+    {
+      "parameters": {
+        "jsCode": "const fiches = $input.all().map(i => i.json);\n\n// Grouper par catégorie\nconst categories = {};\nfor (const f of fiches) {\n  const cat = f.categorie || 'Autre';\n  if (!categories[cat]) categories[cat] = [];\n  categories[cat].push(f);\n}\n\n// Couleurs par catégorie\nconst couleurs = {\n  'Méthode pédagogique': '#1D9E75',\n  'IA & éducation':      '#7F77DD',\n  'Outil EdTech':        '#378ADD',\n  'Recherche appliquée': '#BA7517',\n  'Tendance':            '#D85A30',\n  'Pédagogie':           '#1D9E75',\n  'Intelligence artificielle': '#7F77DD',\n  'Autre':               '#888780'\n};\n\n// Date formatée\nconst date = new Date();\nconst dateStr = date.toLocaleDateString('fr-FR', {\n  weekday: 'long',\n  day: 'numeric',\n  month: 'long',\n  year: 'numeric'\n});\n\n// Générer les sections HTML\nlet sectionsHtml = '';\n\nfor (const [cat, items] of Object.entries(categories)) {\n  const couleur = couleurs[cat] || '#888780';\n  let articlesHtml = '';\n\n  for (const f of items) {\n\n    const titre = f.titre || 'Sans titre';\n    const resume = f.resume || '';\n    const lien = f.lien || '#';\n    const score = f.score ?? 'N/A';\n\n    articlesHtml += `\n      <div style=\"border-left:3px solid ${couleur}; padding:12px 16px; margin-bottom:16px; background:#fafafa; border-radius:0 6px 6px 0;\">\n        \n        <div style=\"font-size:15px; font-weight:600; color:#1a1a1a; margin-bottom:6px;\">\n          <a href=\"${lien}\" style=\"color:#1a1a1a; text-decoration:none;\">\n            ${titre}\n          </a>\n        </div>\n\n        <div style=\"font-size:13px; color:#444; margin-bottom:8px; line-height:1.5;\">\n          ${resume}\n        </div>\n\n        <div style=\"font-size:12px; color:${couleur}; font-weight:500; margin-bottom:4px;\">\n          Score : ${score}/10\n        </div>\n\n        <div style=\"font-size:12px; color:#888;\">\n          <a href=\"${lien}\" style=\"color:#888;\">Lire l'article</a>\n        </div>\n\n      </div>`;\n  }\n\n  sectionsHtml += `\n    <h2 style=\"font-size:16px; font-weight:700; color:${couleur}; border-bottom:2px solid ${couleur}; padding-bottom:6px; margin:28px 0 14px;\">\n      ${cat} (${items.length})\n    </h2>\n    ${articlesHtml}`;\n}\n\n// Nombre total d’articles\nconst nbTotal = fiches.length;\n\n// HTML final\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n</head>\n\n<body style=\"font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; max-width:640px; margin:0 auto; padding:20px; background:#fff; color:#1a1a1a;\">\n\n  <div style=\"background:#7F77DD; color:#fff; padding:20px 24px; border-radius:10px; margin-bottom:28px;\">\n    <div style=\"font-size:22px; font-weight:700; margin-bottom:4px;\">\n       Veille Pédagogie & IA\n    </div>\n    <div style=\"font-size:13px; opacity:0.85;\">\n      ${dateStr} — ${nbTotal} articles sélectionnés\n    </div>\n  </div>\n\n  ${sectionsHtml}\n\n  <div style=\"margin-top:36px; padding-top:16px; border-top:1px solid #eee; font-size:11px; color:#aaa; text-align:center;\">\n    Newsletter générée automatiquement par n8n<br>\n  </div>\n\n</body>\n</html>\n`;\n\nreturn [\n  {\n    json: {\n      html,\n      nbArticles: nbTotal,\n      dateSemaine: dateStr\n    }\n  }\n];"
+      },
+      "id": "862b5da1-9b5b-4143-8451-5be46b253c1b",
+      "name": "Composer newsletter HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1408,
+        256
+      ],
+      "notes": "Génère le HTML complet de la newsletter, groupé par catégorie avec une mise en forme claire. Chaque article a son résumé, la raison pour laquelle c'est utile, et un lien direct."
+    },
+    {
+      "parameters": {
+        "sendTo": "mombobilimbilim@gmail.com",
+        "subject": "={{ '📚 Veille Péda & IA — ' + $json.dateSemaine + ' (' + $json.nbArticles + ' articles)' }}",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "id": "66c175c7-0469-4a92-b9a8-feb856093d97",
+      "name": "Envoyer la newsletter",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -1104,
+        256
+      ],
+      "webhookId": "f0a07608-0396-4a49-a8a6-6c70f1377886",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "544w3i1xrBDNGKPp",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Remplacez TON_EMAIL@gmail.com par votre adresse. Vous pouvez ajouter plusieurs destinataires séparés par des virgules si vous souhaitez partager la newsletter avec des collègues."
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un expert en pédagogie et intelligence artificielle.\n\nVoici une liste d’articles au format JSON :\n{{$json.articles_json}}\n\nChaque article contient :\n- titre\n- description\n- lien\n\nTa mission :\n1. Sélectionner les 5 articles les plus pertinents\n2. Produire pour chacun :\n   - un titre (texte simple)\n   - un résumé clair (2-3 phrases max)\n   - un score de pertinence sur 10\n   - une catégorie parmi : \n     [\"Pédagogie\", \"IA\", \"EdTech\", \"Recherche\", \"Autre\"]\n   - le lien ORIGINAL (obligatoire)\n\n⚠️ RÈGLES STRICTES :\n- Tu dois reprendre EXACTEMENT le champ \"lien\" d’origine\n- Tu ne dois JAMAIS inventer ou modifier un lien\n- Tous les champs doivent être du TEXTE (pas d’objet)\n- Pas de doublons\n- Maximum 5 articles\n\n⚠️ FORMAT DE SORTIE (OBLIGATOIRE JSON PUR) :\n\n[\n  {\n    \"titre\": \"string\",\n    \"resume\": \"string\",\n    \"score\": 0,\n    \"categorie\": \"string\",\n    \"lien\": \"string\"\n  }\n]",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -2032,
+        256
+      ],
+      "id": "fa6c4e39-3ab0-416a-a560-246b154c8422",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -2032,
+        576
+      ],
+      "id": "9aa92cad-269c-45d2-b67c-f443206bc475",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "DkWNfuLIe2qT6z3b",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2656,
+        240
+      ],
+      "id": "5d38ae7d-d670-4a52-b79d-4b20df4b4454",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "url": "https://theconversation.com/fr/education.atom",
+        "options": {}
+      },
+      "id": "bbcdf61c-e957-46fb-9b69-c87a8088f5de",
+      "name": "RSS — PEDAGOGIE",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        -3056,
+        48
+      ],
+      "notes": "Remplacez par vos flux RSS préférés. Exemples recommandés:\n- https://www.elearningindustry.com/feed\n- https://www.edutopia.org/feeds/all\n- https://www.theguardian.com/education/rss\n- https://lehollandaisvolant.net/feed/\n- https://www.blog-formation-professionnelle.fr/feed\n- https://teacherhead.com/feed/"
+    },
+    {
+      "parameters": {
+        "url": "https://www.edsurge.com/feed",
+        "options": {}
+      },
+      "id": "5502453d-7d95-46a2-a4cd-694bcf95bb15",
+      "name": "RSS — IA appliquée aux études",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        -3056,
+        256
+      ],
+      "notes": "Remplacez par vos flux RSS préférés. Exemples recommandés:\n- https://www.elearningindustry.com/feed\n- https://www.edutopia.org/feeds/all\n- https://www.theguardian.com/education/rss\n- https://lehollandaisvolant.net/feed/\n- https://www.blog-formation-professionnelle.fr/feed\n- https://teacherhead.com/feed/"
+    },
+    {
+      "parameters": {
+        "url": "https://www.technologyreview.com/feed/",
+        "options": {}
+      },
+      "id": "8354ab1d-3739-42b3-bb19-895d1336d6cb",
+      "name": "RSS — IA",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        -3056,
+        464
+      ],
+      "notes": "Remplacez par vos flux RSS préférés. Exemples recommandés:\n- https://www.elearningindustry.com/feed\n- https://www.edutopia.org/feeds/all\n- https://www.theguardian.com/education/rss\n- https://lehollandaisvolant.net/feed/\n- https://www.blog-formation-professionnelle.fr/feed\n- https://teacherhead.com/feed/"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        -1712,
+        464
+      ],
+      "id": "8d636ec7-fb5b-46e9-ad55-3645e855c31b",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "EyCtbe94CsBAj0uF",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const articles = $input.all().map(item => ({\n  titre: item.json.titre,\n  description: item.json.description,\n  lien: item.json.lien\n}));\n\nreturn [{\n  json: {\n    articles_json: JSON.stringify(articles)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2272,
+        48
+      ],
+      "id": "1ac4aad5-27db-4dc1-a0f3-c101552846b5",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chaque lundi 7h": {
+      "main": [
+        [
+          {
+            "node": "RSS — IA appliquée aux études",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS — IA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS — PEDAGOGIE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normaliser & dédupliquer": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser fiches & trier par score": {
+      "main": [
+        [
+          {
+            "node": "Composer newsletter HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Composer newsletter HTML": {
+      "main": [
+        [
+          {
+            "node": "Envoyer la newsletter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer la newsletter": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Parser fiches & trier par score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Normaliser & dédupliquer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS — PEDAGOGIE": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS — IA appliquée aux études": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "RSS — IA": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "43a40abe-0851-4b2e-b6be-cb44c31ce5aa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "009416c51d28fd4ac923d050652b2fed56dee3677b6e970cd49f64257b7083c4"
+  },
+  "id": "btLEokAD9wGgF4I6",
+  "tags": [
+    {
+      "updatedAt": "2026-04-09T10:51:07.154Z",
+      "createdAt": "2026-04-09T10:51:07.154Z",
+      "id": "0lRSV9RKVY7lTYhO",
+      "name": "Newsletter"
+    },
+    {
+      "updatedAt": "2026-04-09T10:51:07.161Z",
+      "createdAt": "2026-04-09T10:51:07.161Z",
+      "id": "D63NlCXHV78JWEZr",
+      "name": "Pédagogie"
+    },
+    {
+      "updatedAt": "2026-04-09T10:40:55.027Z",
+      "createdAt": "2026-04-09T10:40:55.027Z",
+      "id": "TrzgrZVuv3Fr4tNg",
+      "name": "IA"
+    },
+    {
+      "updatedAt": "2026-04-09T10:51:07.192Z",
+      "createdAt": "2026-04-09T10:51:07.192Z",
+      "id": "kRKtN9PlZgkYkW8l",
+      "name": "Veille"
+    }
+  ]
+}

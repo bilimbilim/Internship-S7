@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Research Watch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:      #0a0a0f;
+      --surface: #111118;
+      --s2:      #16161f;
+      --border:  #1e1e2e;
+      --accent:  #c8f04e;
+      --accent2: #4ef0c8;
+      --accent3: #f04e8c;
+      --red:     #f04e6a;
+      --muted:   #4a4a6a;
+      --text:    #e8e8f0;
+      --dim:     #8888aa;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif; font-weight: 300;
+      min-height: 100vh; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999; opacity: .4;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,15,.92); backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(20px,5vw,80px); height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-family: 'IBM Plex Mono', monospace; font-size: .75rem; letter-spacing: .15em; color: var(--accent); text-transform: uppercase; }
+    .header-right { display: flex; align-items: center; gap: 20px; }
+    .header-meta { font-family: 'IBM Plex Mono', monospace; font-size: .7rem; color: var(--muted); display: flex; gap: 20px; }
+    .header-meta b { color: var(--accent2); font-weight: 500; }
+    .nav-tabs { display: flex; gap: 4px; }
+    .nav-tab {
+      font-family: 'IBM Plex Mono', monospace; font-size: .7rem; letter-spacing: .05em;
+      color: var(--muted); background: none; border: 1px solid transparent;
+      padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: all .2s;
+    }
+    .nav-tab:hover { color: var(--text); border-color: var(--border); }
+    .nav-tab.active { color: var(--accent); border-color: rgba(200,240,78,.3); background: rgba(200,240,78,.06); }
+
+    /* ── VUES ── */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ════════════════════════════════════════
+       VUE RÉSULTATS
+    ════════════════════════════════════════ */
+    .hero {
+      padding: clamp(60px,10vw,120px) clamp(20px,5vw,80px) 60px;
+      display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 40px;
+      border-bottom: 1px solid var(--border); position: relative;
+    }
+    .hero::after {
+      content: ''; position: absolute; top: 0; right: 0; left: 40%; height: 100%;
+      background: radial-gradient(ellipse at 70% 50%, rgba(200,240,78,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem,6vw,6rem); line-height: 1.05; font-weight: 700; }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero-sub { font-size: .9rem; color: var(--dim); margin-top: 16px; max-width: 520px; line-height: 1.7; }
+    .live-badge { display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: .7rem; color: var(--accent); letter-spacing: .1em; text-transform: uppercase; margin-top: 20px; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+    .cluster-nav {
+      position: sticky; top: 64px; z-index: 90;
+      background: rgba(10,10,15,.92); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(20px,5vw,80px);
+      display: flex; overflow-x: auto; scrollbar-width: none;
+    }
+    .cluster-nav::-webkit-scrollbar { display: none; }
+    .cluster-nav a {
+      display: flex; align-items: center; gap: 8px; padding: 18px 20px;
+      font-family: 'IBM Plex Mono', monospace; font-size: .7rem; letter-spacing: .05em;
+      color: var(--muted); text-decoration: none; border-bottom: 2px solid transparent;
+      white-space: nowrap; transition: color .2s, border-color .2s;
+    }
+    .cluster-nav a:hover { color: var(--text); }
+    .cluster-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .cluster-nav .nav-count { background: var(--border); color: var(--muted); font-size: .6rem; padding: 2px 7px; border-radius: 20px; }
+
+    .cluster-section { border-bottom: 1px solid var(--border); }
+    .cluster-header { padding: 40px clamp(20px,5vw,80px) 24px; display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .cluster-header-left { display: flex; align-items: baseline; gap: 16px; }
+    .cluster-index { font-family: 'IBM Plex Mono', monospace; font-size: .65rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+    .cluster-name { font-family: 'Playfair Display', serif; font-size: clamp(1.3rem,3vw,2rem); font-weight: 700; }
+    .cluster-count { font-family: 'IBM Plex Mono', monospace; font-size: .7rem; color: var(--dim); }
+
+    .cluster-section:nth-child(1) .cluster-name  { color: var(--accent); }
+    .cluster-section:nth-child(2) .cluster-name  { color: var(--accent2); }
+    .cluster-section:nth-child(3) .cluster-name  { color: #b89cff; }
+    .cluster-section:nth-child(4) .cluster-name  { color: var(--accent3); }
+    .cluster-section:nth-child(1) .cluster-index { color: var(--accent); }
+    .cluster-section:nth-child(2) .cluster-index { color: var(--accent2); }
+    .cluster-section:nth-child(3) .cluster-index { color: #b89cff; }
+    .cluster-section:nth-child(4) .cluster-index { color: var(--accent3); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1px; background: var(--border); border-top: 1px solid var(--border); }
+    .card { background: var(--surface); padding: 28px 24px; display: flex; flex-direction: column; gap: 12px; transition: background .2s; animation: fadeUp .4s ease both; }
+    .card:hover { background: #13131c; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .rank-badge { font-family: 'IBM Plex Mono', monospace; font-size: .62rem; color: var(--muted); flex-shrink: 0; }
+    .source-badge { flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; font-weight: 500; }
+    .badge-arxiv    { background:rgba(78,178,240,.12); color:#4eb2f0; border:1px solid rgba(78,178,240,.25); }
+    .badge-crossref { background:rgba(200,240,78,.1); color:var(--accent); border:1px solid rgba(200,240,78,.2); }
+    .card h2 { font-family: 'Playfair Display', serif; font-size: 1rem; line-height: 1.55; color: var(--text); font-weight: 400; }
+    .score-row { display:flex; align-items:center; gap:10px; }
+    .score-track { flex:1; height:2px; background:var(--border); border-radius:2px; overflow:hidden; }
+    .score-fill { height:100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius:2px; }
+    .score-val { font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--dim); white-space:nowrap; }
+    .summary { font-size:.875rem; line-height:1.75; color:var(--dim); padding-left:14px; position:relative; }
+    .summary::before { content:''; position:absolute; left:0; top:4px; bottom:4px; width:2px; background:linear-gradient(to bottom,var(--accent2),transparent); border-radius:2px; }
+    .card-cta { margin-top:auto; padding-top:12px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; }
+    .card-cta a { font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--muted); text-decoration:none; display:flex; align-items:center; gap:6px; transition:color .2s; }
+    .card-cta a:hover { color:var(--accent); }
+    .card-cta a::after { content:'→'; }
+
+    /* ════════════════════════════════════════
+       VUE CONFIG
+    ════════════════════════════════════════ */
+    .config-page { max-width: 900px; margin: 0 auto; padding: 48px clamp(20px,5vw,40px) 100px; }
+    .config-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; margin-bottom: 6px; }
+    .config-title em { font-style: italic; color: var(--accent); }
+    .config-sub { font-size: .88rem; color: var(--dim); line-height: 1.7; margin-bottom: 36px; max-width: 580px; }
+
+    /* Pipeline box */
+    .pipeline-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 40px; display: flex; flex-direction: column; gap: 14px; }
+    .pipeline-box-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .pipeline-label { font-family: 'IBM Plex Mono', monospace; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent2); }
+    .btn-run { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #0a0a0f; font-family: 'IBM Plex Mono', monospace; font-size: .78rem; font-weight: 500; border: none; border-radius: 8px; padding: 11px 22px; cursor: pointer; transition: opacity .2s; }
+    .btn-run:hover:not(:disabled) { opacity: .85; }
+    .btn-run:disabled { opacity: .4; cursor: not-allowed; }
+    .spinner { width:13px; height:13px; border:2px solid rgba(0,0,0,.25); border-top-color:#0a0a0f; border-radius:50%; animation:spin .7s linear infinite; display:none; }
+    .btn-run.loading .spinner { display:block; }
+    .btn-run.loading .ico { display:none; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .status-pill { font-family:'IBM Plex Mono',monospace; font-size:.68rem; padding:4px 13px; border-radius:20px; display:none; }
+    .status-pill.show { display:inline-flex; align-items:center; gap:5px; }
+    .status-pill.running { background:rgba(200,240,78,.08); color:var(--accent); border:1px solid rgba(200,240,78,.25); }
+    .status-pill.done    { background:rgba(78,240,200,.08); color:var(--accent2); border:1px solid rgba(78,240,200,.25); }
+    .status-pill.error   { background:rgba(240,78,106,.08); color:var(--red); border:1px solid rgba(240,78,106,.25); }
+    .log-box { display:none; background:#0d0d13; border:1px solid var(--border); border-radius:8px; padding:14px 16px; max-height:200px; overflow-y:auto; font-family:'IBM Plex Mono',monospace; font-size:.7rem; line-height:1.85; color:var(--dim); }
+    .log-box.show { display:block; }
+    .ll { white-space:pre-wrap; }
+    .ll.ok  { color:var(--accent2); }
+    .ll.war { color:#f0c44e; }
+    .ll.err { color:var(--red); }
+
+    /* Clusters */
+    .clusters-grid { display:flex; flex-direction:column; gap:2px; }
+    .cluster-block { border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:border-color .2s; }
+    .cluster-block:focus-within { border-color:rgba(200,240,78,.3); }
+    .cluster-block:nth-child(1) { --ca:#c8f04e; }
+    .cluster-block:nth-child(2) { --ca:#4ef0c8; }
+    .cluster-block:nth-child(3) { --ca:#b89cff; }
+    .cluster-block:nth-child(4) { --ca:#f04e8c; }
+
+    .cluster-summary { display:grid; grid-template-columns:4px 1fr auto; align-items:stretch; background:var(--surface); cursor:pointer; user-select:none; }
+    .cluster-bar { background:var(--ca); }
+    .cluster-summary-inner { display:flex; align-items:center; gap:14px; padding:18px 20px; min-width:0; }
+    .cluster-num { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:var(--muted); flex-shrink:0; }
+    .cluster-name-preview { flex:1; font-size:.95rem; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cluster-meta { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:var(--muted); white-space:nowrap; flex-shrink:0; }
+    .cluster-chevron { font-size:.65rem; color:var(--muted); padding:18px 20px; transition:transform .2s; display:flex; align-items:center; flex-shrink:0; }
+    .cluster-block.open .cluster-chevron { transform:rotate(180deg); }
+    .cluster-body { display:none; background:var(--surface); border-top:1px solid var(--border); }
+    .cluster-block.open .cluster-body { display:block; }
+
+    /* Tabs */
+    .tabs { display:flex; border-bottom:1px solid var(--border); }
+    .tab { font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); padding:12px 20px; cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; transition:all .18s; }
+    .tab:hover { color:var(--text); }
+    .tab.active { color:var(--ca); border-bottom-color:var(--ca); }
+    .tab-panel { display:none; padding:22px 22px 26px; }
+    .tab-panel.active { display:block; }
+
+    /* Fields */
+    .field { display:flex; flex-direction:column; gap:7px; margin-bottom:16px; }
+    .field:last-child { margin-bottom:0; }
+    .field label { font-family:'IBM Plex Mono',monospace; font-size:.63rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+    .field input, .field textarea { background:var(--s2); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:.8rem; padding:10px 14px; outline:none; width:100%; resize:vertical; transition:border-color .2s; }
+    .field input:focus, .field textarea:focus { border-color:rgba(200,240,78,.4); }
+    .hint { font-size:.72rem; color:var(--muted); line-height:1.5; }
+
+    /* Tags */
+    .tags-wrap { display:flex; flex-wrap:wrap; gap:7px; background:var(--s2); border:1px solid var(--border); border-radius:6px; padding:9px 12px; cursor:text; min-height:44px; align-items:center; transition:border-color .2s; }
+    .tags-wrap:focus-within { border-color:rgba(200,240,78,.4); }
+    .tag { display:inline-flex; align-items:center; gap:5px; background:rgba(200,240,78,.08); border:1px solid rgba(200,240,78,.2); color:var(--accent); border-radius:4px; font-family:'IBM Plex Mono',monospace; font-size:.7rem; padding:3px 9px; }
+    .tag-x { background:none; border:none; cursor:pointer; color:var(--muted); font-size:.8rem; line-height:1; padding:0; transition:color .15s; }
+    .tag-x:hover { color:var(--red); }
+    .tag-input { background:none; border:none; outline:none; font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--text); min-width:130px; flex:1; }
+
+    /* Articles list */
+    .articles-list { display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:8px; overflow:hidden; }
+    .article-row { display:grid; grid-template-columns:28px 1fr auto; align-items:start; gap:12px; background:var(--s2); padding:14px 16px; transition:background .15s; }
+    .article-row:hover { background:#1a1a26; }
+    .art-rank { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:var(--muted); padding-top:2px; }
+    .art-info { display:flex; flex-direction:column; gap:5px; min-width:0; }
+    .art-title { font-size:.88rem; color:var(--text); line-height:1.45; }
+    .art-summary { font-size:.78rem; color:var(--dim); line-height:1.55; }
+    .art-meta { display:flex; gap:8px; align-items:center; margin-top:3px; }
+    .art-score { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:var(--muted); white-space:nowrap; padding-top:3px; }
+    .art-link { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:var(--muted); text-decoration:none; transition:color .15s; }
+    .art-link:hover { color:var(--accent); }
+    .badge { font-family:'IBM Plex Mono',monospace; font-size:.58rem; letter-spacing:.08em; text-transform:uppercase; padding:2px 7px; border-radius:3px; }
+    .badge-arxiv    { background:rgba(78,178,240,.1); color:#4eb2f0; border:1px solid rgba(78,178,240,.2); }
+    .badge-crossref { background:rgba(200,240,78,.08); color:var(--accent); border:1px solid rgba(200,240,78,.18); }
+
+    /* Save bar */
+    .save-bar { position:fixed; bottom:0; left:0; right:0; z-index:50; background:rgba(10,10,15,.96); backdrop-filter:blur(14px); border-top:1px solid var(--border); padding:14px clamp(20px,5vw,80px); display:none; align-items:center; justify-content:space-between; gap:16px; }
+    .save-bar.show { display:flex; }
+    .save-hint { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--muted); }
+    .btn-save { background:var(--accent); color:#0a0a0f; font-family:'IBM Plex Mono',monospace; font-size:.78rem; font-weight:500; border:none; border-radius:8px; padding:10px 26px; cursor:pointer; transition:opacity .2s; }
+    .btn-save:hover { opacity:.85; }
+    .toast { font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--accent2); opacity:0; transition:opacity .3s; }
+    .toast.show { opacity:1; }
+
+    /* ── FOOTER ── */
+    footer { border-top:1px solid var(--border); padding:22px clamp(20px,5vw,80px); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    footer p { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:var(--muted); }
+    footer a { color:var(--accent2); text-decoration:none; }
+    .back-top { position:fixed; bottom:28px; right:28px; width:40px; height:40px; background:var(--surface); border:1px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:.9rem; color:var(--muted); text-decoration:none; transition:border-color .2s, color .2s; z-index:200; }
+    .back-top:hover { border-color:var(--accent); color:var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AI Research Watch</div>
+  <div class="header-right">
+    <div class="header-meta">
+      <span>Articles&nbsp;<b>{{ total }}</b></span>
+      <span>Clusters&nbsp;<b>{{ cluster_list | length }}</b></span>
+      <span>Sources&nbsp;<b>arXiv · Crossref</b></span>
+      <span>Model&nbsp;<b>Llama 3</b></span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showView('results', this)">Résultats</button>
+      <button class="nav-tab"        onclick="showView('config', this)">⚙ Config</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════
+     VUE RÉSULTATS
+══════════════════════════════════════════ -->
+<div id="view-results" class="view active">
+
+  <section class="hero">
+    <div>
+      <h1>Veille<br/><em>Intelligence</em><br/>Artificielle</h1>
+      <p class="hero-sub">Top 10 articles par cluster thématique, sélectionnés par similarité sémantique et résumés automatiquement par Llama 3 — veille mise à jour le 1ᵉʳ de chaque mois..</p>
+      <div class="live-badge"><div class="live-dot"></div>Pipeline actif</div>
+    </div>
+  </section>
+
+  <nav class="cluster-nav" id="cluster-nav">
+    {% for cl in cluster_list %}
+    <a href="#cluster-{{ cl.id }}" class="{% if loop.first %}active{% endif %}">
+      {{ cl.title }}<span class="nav-count">{{ cl.papers | length }}</span>
+    </a>
+    {% endfor %}
+  </nav>
+
+  {% for cl in cluster_list %}
+  <section class="cluster-section" id="cluster-{{ cl.id }}">
+    <div class="cluster-header">
+      <div class="cluster-header-left">
+        <span class="cluster-index">Cluster {{ loop.index }}</span>
+        <h2 class="cluster-name">{{ cl.title }}</h2>
+      </div>
+      <span class="cluster-count">{{ cl.papers | length }} articles</span>
+    </div>
+    <div class="grid">
+      {% for paper in cl.papers %}
+      <article class="card">
+        <div class="card-top">
+          <span class="rank-badge"># {{ loop.index }}</span>
+          <span class="source-badge {% if paper.source == 'arXiv' %}badge-arxiv{% else %}badge-crossref{% endif %}">{{ paper.source }}</span>
+        </div>
+        <h2>{{ paper.title }}</h2>
+        <div class="score-row">
+          <div class="score-track"><div class="score-fill" style="width:{{ [paper.score * 100, 100] | min | int }}%"></div></div>
+          <span class="score-val">{{ paper.score }}</span>
+        </div>
+        <p class="summary">{{ paper.summary }}</p>
+        <div class="card-cta"><a href="{{ paper.url }}" target="_blank" rel="noopener">Lire l'article</a></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+
+  <footer>
+    <p>AI Research Watch — Powered by arXiv · Crossref · Llama 3 · Flask</p>
+    <p><a href="/veille_ai.xml">Flux RSS</a></p>
+  </footer>
+  <a class="back-top" href="#" title="Retour en haut">↑</a>
+
+</div><!-- /view-results -->
+
+<!-- ══════════════════════════════════════════
+     VUE CONFIG
+══════════════════════════════════════════ -->
+<div id="view-config" class="view">
+  <div class="config-page">
+
+    <h1 class="config-title">Mes <em>clusters</em> de veille</h1>
+    <p class="config-sub">Visualisez et modifiez chaque cluster. Sauvegardez pour que le prochain pipeline utilise vos nouvelles définitions.</p>
+
+    <!-- Pipeline -->
+    <div class="pipeline-box">
+      <div class="pipeline-box-top">
+        <span class="pipeline-label">▶ Pipeline de collecte</span>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="status-pill" id="status-pill"></span>
+          <button class="btn-run" id="btn-run" onclick="startPipeline()">
+            <span class="ico">▶ Lancer la collecte</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+      </div>
+      <div class="log-box" id="log-box"></div>
+    </div>
+
+    <!-- Clusters -->
+    <div class="clusters-grid" id="clusters-grid"></div>
+
+  </div>
+
+  <!-- Save bar -->
+  <div class="save-bar" id="save-bar">
+    <span class="save-hint">Les modifications seront prises en compte au prochain pipeline.</span>
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="toast" id="toast">✓ Sauvegardé</span>
+      <button class="btn-save" onclick="saveClusters()">Sauvegarder</button>
+    </div>
+  </div>
+</div><!-- /view-config -->
+
+
+<script>
+// ── NAVIGATION ENTRE VUES ────────────────────────────────────────────────────
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('save-bar').classList.toggle('show', name === 'config');
+  if (name === 'config' && clusters.length === 0) loadConfig();
+}
+
+// ── SCROLL SPY (vue résultats) ────────────────────────────────────────────────
+const sections = document.querySelectorAll('.cluster-section');
+const navLinks  = document.querySelectorAll('.cluster-nav a');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting)
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+  });
+}, { threshold: 0.25, rootMargin: '-64px 0px -50% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// ── CONFIG — DATA ─────────────────────────────────────────────────────────────
+let clusters = [];
+let papers_by_cluster = {};
+
+async function loadConfig() {
+  const [cr, pr] = await Promise.all([fetch('/api/clusters'), fetch('/api/papers')]);
+  clusters = await cr.json();
+  papers_by_cluster = await pr.json();
+  renderClusters();
+  checkPipelineStatus();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderClusters() {
+  const grid = document.getElementById('clusters-grid');
+  grid.innerHTML = '';
+  clusters.forEach((c, i) => grid.appendChild(makeBlock(c, i)));
+}
+
+function makeBlock(cluster, idx) {
+  const arts = papers_by_cluster[String(cluster.id)] || [];
+  const block = document.createElement('div');
+  block.className = 'cluster-block';
+  block.dataset.idx = idx;
+  block.id = 'block-' + idx;
+
+  // Summary row
+  const sum = document.createElement('div');
+  sum.className = 'cluster-summary';
+  sum.innerHTML = `
+    <div class="cluster-bar"></div>
+    <div class="cluster-summary-inner">
+      <span class="cluster-num">#${idx+1}</span>
+      <span class="cluster-name-preview" id="preview-${idx}">${esc(cluster.label||'Cluster '+(idx+1))}</span>
+      <span class="cluster-meta">${arts.length} article${arts.length!==1?'s':''} · ${cluster.keywords?.length||0} mots-clés</span>
+    </div>
+    <span class="cluster-chevron">▼</span>`;
+  sum.onclick = () => block.classList.toggle('open');
+
+  // Body
+  const body = document.createElement('div');
+  body.className = 'cluster-body';
+
+  const kwTags = (cluster.keywords||[]).map(kw => tagHTML(kw, idx)).join('');
+
+  const artRows = arts.length
+    ? arts.map((p,i) => `
+      <div class="article-row">
+        <span class="art-rank">#${i+1}</span>
+        <div class="art-info">
+          <span class="art-title">${esc(p.title||'')}</span>
+          ${p.summary ? `<span class="art-summary">${esc(p.summary)}</span>` : ''}
+          <div class="art-meta">
+            <span class="badge badge-${p.source==='arXiv'?'arxiv':'crossref'}">${esc(p.source||'')}</span>
+            <a class="art-link" href="${esc(p.url||'')}" target="_blank" rel="noopener">Lire →</a>
+          </div>
+        </div>
+        <span class="art-score">${p.score?.toFixed(4)||''}</span>
+      </div>`).join('')
+    : `<div style="padding:20px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted)">Aucun article — lancez le pipeline.</div>`;
+
+  body.innerHTML = `
+    <div class="tabs" id="tabs-${idx}">
+      <button class="tab active" onclick="switchTab(event,${idx},'edit')">Modifier</button>
+      <button class="tab"        onclick="switchTab(event,${idx},'articles')">Articles (${arts.length})</button>
+    </div>
+    <div class="tab-panel active" id="panel-edit-${idx}">
+      <div class="field">
+        <label>Nom du cluster</label>
+        <input type="text" value="${esc(cluster.label||'')}"
+          oninput="clusters[${idx}].label=this.value;document.getElementById('preview-${idx}').textContent=this.value||'Cluster ${idx+1}'"/>
+        <span class="hint">Llama le renommera après la prochaine collecte.</span>
+      </div>
+      <div class="field">
+        <label>Mots-clés de scoring</label>
+        <div class="tags-wrap" id="tags-${idx}" onclick="document.getElementById('tag-input-${idx}').focus()">
+          ${kwTags}
+          <input class="tag-input" id="tag-input-${idx}" placeholder="Nouveau mot-clé + Entrée" onkeydown="handleTagKey(event,${idx})"/>
+        </div>
+        <span class="hint">Chaque mot-clé est projeté individuellement. Score = max similarité avec tous les mots-clés.</span>
+      </div>
+      <div class="field">
+        <label>Requête API <span style="font-size:.6rem;color:var(--muted)">(arXiv · Crossref)</span></label>
+        <textarea rows="3" oninput="clusters[${idx}].query_str=this.value">${esc(cluster.query_str||'')}</textarea>
+        <span class="hint">Ex : <code>graph neural network OR GNN OR knowledge graph</code></span>
+      </div>
+    </div>
+    <div class="tab-panel" id="panel-articles-${idx}">
+      <div class="articles-list">${artRows}</div>
+    </div>`;
+
+  block.appendChild(sum);
+  block.appendChild(body);
+  return block;
+}
+
+function tagHTML(kw, idx) {
+  return `<span class="tag">${esc(kw)}<button class="tag-x" onclick="removeTag(event,'${esc(kw)}',${idx})">×</button></span>`;
+}
+function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function switchTab(e, idx, name) {
+  e.stopPropagation();
+  document.querySelectorAll(`#tabs-${idx} .tab`).forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll(`#block-${idx} .tab-panel`).forEach(p=>p.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(`panel-${name}-${idx}`).classList.add('active');
+}
+
+function handleTagKey(e, idx) {
+  if (e.key==='Enter'||e.key===',') {
+    e.preventDefault();
+    const val = e.target.value.trim().replace(/,$/,'');
+    if (val && !clusters[idx].keywords.includes(val)) {
+      clusters[idx].keywords.push(val);
+      const input = document.getElementById(`tag-input-${idx}`);
+      const t = document.createElement('span');
+      t.innerHTML = tagHTML(val, idx);
+      input.parentNode.insertBefore(t.firstElementChild, input);
+    }
+    e.target.value = '';
+  }
+  if (e.key==='Backspace' && !e.target.value && clusters[idx].keywords.length) {
+    clusters[idx].keywords.pop();
+    const tags = document.getElementById(`tags-${idx}`).querySelectorAll('.tag');
+    if (tags.length) tags[tags.length-1].remove();
+  }
+}
+function removeTag(e, kw, idx) {
+  e.stopPropagation();
+  clusters[idx].keywords = clusters[idx].keywords.filter(k=>k!==kw);
+  e.target.closest('.tag').remove();
+}
+
+// ── SAVE ─────────────────────────────────────────────────────────────────────
+async function saveClusters() {
+  const res = await fetch('/api/clusters', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(clusters) });
+  if (res.ok) { const t=document.getElementById('toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+}
+
+// ── PIPELINE ─────────────────────────────────────────────────────────────────
+let _poll = null;
+
+async function startPipeline() {
+  await saveClusters();
+  const res = await fetch('/api/pipeline/start', { method:'POST' });
+  if (!res.ok) { const d=await res.json(); alert(d.error||'Erreur'); return; }
+  setRunUI(true);
+  _poll = setInterval(pollStatus, 1200);
+}
+
+async function pollStatus() {
+  const data = await (await fetch('/api/pipeline/status')).json();
+  renderLog(data.log);
+  if (!data.running) {
+    clearInterval(_poll);
+    setRunUI(false);
+    setPill(data.error?'error':'done', data.error?'✕ Erreur':'✓ Terminé');
+    if (!data.error) {
+      papers_by_cluster = await (await fetch('/api/papers')).json();
+      renderClusters();
+    }
+  }
+}
+
+async function checkPipelineStatus() {
+  const data = await (await fetch('/api/pipeline/status')).json();
+  if (data.running) { setRunUI(true); renderLog(data.log); _poll = setInterval(pollStatus,1200); }
+}
+
+function setRunUI(running) {
+  const btn = document.getElementById('btn-run');
+  btn.disabled = running;
+  btn.classList.toggle('loading', running);
+  document.getElementById('log-box').classList.add('show');
+  if (running) setPill('running','● En cours...');
+}
+function setPill(type, text) {
+  const p = document.getElementById('status-pill');
+  p.className = `status-pill show ${type}`;
+  p.textContent = text;
+}
+function renderLog(lines) {
+  const box = document.getElementById('log-box');
+  box.innerHTML = lines.map(l => {
+    const cls = l.startsWith('')||l.startsWith('✓') ? 'ok' : l.startsWith('❌') ? 'err' : l.startsWith('⚠') ? 'war' : '';
+    return `<div class="ll ${cls}">${esc(l)}</div>`;
+  }).join('');
+  box.scrollTop = box.scrollHeight;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,766 @@
+{
+  "name": "Agent-CV",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un recruteur expert en Data & IA. Tu dois analyser une candidature de manière objective et précise.\n\nOFFRE DE STAGE/EMPLOI :\n{{ $json.job }}\n\nCV DU CANDIDAT :\n{{ $json.CV_ }}\n\nLETTRE DE MOTIVATION :\n{{ $json.Lettre_Motivation_ }}\n\nINSTRUCTIONS :\n- Analyse UNIQUEMENT ce qui est écrit dans le CV et la lettre de motivation\n- Compare précisément les compétences du candidat avec les exigences de l'offre\n- NE génère PAS de faiblesses génériques ou inventées\n- Les points_faibles doivent être des manques RÉELS par rapport à l'offre\n- Les ecarts_competences doivent être des compétences demandées dans l'offre mais absentes du CV\n- Le score doit refléter l'adéquation réelle candidat/offre\n- La decision doit être : \"retenu\" si score_global >= 70, \"liste_attente\" si >= 50, \"refus\" sinon\n\nRéponds UNIQUEMENT en JSON valide.\nNE COMMENCE PAS par une phrase.\nNE METS AUCUN TEXTE EN DEHORS DU JSON.\nFormat EXACT :\n{\n  \"score_competences\": 0,\n  \"score_motivation\": 0,\n  \"score_global\": 0,\n  \"points_forts\": [\"...\"],\n  \"points_faibles\": [\"...\"],\n  \"ecarts_competences\": [\"...\"],\n  \"resume\": \"...\",\n  \"decision\": \"retenu\"\n}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -336,
+        -16
+      ],
+      "id": "b1c0b1e7-d399-4d01-9f55-364d36df4abd",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        352
+      ],
+      "id": "16629e74-36d8-47df-892c-537f337cacd5",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "EyCtbe94CsBAj0uF",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Candidature Spontanée",
+        "formDescription": "Envoyez-nous votre CV et lettre de motivation, nous vous répondrons rapidement.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nom"
+            },
+            {
+              "fieldLabel": "Prenom"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Telephone ",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "CV ",
+              "fieldType": "file"
+            },
+            {
+              "fieldLabel": "Lettre Motivation ",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -1680,
+        -32
+      ],
+      "id": "89274224-394e-4e3f-8dc4-eddfff3180da",
+      "name": "On form submission",
+      "webhookId": "ad81542c-cbbf-4652-afae-451d4f5c9b7d"
+    },
+    {
+      "parameters": {
+        "fromEmail": "mombobilimbilim@gmail.com",
+        "toEmail": "=To Email: {{$json[\"Email\"]}}",
+        "subject": "Nouvelle candidature",
+        "emailFormat": "text",
+        "text": "=Bonjour {{$json[\"Prenom\"]}},\n\nNous avons bien reçu votre candidature.\n\nVotre CV et votre lettre de motivation ont été pris en compte.\n\nNous allons analyser votre profil et reviendrons vers vous prochainement.\n\nCordialement",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -1728,
+        -464
+      ],
+      "id": "31ddf722-facb-45c0-90f8-89bdf611149f",
+      "name": "Send an Email",
+      "webhookId": "8b633e82-126a-435c-acd6-52e7ce34b617",
+      "credentials": {
+        "smtp": {
+          "id": "ykyE2a4ta09IS09y",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68661009-862e-4425-b906-7e23f9d23453",
+              "name": "=CV_",
+              "value": "={{$json[\"text\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -944,
+        176
+      ],
+      "id": "ab47200a-71e8-4c35-8ea6-d4775b6da851",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "CV_",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1232,
+        176
+      ],
+      "id": "a5796fc6-bbcb-4211-95ce-eff1ccde4779",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68661009-862e-4425-b906-7e23f9d23453",
+              "name": "=Lettre_Motivation_",
+              "value": "={{$json[\"text\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -960,
+        -32
+      ],
+      "id": "c82414dd-cf62-4bd7-9f4d-dc41debb1659",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Lettre_Motivation_",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1248,
+        -32
+      ],
+      "id": "1cefc580-d22f-494f-bb81-3eb2832d619d",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -576,
+        -32
+      ],
+      "id": "18618005-e452-4c5b-8368-c6230f3a5d42",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jooble.org/api/50f1bb4b-7e3c-4c32-bfae-d75960ab64fc",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"keywords\": \"data engineer\",\n  \"location\": \"France\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1232,
+        -256
+      ],
+      "id": "e2b82e91-1bdd-4a3d-b97a-68fe66f5f69e",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68661009-862e-4425-b906-7e23f9d23453",
+              "name": "=job",
+              "value": "={{$json[\"jobs\"][0][\"title\"] + \" - \" + \n$json[\"jobs\"][0][\"snippet\"]\n.replace(/<[^>]*>/g, \"\")\n.replace(/&nbsp;/g, \" \")\n.replace(/\\r/g, \" \")\n.replace(/\\n/g, \" \") +\n\n\"\\n\\nProfil recherché : Data & IA avec forte composante LLM et automatisation.\\n\\nCompétences attendues :\\n\" +\n\"- Data Science & Machine Learning : Pandas, NumPy, Scikit-learn\\n\" +\n\"- Deep Learning : TensorFlow, réseaux de neurones\\n\" +\n\"- Traitement du signal & imagerie : ECG, IRM, OpenCV\\n\" +\n\"- IA générative & LLM : OpenAI API, Transformers, RAG\\n\" +\n\"- Systèmes d’agents & orchestration : LangChain, LangGraph, n8n\\n\" +\n\"- Backend & APIs : Flask, FastAPI\\n\" +\n\"- Conteneurisation & déploiement : Docker\"\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -960,
+        -256
+      ],
+      "id": "c5c34bb8-4148-46f7-8e47-79bbfd3735ba",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro",
+          "mode": "list",
+          "cachedResultName": "Candidats_IA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{$json[\"name \"]}}",
+            "email": "={{$json[\"email \"]}}",
+            "score_global": "={{$json[\" score_global\"]}}",
+            "decision ": "={{$json[\"decision \"]}}",
+            "phone": "={{ \"'\" + $('On form submission').item.json[\"Telephone \"] }}",
+            "resume": "={{ $json[\"resume\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "score_global",
+              "displayName": "score_global",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "decision ",
+              "displayName": "decision ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "resume",
+              "displayName": "resume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        -208
+      ],
+      "id": "998a7f65-dda0-4cc2-b8c4-81aa43c38e11",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BLRGaXi2ungkPVgI",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68661009-862e-4425-b906-7e23f9d23453",
+              "name": "=resultats",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "4a815cd4-6991-4ea9-b3c3-db88060ae591",
+              "name": "name ",
+              "value": "={{ $('On form submission').item.json[\"Nom\"] }} {{ $('On form submission').item.json[\"Prenom\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "1605bf41-9a41-41d0-8aea-603834c51dad",
+              "name": "email ",
+              "value": "={{ $('On form submission').item.json[\"Email\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "43648e07-d6ca-4e71-ad93-d6e7630e20dc",
+              "name": "phone ",
+              "value": "={{ $('On form submission').item.json[\"Telephone \"] }}",
+              "type": "string"
+            },
+            {
+              "id": "7ed60f16-58fd-4c07-83da-05ae94d25a46",
+              "name": " score_global",
+              "value": "={{ $json.text.match(/\"score_global\":\\s*([\\d.]+)/)[1] }}",
+              "type": "string"
+            },
+            {
+              "id": "f417c1e1-fb47-434a-b5f0-4fa9f45ecbfc",
+              "name": "decision ",
+              "value": "={{ $json.text.match(/\"score_global\":\\s*([\\d.]+)/)[1] >= 70 ? \"retenu\" : $json.text.match(/\"score_global\":\\s*([\\d.]+)/)[1] >= 50 ? \"liste_attente\" : \"refus\" }}",
+              "type": "string"
+            },
+            {
+              "id": "f24b81fc-d2cd-4815-9480-627eba3f530b",
+              "name": "resume",
+              "value": "={{ $json.text.match(/\"resume\":\\s*\"([^\"]+)\"/)[1] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        -16
+      ],
+      "id": "46f77695-0861-4a80-af15-383ea1eb9d84",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro",
+          "mode": "list",
+          "cachedResultName": "Candidats_IA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HCKnjbGI6LO2O3HWp9C1wCgt3AHyt3LFTGLJl2ejLro/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "decision ",
+              "lookupValue": "retenu"
+            },
+            {
+              "lookupColumn": "decision ",
+              "lookupValue": "liste_attente"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        336,
+        80
+      ],
+      "id": "6ab02f9c-8006-4db5-912e-11172047fc84",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BLRGaXi2ungkPVgI",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b6056f1d-cc50-4cd1-8ef2-df501efe6534",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 2,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        512,
+        -64
+      ],
+      "id": "fbaef2e3-1ba9-4849-a377-494f85c5e696",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fromEmail": "mombobilimbilim@gmail.com",
+        "toEmail": "mombobilimbilim@gmail.com",
+        "subject": "20 candidatures atteintes -",
+        "html": "<p>Bonjour,</p>\n\n<p>Le nombre minimum de <b>20 candidatures</b> a été atteint.</p>\n\n<p>Veuillez consulter le Google Sheet pour examiner les candidats.</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        576,
+        160
+      ],
+      "id": "267a964d-9cd2-4078-bca2-88844528d30f",
+      "name": "Send an Email1",
+      "webhookId": "c07b6253-a78d-4155-9523-ea51dd79a18b",
+      "credentials": {
+        "smtp": {
+          "id": "ykyE2a4ta09IS09y",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "CV_",
+        "name": "={{ $json[\"Nom\"] }} {{ $json[\"Prenom\"] }}_CV.pdf",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1EDX1IBd0p5iKc3X_7c0cidMa3ryfxriv",
+          "mode": "list",
+          "cachedResultName": "CV_Candidats",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1EDX1IBd0p5iKc3X_7c0cidMa3ryfxriv"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1392,
+        528
+      ],
+      "id": "934fad57-53ef-410a-ad53-3a9ef22ae2a0",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "hg2bnea5aGlLG8lZ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        352
+      ],
+      "id": "91967623-c755-463f-87ff-287d7cdf48ac",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "DkWNfuLIe2qT6z3b",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ollama Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an Email": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send an Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "54dd0175-a99f-4f2b-b7d4-7e066135dbd8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "009416c51d28fd4ac923d050652b2fed56dee3677b6e970cd49f64257b7083c4"
+  },
+  "id": "Nl7PUVloK0dYVAyC",
+  "tags": []
+}

@@ -1,0 +1,1132 @@
+[
+  {
+    "title": "Economy of dependence in memory-augmented large language models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.sbr.2025.100046",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.7068918,
+    "summary": "Les modèles de langage augmentés par la mémoire sont influencés par une économie de dépendance."
+  },
+  {
+    "title": "Speed-of-sound optimized beamforming method for high quality, high frame rate ultrasound imaging",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.measurement.2026.121267",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.6364913,
+    "summary": "Résumé de l'article 0 : Méthode d'amplification de signal en utilisant la vitesse du son pour améliorer l'imagerie ultrasonore."
+  },
+  {
+    "title": "Reasoning-guided structured planning and search in large language models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ipm.2026.104732",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.6226745,
+    "summary": "La planification et la recherche guidées par la raison améliorent les performances des modèles de langage."
+  },
+  {
+    "title": "Extraordinary acoustic transmission and enhanced focusing by metasurface ultrasonic transducers",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ultras.2026.108070",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.6225427,
+    "summary": "Résumé de l'article 1 : Transmission acoustique extraordinaire et focussage renforcé par des transducteurs ultrasonores à métamatériau."
+  },
+  {
+    "title": "Predicting the acoustic influence map of the ultrasonic total focusing method using a depth-conditional diffusion model",
+    "abstract": "",
+    "url": "https://doi.org/10.1080/10589759.2026.2651933",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Technologies",
+    "score": 0.6172284,
+    "summary": "Prédiction de la carte d'influence acoustique du méthode de mise au point totale ultrasonique en utilisant un modèle de diffusion conditionnelle à profondeur."
+  },
+  {
+    "title": "An enhanced ultrasonic total focusing method combining pulse compression and phase coherence for thick-walled metal structures",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ijpvp.2025.105736",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Technologies",
+    "score": 0.5930446,
+    "summary": "Méthode de mise en forme totale ultra-sonore améliorée combinant la compression d'impulsion et la cohérence de phase pour les structures métalliques épaisses."
+  },
+  {
+    "title": "From structure to synergy: A survey of vision-language perception paradigm evolution in multimodal large language models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.inffus.2026.104285",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.5867209,
+    "summary": "L'évolution du paradigme perception-vision dans les modèles de langage multimodale explore la structure et l'effet synergique."
+  },
+  {
+    "title": "A rapid multi-defect imaging method for composite plates using air-coupled ultrasonic guided waves based on multi-scale interactive Siamese network",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ultras.2026.108048",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.5833653,
+    "summary": "Résumé de l'article 2 : Méthode rapide d'imagerie multi-défaut pour plaques composites en utilisant les ondes guidées ultrasonores aéro-couplées."
+  },
+  {
+    "title": "Ultrasonic imaging technology for non-destructive detection of lithium ion batteries",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.jechem.2025.11.041",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Technologies",
+    "score": 0.5783303,
+    "summary": "Technologie d'imagerie ultrasonore pour la détection non-destructive de batteries ioniques lithium."
+  },
+  {
+    "title": "Achieving direct volumetric 3D printing via high-intensity ultrasonic focusing: leaping from 2D layer-wise deposition to 3D spatial structures",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ultras.2026.108073",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.5761787,
+    "summary": "Résumé de l'article 3 : Imprimer 3D volumétrique directement via un focus ultrasonore à haute intensité : sauter de la déposition en couches 2D à des structures spatiales 3D."
+  },
+  {
+    "title": "Precise localization of closed cracks: A nonlinear ultrasonic total focusing imaging technique integrated with phase coherence",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ndteint.2026.103721",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.573255,
+    "summary": "Résumé de l'article 4 : Localisation précise de fissures fermées : technique d'imagerie totale de focalisation non linéaire intégrée à la cohérence de phase."
+  },
+  {
+    "title": "Vector Flow Imaging in Layered Models With a High Speed of Sound Contrast Using Pulse-Echo Ultrasound and Photoacoustics",
+    "abstract": "In this study, we develop vector flow imaging techniques for multi-layered models with a high wavespeed contrast using photoacoustic and ultrasonic imaging. We use refraction-corrected delay-and-sum image reconstruction (RC-DAS), which enforces Snell's law to accurately calculate time delays within each layer. We compare RC-DAS against conventional delay-and-sum for vector flow imaging in benchtop phantoms made of transparent polymethyl methacrylate (PMMA) in a water bath. We study the flow beneath a PMMA layer using two phantoms, where the PMMA layer has different shapes and thicknesses. We image a slow-moving suspension of carbon microspheres (~4 mm/s) using interleaved photoacoustic and multi-angle plane wave ultrasound acquisitions measured with a 7.6 MHz linear ultrasound array. Photoacoustic waves are generated by a 1064 nm wavelength nanosecond-pulsed laser at 50 Hz, and multi-angle plane wave ultrasound data are acquired at 100 Hz for eleven steering angles between $\\pm$10$^\\circ$. RC-DAS improves the flow speed accuracy, reducing the mean absolute error by 0.41-0.63 mm/s compared to the expected flow profile. The error in direction estimates improves when we use RC-DAS, with the interdecile range reducing by up to 17$^\\circ$. This work emphasises the importance of refraction correction for accurate flow measurements in layered media with photoacoustics and ultrasonic imaging. While both imaging modalities can quantify flow in these multi-layered models, the modality best suited for a specific application will depend on the imaging target and flow dynamics. These techniques show promise for biomedical applications such as intraosseous and transcranial blood flow quantification, and in nondestructive testing to monitor fluid motion.",
+    "url": "http://arxiv.org/abs/2512.14933v1",
+    "source": "arXiv",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Non Destructive Testing",
+    "score": 0.5688868,
+    "summary": "Un nouvel appareil transducteur ultrasonore micro-mécano-électrique linéaire est conçu."
+  },
+  {
+    "title": "Research on ultrasonic coherent plane-wave compounding imaging method based on delay multiply and sum",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.apacoust.2026.111338",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.5652058,
+    "summary": "Résumé de l'article 5 : Méthode d'imagerie planaire cohérente ultrasonore comprenant une multiplication et une addition en retard."
+  },
+  {
+    "title": "Ultrasound synthetic aperture imaging with SpecularNet for enhanced needle visualization",
+    "abstract": "",
+    "url": "https://doi.org/10.1007/s10396-026-01623-x",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Technologies",
+    "score": 0.5517986,
+    "summary": "Développement de transducteurs linéaires incluant une fonction de mise au point basée sur le principe de plaque de zone Fresnel."
+  },
+  {
+    "title": "Development of piezoelectric micromachined ultrasonic transducer linear array including focusing function based on principle of fresnel zone plate",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.sna.2026.117646",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.54673,
+    "summary": "Résumé de l'article 6 : Développement d'un ensemble linéaire d'array de transducteurs ultrasonores piézo-électriques avec fonction de focussage basée sur le principe de plaque de zone de Fresnel."
+  },
+  {
+    "title": "F2LLM-v2: Inclusive, Performant, and Efficient Embeddings for a Multilingual World",
+    "abstract": "We present F2LLM-v2, a new family of general-purpose, multilingual embedding models in 8 distinct sizes ranging from 80M to 14B. Trained on a newly curated composite of 60 million publicly available high-quality data samples, F2LLM-v2 supports more than 200 languages, with a particular emphasis on previously underserved mid- and low-resource languages. By integrating a two-stage LLM-based embedding training pipeline with matryoshka learning, model pruning, and knowledge distillation techniques, we present models that are far more efficient than previous LLM-based embedding models while retaining competitive performances. Extensive evaluations confirm that F2LLM-v2-14B ranks first on 11 MTEB benchmarks, while the smaller models in the family also set a new state of the art for resource-constrained applications. To facilitate open-source embedding model research, we release all models, data, code, and intermediate checkpoints.",
+    "url": "http://arxiv.org/abs/2603.19223v1",
+    "source": "arXiv",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.5459628,
+    "summary": "Les nouveaux modèles d'embeddings multilingues prennent en charge plus de 200 langues avec une efficacité réduite."
+  },
+  {
+    "title": "Laser ultrasonic multimode sparse array intelligent optimization imaging method",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.measurement.2026.121264",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.542653,
+    "summary": "Résumé de l'article 7 : Méthode d'imagerie d'optimisation intelligente par array multimode laser-ultrasonore."
+  },
+  {
+    "title": "Corrigendum to “Adaptive optimization strategy for total focusing ultrasonic imaging using sparse array combined with metric learning in dual-layer medium”. [Appl. Acoust. 247 (2026) 111246]",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.apacoust.2026.111264",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Technologies",
+    "score": 0.5407492,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Full Waveform Inversion using the Wasserstein metric for ultrasound transducer array based NDT",
+    "abstract": "Ultrasonic imaging methods often assume linear direct models, while in reality, many nonlinear phenomena are present, e.g. multiple reflections. A family of imaging methods called Full Waveform Inversion (FWI), which has been developed in the field of seismic imaging, uses full acoustic wave simulations as direct models, taking into account virtually all nonlinearities, which can ultimately enhance the accuracy of ultrasonic imaging. However, the problem of cycle skipping -- the existence of many local minima of the Least Squares (L2) misfit function due to the oscillatory nature of the signals -- is worsened when FWI is applied to ultrasound data because of a lack of low-frequency components. In this paper, we explore the use of the squared Wasserstein (W2) Optimal Transport Distance as the metric for the misfit between the acquired and the synthetic data, applying the method to Nondestructive Evaluation with ultrasonic phased arrays. An analytical continuous time-domain derivation of the adjoint acoustic field related to the W2 misfit is presented and used for the computation of the gradients. To cope with the computational burden of FWI, we apply a low-memory strategy that allows for the computation of the gradients without the storage of the full simulated fields. The GPU implementation of the method (in CUDA language) is detailed, and the source code is made available. Six prototypical cases are presented, and the corresponding sound speed maps are reconstructed with FWI using both the L2 and the W2 misfit functionals. In five of the six cases, the pixel-wise sum of squared errors obtained with W2 was at least one order of magnitude lower than that obtained with W2, with an increase in the gradient computation time not exceeding 2\\%. The results highlight both the adequacy of the W2 misfit for ultrasonic FWI with phased arrays and its computational feasibility.",
+    "url": "http://arxiv.org/abs/2602.22378v1",
+    "source": "arXiv",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Technologies",
+    "score": 0.5403178,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Gradient acoustic focusing metamaterial-based ultrasonic guided wave energy enhancement for minor damage detection",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.measurement.2026.121407",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.5329399,
+    "summary": "Résumé de l'article 8 : Amélioration de l'énergie des ondes guidées ultrasonores pour la détection de dommages mineurs à travers un métamatériau acoustique gradé."
+  },
+  {
+    "title": "Size quantification method for blind holes based on ultrasonic total focusing imaging method",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.measurement.2026.120866",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Technologies",
+    "score": 0.5298507,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Synthetic aperture ladar imaging based on digital refocusing",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.optcom.2026.133265",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Imaging Methods",
+    "score": 0.5275424,
+    "summary": "Résumé de l'article 9 : Imagerie par synthèse d'ouverture radar numérique basée sur le réfocussage numérique."
+  },
+  {
+    "title": "Dual-strategy retrieval-augmented generation for anomaly recovery in large language models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.patcog.2026.113430",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.5249099,
+    "summary": "[\"Les modèles de langage augmentés par la mémoire économisent leur dépendance.\", \"Un modèle de génération récupère des anomalies dans les modèles de langage larges.\", \"EEGTune est un framework d'entraînement efficace pour les modèles fondationnels EEG.\", \"Les modèles de langage larges jouent un rôle important dans le diagnostic dentaire et la communication.\", \"Le modèle SyntheFormer prédit la qualité en série temporelle expliquable.\", \"Les modèles de langage larges améliorent la performance des firmes à grande échelle.\", \"Une nouvelle attaque d'inférence de membres pour les modèles de langage fine-tunés utilise un apprentissage transférable.\", \"Le modèle Cro-MTVITS synthétise une voix en mandarin et tibétain multi-dialecte.\", \"Le modèle de reconnaissance d'image SyntheFormer est structuré pour la reconnaissance fine-grained.\"]"
+  },
+  {
+    "title": "Sparse spatial-partition probabilistic imaging method for debonding evaluation of composite wing leading edge using ultrasonic guided wave",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ultras.2025.107917",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Non Destructive Testing",
+    "score": 0.5151633,
+    "summary": "L'inspection ultrasonore des délaminations dans des structures composites épais avec des angles de fibres variables est étudiée."
+  },
+  {
+    "title": "Comment on “Cross specialty evaluation of large language model responses on intentional replantation”",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.jormas.2026.102752",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.5118058,
+    "summary": "La marqueur d'eau dual peut protéger les modèles de langage contre la falsification."
+  },
+  {
+    "title": "Predicting tourism product advertising effectiveness: Fusing multimodal large language models with visually-rich document understanding",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ipm.2026.104845",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.5054078,
+    "summary": "La fusion de modèles de langage avec l'intelligence visuelle permet de prédire l'efficacité des publicités touristiques."
+  },
+  {
+    "title": "Dualmark: A novel dual watermarking approach for large language models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ipm.2026.104707",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.5040534,
+    "summary": "Les modèles de langage à grande échelle aident au diagnostic dentaire et à la prise de décision."
+  },
+  {
+    "title": "Evaluating In-Context Translation with Synchronous Context-Free Grammar Transduction",
+    "abstract": "Low-resource languages pose a challenge for machine translation with large language models (LLMs), which require large amounts of training data. One potential way to circumvent this data dependence is to rely on LLMs' ability to use in-context descriptions of languages, like textbooks and dictionaries. To do so, LLMs must be able to infer the link between the languages' grammatical descriptions and the sentences in question. Here we isolate this skill using a formal analogue of the task: string transduction based on a formal grammar provided in-context. We construct synchronous context-free grammars which define pairs of formal languages designed to model particular aspects of natural language grammar, morphology, and written representation. Using these grammars, we measure how well LLMs can translate sentences from one formal language into another when given both the grammar and the source-language sentence. We vary the size of the grammar, the lengths of the sentences, the syntactic and morphological properties of the languages, and their written script. We note three key findings. First, LLMs' translation accuracy decreases markedly as a function of grammar size and sentence length. Second, differences in morphology and written representation between the source and target languages can strongly diminish model performance. Third, we examine the types of errors committed by models and find they are most prone to recall the wrong words from the target language vocabulary, hallucinate new words, or leave source-language words untranslated.",
+    "url": "http://arxiv.org/abs/2604.07320v1",
+    "source": "arXiv",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.502964,
+    "summary": "Les modèles de langues élargies sont confrontés à un défi avec les langues à faible ressource, nécessitant de grandes quantités de données pour s'enformer."
+  },
+  {
+    "title": "Ultrasonic inspection of delaminations in thick composite structures with variable fiber angles using optimal total focusing method: Simulation and experiment",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.engstruct.2026.122252",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Ultrasonic Non Destructive Testing",
+    "score": 0.4941566,
+    "summary": "Une nouvelle méthode d'imagerie totale focalisation pour la détection de délaminations dans les structures composites épais est présentée."
+  },
+  {
+    "title": "LLM REgression with a Latent Iterative State Head",
+    "abstract": "We present RELISH (REgression with a Latent Iterative State Head), a novel, lightweight architecture designed for text regression with large language models. Rather than decoding numeric targets as text or aggregating multiple generated outputs, RELISH predicts scalar values directly from frozen LLM representations by iteratively refining a learned latent state through cross-attention over token-level representations, and then mapping the final state to a point estimate with a linear regressor. Across five datasets, four LLM backbones, and two LLM training regimes, RELISH consistently outperforms prior baselines from all three major LLM regression families, including autoregressive decoding, regression-aware inference, and existing predictive head methods. Despite these gains, RELISH remains highly parameter-efficient, requiring only 3.4-3.7M trainable parameters across frozen LLM backbones (only 0.01-0.04% additional overhead), far less than LoRA-based alternatives that grow with model size (0.26-0.42%).",
+    "url": "http://arxiv.org/abs/2604.01206v1",
+    "source": "arXiv",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4918092,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "EEGTune: A data-efficient fine-tuning framework for EEG foundation models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.patcog.2026.113591",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4898669,
+    "summary": "EEGTune est un framework pour le fine-tuning de modèles fondamentaux EEG en utilisant des données efficaces."
+  },
+  {
+    "title": "The role of large language models in dental diagnosis, decision-making, and communication: A systematic review",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.jdsr.2026.01.002",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4861993,
+    "summary": "Les modèles de langage géants jouent un rôle clé dans les diagnostics dentaires, la prise de décision et la communication."
+  },
+  {
+    "title": "Unified Policy Value Decomposition for Rapid Adaptation",
+    "abstract": "Rapid adaptation in complex control systems remains a central challenge in reinforcement learning. We introduce a framework in which policy and value functions share a low-dimensional coefficient vector - a goal embedding - that captures task identity and enables immediate adaptation to novel tasks without retraining representations. During pretraining, we jointly learn structured value bases and compatible policy bases through a bilinear actor-critic decomposition. The critic factorizes as Q = sum_k G_k(g) y_k(s,a), where G_k(g) is a goal-conditioned coefficient vector and y_k(s,a) are learned value basis functions. This multiplicative gating - where a context signal scales a set of state-dependent bases - is reminiscent of gain modulation observed in Layer 5 pyramidal neurons, where top-down inputs modulate the gain of sensory-driven responses without altering their tuning. Building on Successor Features, we extend the decomposition to the actor, which composes a set of primitive policies weighted by the same coefficients G_k(g). At test time the bases are frozen and G_k(g) is estimated zero-shot via a single forward pass, enabling immediate adaptation to novel tasks without any gradient update. We train a Soft Actor-Critic agent on the MuJoCo Ant environment under a multi-directional locomotion objective, requiring the agent to walk in eight directions specified as continuous goal vectors. The bilinear structure allows each policy head to specialize to a subset of directions, while the shared coefficient layer generalizes across them, accommodating novel directions by interpolating in goal embedding space. Our results suggest that shared low-dimensional goal embeddings offer a general mechanism for rapid, structured adaptation in high-dimensional control, and highlight a potentially biologically plausible principle for efficient transfer in complex reinforcement learning systems.",
+    "url": "http://arxiv.org/abs/2603.17947v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.4820201,
+    "summary": "Résumé de l'article 0 : L'apprentissage rapide dans les systèmes de contrôle complexes est un défi central en apprentissage automatique. Nous présentons un framework dans lequel les fonctions de politique et de valeur partagent un vecteur coefficient à faible dimensionnalité qui capture l'identité tâche et permet une adaptation immédiate aux tâches novuelles sans reformation des représentations."
+  },
+  {
+    "title": "SyntheFormer: A multivariate variable-length time series data-based parallel Transformer model for explainable quality predicting and anomaly tracing",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.rcim.2026.103304",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4749966,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Machine Learning Application for SAIs",
+    "abstract": "",
+    "url": "https://doi.org/10.56251/watu4873",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.4719939,
+    "summary": "La mise en œuvre de l'apprentissage automatique pour les SAIs permet une amélioration de la performance."
+  },
+  {
+    "title": "Multimodal Large Language Models in Construction Education for Learning Human–Robot Collaboration: A Narrative Review",
+    "abstract": "",
+    "url": "https://doi.org/10.1061/aomjah.aoeng-0102",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4654439,
+    "summary": "Les performances holistiques d'une entreprise peuvent être comprises à partir d'analyses de texte et d'embarquements en langage géant."
+  },
+  {
+    "title": "Big data and holistic firm performance: Insights from text analytics and large language model embeddings",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.accinf.2026.100771",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4653792,
+    "summary": "Les modèles de langage peuvent-ils persuader? Les résultats montrent que oui."
+  },
+  {
+    "title": "The Unreasonable Effectiveness of Text Embedding Interpolation for Continuous Image Steering",
+    "abstract": "We present a training-free framework for continuous and controllable image editing at test time for text-conditioned generative models. In contrast to prior approaches that rely on additional training or manual user intervention, we find that a simple steering in the text-embedding space is sufficient to produce smooth edit control. Given a target concept (e.g., enhancing photorealism or changing facial expression), we use a large language model to automatically construct a small set of debiased contrastive prompt pairs, from which we compute a steering vector in the generator's text-encoder space. We then add this vector directly to the input prompt representation to control generation along the desired semantic axis. To obtain a continuous control, we propose an elastic range search procedure that automatically identifies an effective interval of steering magnitudes, avoiding both under-steering (no-edit) and over-steering (changing other attributes). Adding the scaled versions of the same vector within this interval yields smooth and continuous edits. Since our method modifies only textual representations, it naturally generalizes across text-conditioned modalities, including image and video generation. To quantify the steering continuity, we introduce a new evaluation metric that measures the uniformity of semantic change across edit strengths. We compare the continuous editing behavior across methods and find that, despite its simplicity and lightweight design, our approach is comparable to training-based alternatives, outperforming other training-free methods.",
+    "url": "http://arxiv.org/abs/2603.17998v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.4607317,
+    "summary": "Résumé de l'article 0 : La méthode proposée permet d'effectuer des éditions d'images continues et contrôlables sans entraînement supplémentaire."
+  },
+  {
+    "title": "Learning the Signature of Memorization in Autoregressive Language Models",
+    "abstract": "All prior membership inference attacks for fine-tuned language models use hand-crafted heuristics (e.g., loss thresholding, Min-K\\%, reference calibration), each bounded by the designer's intuition. We introduce the first transferable learned attack, enabled by the observation that fine-tuning any model on any corpus yields unlimited labeled data, since membership is known by construction. This removes the shadow model bottleneck and brings membership inference into the deep learning era: learning what matters rather than designing it, with generalization through training diversity and scale. We discover that fine-tuning language models produces an invariant signature of memorization detectable across architectural families and data domains. We train a membership inference classifier exclusively on transformer-based models. It transfers zero-shot to Mamba (state-space), RWKV-4 (linear attention), and RecurrentGemma (gated recurrence), achieving 0.963, 0.972, and 0.936 AUC respectively. Each evaluation combines an architecture and dataset never seen during training, yet all three exceed performance on held-out transformers (0.908 AUC). These four families share no computational mechanisms, their only commonality is gradient descent on cross-entropy loss. Even simple likelihood-based methods exhibit strong transfer, confirming the signature exists independently of the detection method. Our method, Learned Transfer MIA (LT-MIA), captures this signal most effectively by reframing membership inference as sequence classification over per-token distributional statistics. On transformers, LT-MIA achieves 2.8$\\times$ higher TPR at 0.1\\% FPR than the strongest baseline. The method also transfers to code (0.865 AUC) despite training only on natural language texts. Code and trained classifier available at https://github.com/JetBrains-Research/learned-mia.",
+    "url": "http://arxiv.org/abs/2604.03199v1",
+    "source": "arXiv",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4576852,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Universal YOCO for Efficient Depth Scaling",
+    "abstract": "The rise of test-time scaling has remarkably boosted the reasoning and agentic proficiency of Large Language Models (LLMs). Yet, standard Transformers struggle to scale inference-time compute efficiently, as conventional looping strategies suffer from high computational overhead and a KV cache that inflates alongside model depth. We present Universal YOCO (YOCO-U), which combines the YOCO decoder-decoder architecture with recursive computation to achieve a synergistic effect greater than either alone. Built on the YOCO framework, YOCO-U implements a Universal Self-Decoder that performs multiple iterations via parameter sharing, while confining the iterative process to shallow, efficient-attention layers. This combination yields a favorable capability-efficiency tradeoff that neither YOCO nor recursion achieves independently. The YOCO architecture provides a constant global KV cache and linear pre-filling, while partial recursion enhances representational depth with limited overhead. Together, YOCO-U improves token utility and scaling behavior while maintaining efficient inference. Empirical results confirm that YOCO-U remains highly competitive in general and long-context benchmarks, demonstrating that the integration of efficient-attention architectures and recursive computation is a promising direction for scalable LLMs.",
+    "url": "http://arxiv.org/abs/2604.01220v1",
+    "source": "arXiv",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4534285,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "LoST: Level of Semantics Tokenization for 3D Shapes",
+    "abstract": "Tokenization is a fundamental technique in the generative modeling of various modalities. In particular, it plays a critical role in autoregressive (AR) models, which have recently emerged as a compelling option for 3D generation. However, optimal tokenization of 3D shapes remains an open question. State-of-the-art (SOTA) methods primarily rely on geometric level-of-detail (LoD) hierarchies, originally designed for rendering and compression. These spatial hierarchies are often token-inefficient and lack semantic coherence for AR modeling. We propose Level-of-Semantics Tokenization (LoST), which orders tokens by semantic salience, such that early prefixes decode into complete, plausible shapes that possess principal semantics, while subsequent tokens refine instance-specific geometric and semantic details. To train LoST, we introduce Relational Inter-Distance Alignment (RIDA), a novel 3D semantic alignment loss that aligns the relational structure of the 3D shape latent space with that of the semantic DINO feature space. Experiments show that LoST achieves SOTA reconstruction, surpassing previous LoD-based 3D shape tokenizers by large margins on both geometric and semantic reconstruction metrics. Moreover, LoST achieves efficient, high-quality AR 3D generation and enables downstream tasks like semantic retrieval, while using only 0.1%-10% of the tokens needed by prior AR models.",
+    "url": "http://arxiv.org/abs/2603.17995v1",
+    "source": "arXiv",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.4522233,
+    "summary": "Here is the JSON array with summaries:"
+  },
+  {
+    "title": "Can language models persuade? Exploring the persuasive efficacy of Large Language and Vision Language models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.csl.2026.101991",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4482712,
+    "summary": "EvoJail est un générateur de prompts pour les modèles de langage qui produit des phénomènes évolués."
+  },
+  {
+    "title": "Cro-MTVITS: An end-to-end cross-lingual speech synthesis model for Mandarin and multi-dialect Tibetan based on VITS",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.csl.2026.101956",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4480882,
+    "summary": "Il est possible de fine-tuning les modèles de langues élargies en utilisant des prompts structurés."
+  },
+  {
+    "title": "Unlocking explainable and effective multimodal affective reasoning via large language models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.patcog.2026.113366",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4454184,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Variational Bayes for High-dimensional Structured Mixture Model",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0226",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Machine Learning",
+    "score": 0.443527,
+    "summary": "["
+  },
+  {
+    "title": "Conditional Density Estimation with Deep Neural Networks",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0144",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.4423232,
+    "summary": "[\"Résumé de l'article 0 : L'article propose une nouvelle méthode de tokenisation pour la génération de formes 3D, appelée LoST (Level-of-Semantics Tokenization), qui ordonne les tokens par leur importance semantique. Les expériences montrent que LoST réduit le nombre de tokens nécessaires pour la reconstruction de formes 3D.\", \"Résumé de l'article 1 : L'article explore la densité conditionnelle avec des réseaux neuronaux profonds.\", \"Aucun résumé disponible\", \"Résumé de l'article 4 : Le travail présente EchoGen, un framework pour la génération d'images à partir de plans et la mise en correspondance des images. Il propose des stratégies d'optimisation progressive pour améliorer les performances.\", \"Résumé de l'article 5 : L'article présente des tests cohérents universels pour le graphe d'un modèle graphique gaussien.\", \"Résumé de l'article 6 : Le travail introduit Loc3R-VLM, un framework qui équipe les modèles de langage avec une compréhension avancée de l'espace 3D à partir d'input vidéo monochrome. Il propose des objectifs conjoints pour reconstruire le plan et modéliser la situation.\", \"Résumé de l'article 7 : L'article propose une méthode de quantification de l'incertitude pour les réseaux neuronaux profonds.\", \"Résumé de l'article 8 : Le travail présente une approche d'apprentissage automatique intégrée pour extraire le ventricule gauche à partir d'images médicales.\", \"Résumé de l'article 9 : L'article propose un méthode de classification et d'optimisation des QoS basées sur l'apprentissage automatique.\"]"
+  },
+  {
+    "title": "Graph Theory: an Intriguing Mathematical Framework in Civil Infrastructures",
+    "abstract": "",
+    "url": "https://doi.org/10.1504/ijcis.2028.10073464",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.4399448,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "VOSR: A Vision-Only Generative Model for Image Super-Resolution",
+    "abstract": "Most of the recent generative image super-resolution (SR) methods rely on adapting large text-to-image (T2I) diffusion models pretrained on web-scale text-image data. While effective, this paradigm starts from a generic T2I generator, despite that SR is fundamentally a low-resolution (LR) input-conditioned image restoration task. In this work, we investigate whether an SR model trained purely on visual data can rival T2I-based ones. To this end, we propose VOSR, a Vision-Only generative framework for SR. We first extract semantically rich and spatially grounded features from the LR input using a pretrained vision encoder as visual semantic guidance. We then revisit classifier-free guidance for training generative models and show that the standard unconditional branch is ill-suited to restoration models trained from scratch. We therefore replace it with a restoration-oriented guidance strategy that preserves weak LR anchors. Built upon these designs, we first train a multi-step VOSR model from scratch and then distill it into a one-step model for efficient inference. VOSR requires less than one-tenth of the training cost of representative T2I-based SR methods, yet in both multi-step and one-step settings, it achieves competitive or even better perceptual quality and efficiency, while producing more faithful structures with fewer hallucinations on both synthetic and real-world benchmarks. Our results, for the first time, show that high-quality generative SR can be achieved without multimodal pretraining. The code and models can be found at https://github.com/cswry/VOSR.",
+    "url": "http://arxiv.org/abs/2604.03225v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.4372582,
+    "summary": "Les réseaux de génération d'images haute qualité peuvent être entraînés sans pré-entraînement multimodal."
+  },
+  {
+    "title": "EvoJail: Evolutionary diverse jailbreak prompt generation for large language models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.ipm.2026.104831",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4295966,
+    "summary": "Le réglage du prompt structuré condensé dans les modèles vision-langage améliore la reconnaissance d'images fine-grained."
+  },
+  {
+    "title": "Neural Harmonic Textures for High-Quality Primitive Based Neural Reconstruction",
+    "abstract": "Primitive-based methods such as 3D Gaussian Splatting have recently become the state-of-the-art for novel-view synthesis and related reconstruction tasks. Compared to neural fields, these representations are more flexible, adaptive, and scale better to large scenes. However, the limited expressivity of individual primitives makes modeling high-frequency detail challenging. We introduce Neural Harmonic Textures, a neural representation approach that anchors latent feature vectors on a virtual scaffold surrounding each primitive. These features are interpolated within the primitive at ray intersection points. Inspired by Fourier analysis, we apply periodic activations to the interpolated features, turning alpha blending into a weighted sum of harmonic components. The resulting signal is then decoded in a single deferred pass using a small neural network, significantly reducing computational cost. Neural Harmonic Textures yield state-of-the-art results in real-time novel view synthesis while bridging the gap between primitive- and neural-field-based reconstruction. Our method integrates seamlessly into existing primitive-based pipelines such as 3DGUT, Triangle Splatting, and 2DGS. We further demonstrate its generality with applications to 2D image fitting and semantic reconstruction.",
+    "url": "http://arxiv.org/abs/2604.01204v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.4291736,
+    "summary": "La représentation neuronale harmonique texture permet une synthèse de vue en temps réel avec des résultats d'État de l'art."
+  },
+  {
+    "title": "Cross-linguistic analysis of prosodic features based on wavelet prominence: A study of L2 English and L1 Sindhi lexical stress using large language &amp; deep learning models",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.csl.2026.101953",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4226991,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "WEB-BASED COLLABORATIVE LEARNING AND KNOWLEDGE SHARING IN INFORMAL BUSINESS NETWORKS",
+    "abstract": "",
+    "url": "https://doi.org/10.15556/ijiim.01.02.002",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.4206582,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Using Generative Artificial Intelligence ‘Gemini’ and ‘ChatGPT-4’ Development and Research of a Teaching Model on Making Children’s Books",
+    "abstract": "",
+    "url": "https://doi.org/10.47293/ihumjj.2024.37.3",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.417555,
+    "summary": "L'interprétation des solutions de passage de message associées à la probabilité d'appartenir au composant géant est élargie."
+  },
+  {
+    "title": "Measurement-Induced Quantum Neural Network",
+    "abstract": "We introduce a measurement-induced quantum neural network (MINN), an adaptive monitored-circuit architecture in which mid-circuit measurement outcomes determine the entangling gates in subsequent layers. In contrast to standard monitored circuits where sites and gates are sampled randomly, the gates are parametrized and variational, producing correlated history-dependent dynamics and injecting nonlinearity through measurement back-action. A generic MINN is not expected to be efficiently classically simulable. To demonstrate feasibility, we study a matchgate MINN that admits exact fermionic simulation and can be trained with gradient estimators. We apply the architecture to continuous optimization, image classification, and ground-state search in the Sherrington-Kirkpatrick spin glass, finding effective training and performance over a broad range of monitoring rates.",
+    "url": "http://arxiv.org/abs/2603.19200v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.4123627,
+    "summary": "Résumé de l'article 1 : L'algorithme MINN introduit une architecture neuronale quantique adaptative qui injecte la non-linéarité par mesure dans un circuit entrelaçant. L'architecture est appliquée à l'optimisation continue, la classification d'images et la recherche d'état fondamental dans le spin glass de Sherrington-Kirkpatrick."
+  },
+  {
+    "title": "Collaborative Task and Path Planning for Heterogeneous Robotic Teams using Multi-Agent PPO",
+    "abstract": "Efficient robotic extraterrestrial exploration requires robots with diverse capabilities, ranging from scientific measurement tools to advanced locomotion. A robotic team enables the distribution of tasks over multiple specialized subsystems, each providing specific expertise to complete the mission. The central challenge lies in efficiently coordinating the team to maximize utilization and the extraction of scientific value. Classical planning algorithms scale poorly with problem size, leading to long planning cycles and high inference costs due to the combinatorial growth of possible robot-target allocations and possible trajectories. Learning-based methods are a viable alternative that move the scaling concern from runtime to training time, setting a critical step towards achieving real-time planning. In this work, we present a collaborative planning strategy based on Multi-Agent Proximal Policy Optimization (MAPPO) to coordinate a team of heterogeneous robots to solve a complex target allocation and scheduling problem. We benchmark our approach against single-objective optimal solutions obtained through exhaustive search and evaluate its ability to perform online replanning in the context of a planetary exploration scenario.",
+    "url": "http://arxiv.org/abs/2604.01213v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Applications",
+    "score": 0.4067473,
+    "summary": "["
+  },
+  {
+    "title": "Learning and Generating Mixed States Prepared by Shallow Channel Circuits",
+    "abstract": "Learning quantum states from measurement data is a central problem in quantum information and computational complexity. In this work, we study the problem of learning to generate mixed states on a finite-dimensional lattice. Motivated by recent developments in mixed state phases of matter, we focus on arbitrary states in the trivial phase. A state belongs to the trivial phase if there exists a shallow preparation channel circuit under which local reversibility is preserved throughout the preparation. We prove that any mixed state in this class can be efficiently learned from measurement access alone. Specifically, given copies of an unknown trivial phase mixed state, our algorithm outputs a shallow local channel circuit that approximately generates this state in trace distance. The sample complexity and runtime are polynomial (or quasi-polynomial) in the number of qubits, assuming constant (or polylogarithmic) circuit depth and gate locality. Importantly, the learner is not given the original preparation circuit and relies only on its existence. Our results provide a structural foundation for quantum generative models based on shallow channel circuits. In the classical limit, our framework also inspires an efficient algorithm for classical diffusion models using only a polynomial overhead of training and generation.",
+    "url": "http://arxiv.org/abs/2604.01197v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Applications",
+    "score": 0.4056695,
+    "summary": "\"Les robots doivent travailler ensemble pour résoudre un problème complexe et maximiser l'extraction de valeur scientifique. Nous présentons une stratégie de planification collaborative basée sur Multi-Agent Proximal Policy Optimization (MAPPO) pour coordonner une équipe de robots hétérogènes.\","
+  },
+  {
+    "title": "Under One Sun: Multi-Object Generative Perception of Materials and Illumination",
+    "abstract": "We introduce Multi-Object Generative Perception (MultiGP), a generative inverse rendering method for stochastic sampling of all radiometric constituents -- reflectance, texture, and illumination -- underlying object appearance from a single image. Our key idea to solve this inherently ambiguous radiometric disentanglement is to leverage the fact that while their texture and reflectance may differ, objects in the same scene are all lit by the same illumination. MultiGP exploits this consensus to produce samples of reflectance, texture, and illumination from a single image of known shapes based on four key technical contributions: a cascaded end-to-end architecture that combines image-space and angular-space disentanglement; Coordinated Guidance for diffusion convergence to a single consistent illumination estimate; Axial Attention applied to facilitate ``cross-talk'' between objects of different reflectance; and a Texture Extraction ControlNet to preserve high-frequency texture details while ensuring decoupling from estimated lighting. Experimental results demonstrate that MultiGP effectively leverages the complementary spatial and frequency characteristics of multiple object appearances to recover individual texture and reflectance as well as the common illumination.",
+    "url": "http://arxiv.org/abs/2603.19226v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Generative Computer Vision",
+    "score": 0.4047118,
+    "summary": "MultiGP, un méthode inverse de rendering généative, est introduite pour échantillonner toutes les composantes radiométriques - réflectance, texture et illumination - sous-jacentes à l'apparence d'un objet à partir d'une seule image."
+  },
+  {
+    "title": "Structured-condensed prompt tuning in vision-language models for fine-grained image recognition",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.patcog.2026.113610",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.4035991,
+    "summary": "Les conceptions sur l'utilisation des modèles de langage géants dans les milieux scolaires sont différentes pour les enseignants avec et sans littératie AI."
+  },
+  {
+    "title": "Multi-View Video Diffusion Policy: A 3D Spatio-Temporal-Aware Video Action Model",
+    "abstract": "Robotic manipulation requires understanding both the 3D spatial structure of the environment and its temporal evolution, yet most existing policies overlook one or both. They typically rely on 2D visual observations and backbones pretrained on static image--text pairs, resulting in high data requirements and limited understanding of environment dynamics. To address this, we introduce MV-VDP, a multi-view video diffusion policy that jointly models the 3D spatio-temporal state of the environment. The core idea is to simultaneously predict multi-view heatmap videos and RGB videos, which 1) align the representation format of video pretraining with action finetuning, and 2) specify not only what actions the robot should take, but also how the environment is expected to evolve in response to those actions. Extensive experiments show that MV-VDP enables data-efficient, robust, generalizable, and interpretable manipulation. With only ten demonstration trajectories and without additional pretraining, MV-VDP successfully performs complex real-world tasks, demonstrates strong robustness across a range of model hyperparameters, generalizes to out-of-distribution settings, and predicts realistic future videos. Experiments on Meta-World and real-world robotic platforms demonstrate that MV-VDP consistently outperforms video-prediction--based, 3D-based, and vision--language--action models, establishing a new state of the art in data-efficient multi-task manipulation.",
+    "url": "http://arxiv.org/abs/2604.03181v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Methods",
+    "score": 0.4014412,
+    "summary": "Les réseaux neuronaux peuvent être entraînés pour réaliser des tâches complexes telles que la manipulation de robots."
+  },
+  {
+    "title": "Syntax Is Easy, Semantics Is Hard: Evaluating LLMs for LTL Translation",
+    "abstract": "Propositional Linear Temporal Logic (LTL) is a popular formalism for specifying desirable requirements and security and privacy policies for software, networks, and systems. Yet expressing such requirements and policies in LTL remains challenging because of its intricate semantics. Since many security and privacy analysis tools require LTL formulas as input, this difficulty places them out of reach for many developers and analysts. Large Language Models (LLMs) could broaden access to such tools by translating natural language fragments into LTL formulas. This paper evaluates that premise by assessing how effectively several representative LLMs translate assertive English sentences into LTL formulas. Using both human-generated and synthetic ground-truth data, we evaluate effectiveness along syntactic and semantic dimensions. The results reveal three findings: (1) in line with prior findings, LLMs perform better on syntactic aspects of LTL than on semantic ones; (2) they generally benefit from more detailed prompts; and (3) reformulating the task as a Python code-completion problem substantially improves overall performance. We also discuss challenges in conducting a fair evaluation on this task and conclude with recommendations for future work.",
+    "url": "http://arxiv.org/abs/2604.07321v1",
+    "source": "arXiv",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.3962634,
+    "summary": "Les modèles de langues élargies médicaux peuvent être améliorés en intégrant des priorités corporels humains."
+  },
+  {
+    "title": "Enhancing 3D medical multi-modal large language models with integrated human body priors for computed tomography",
+    "abstract": "",
+    "url": "https://doi.org/10.1016/j.patcog.2026.113540",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.3961489,
+    "summary": "Les modèles de langues élargis peuvent aider à reconnaître les images avec une reconnaissance fine-grained."
+  },
+  {
+    "title": "Delving into conceptions of using large language models in school settings for teachers with high and low AI literacy: a drawing analysis",
+    "abstract": "",
+    "url": "https://doi.org/10.1504/ijmlo.2027.10073952",
+    "source": "Crossref",
+    "cluster": 0,
+    "cluster_title": "Large Language Models",
+    "score": 0.3938193,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Spectrally-Guided Diffusion Noise Schedules",
+    "abstract": "Denoising diffusion models are widely used for high-quality image and video generation. Their performance depends on noise schedules, which define the distribution of noise levels applied during training and the sequence of noise levels traversed during sampling. Noise schedules are typically handcrafted and require manual tuning across different resolutions. In this work, we propose a principled way to design per-instance noise schedules for pixel diffusion, based on the image's spectral properties. By deriving theoretical bounds on the efficacy of minimum and maximum noise levels, we design ``tight'' noise schedules that eliminate redundant steps. During inference, we propose to conditionally sample such noise schedules. Experiments show that our noise schedules improve generative quality of single-stage pixel diffusion models, particularly in the low-step regime.",
+    "url": "http://arxiv.org/abs/2603.19222v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Generative Computer Vision",
+    "score": 0.3870066,
+    "summary": "Dans ce travail, nous proposons une façon principielle de concevoir des horloges bruit en temps réel pour les modèles de diffusion des pixels, basée sur les propriétés spectrales de l'image."
+  },
+  {
+    "title": "EchoGen: Cycle-Consistent Learning for Unified Layout-Image Generation and Understanding",
+    "abstract": "In this work, we present EchoGen, a unified framework for layout-to-image generation and image grounding, capable of generating images with accurate layouts and high fidelity to text descriptions (e.g., spatial relationships), while grounding the image robustly at the same time. We believe that image grounding possesses strong text and layout understanding abilities, which can compensate for the corresponding limitations in layout-to-image generation. At the same time, images generated from layouts exhibit high diversity in content, thereby enhancing the robustness of image grounding. Jointly training both tasks within a unified model can promote performance improvements for each. However, we identify that this joint training paradigm encounters several optimization challenges and results in restricted performance. To address these issues, we propose progressive training strategies. First, the Parallel Multi-Task Pre-training (PMTP) stage equips the model with basic abilities for both tasks, leveraging shared tokens to accelerate training. Next, the Dual Joint Optimization (DJO) stage exploits task duality to sequentially integrate the two tasks, enabling unified optimization. Finally, the Cycle RL stage eliminates reliance on visual supervision by using consistency constraints as rewards, significantly enhancing the model's unified capabilities via the GRPO strategy. Extensive experiments demonstrate state-of-the-art results on both layout-to-image generation and image grounding benchmarks, and reveal clear synergistic gains from optimizing the two tasks together.",
+    "url": "http://arxiv.org/abs/2603.18001v1",
+    "source": "arXiv",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.3827421,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Universally Consistent Tests for the Graph of a Gaussian Graphical Model",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202023.0385",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.3741567,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Safe learning-based control via function-based uncertainty quantification",
+    "abstract": "Uncertainty quantification is essential when deploying learning-based control methods in safety-critical systems. This is commonly realized by constructing uncertainty tubes that enclose the unknown function of interest, e.g., the reward and constraint functions or the underlying dynamics model, with high probability. However, existing approaches for uncertainty quantification typically rely on restrictive assumptions on the unknown function, such as known bounds on functional norms or Lipschitz constants, and struggle with discontinuities. In this paper, we model the unknown function as a random function from which independent and identically distributed realizations can be generated, and construct uncertainty tubes via the scenario approach that hold with high probability and rely solely on the sampled realizations. We integrate these uncertainty tubes into a safe Bayesian optimization algorithm, which we then use to safely tune control parameters on a real Furuta pendulum.",
+    "url": "http://arxiv.org/abs/2604.01173v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Applications",
+    "score": 0.3705764,
+    "summary": "\"Nous étudions le problème de l'apprentissage des états quantiques à partir de données de mesure. Nous démontrons que tout état mixte dans la phase triviale peut être appris efficacement à partir d'accès aux mesures seule.\","
+  },
+  {
+    "title": "Reflective Context Learning: Studying the Optimization Primitives of Context Space",
+    "abstract": "Generally capable agents must learn from experience in ways that generalize across tasks and environments. The fundamental problems of learning, including credit assignment, overfitting, forgetting, local optima, and high-variance learning signals, persist whether the learned object lies in parameter space or context space. While these challenges are well understood in classical machine learning optimization, they remain underexplored in context space, leading current methods to be fragmented and ad hoc. We present Reflective Context Learning (RCL), a unified framework for agents that learn through repeated interaction, reflection on behavior and failure modes, and iterative updates to context. In RCL, reflection converts trajectories and current context into a directional update signal analogous to gradients, while mutation applies that signal to improve future behavior in context space. We recast recent context-optimization approaches as instances of this shared learning problem and systematically extend them with classical optimization primitives, including batching, improved credit-assignment signal, auxiliary losses, failure replay, and grouped rollouts for variance reduction. On AppWorld, BrowseComp+, and RewardBench2, these primitives improve over strong baselines, with their relative importance shifting across task regimes. We further analyze robustness to initialization, the effects of batch size, sampling and curriculum strategy, optimizer-state variants, and the impact of allocating stronger or weaker models to different optimization components. Our results suggest that learning through context updates should be treated not as a set of isolated algorithms, but as an optimization problem whose mechanisms can be studied systematically and improved through transferable principles.",
+    "url": "http://arxiv.org/abs/2604.03189v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Methods",
+    "score": 0.3702087,
+    "summary": "La méthode d'estimation simultanée et de sélection du jeu de données pour l'apprentissage transféré est proposée dans cet article."
+  },
+  {
+    "title": "Loc3R-VLM: Language-based Localization and 3D Reasoning with Vision-Language Models",
+    "abstract": "Multimodal Large Language Models (MLLMs) have made impressive progress in connecting vision and language, but they still struggle with spatial understanding and viewpoint-aware reasoning. Recent efforts aim to augment the input representations with geometric cues rather than explicitly teaching models to reason in 3D space. We introduce Loc3R-VLM, a framework that equips 2D Vision-Language Models with advanced 3D understanding capabilities from monocular video input. Inspired by human spatial cognition, Loc3R-VLM relies on two joint objectives: global layout reconstruction to build a holistic representation of the scene structure, and explicit situation modeling to anchor egocentric perspective. These objectives provide direct spatial supervision that grounds both perception and language in a 3D context. To ensure geometric consistency and metric-scale alignment, we leverage lightweight camera pose priors extracted from a pre-trained 3D foundation model. Loc3R-VLM achieves state-of-the-art performance in language-based localization and outperforms existing 2D- and video-based approaches on situated and general 3D question-answering benchmarks, demonstrating that our spatial supervision framework enables strong 3D understanding. Project page: https://kevinqu7.github.io/loc3r-vlm",
+    "url": "http://arxiv.org/abs/2603.18002v1",
+    "source": "arXiv",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.369844,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Simultaneous Estimation and Dataset Selection for Transfer Learning in High Dimensions by a Non-convex Penalty",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202024.0423",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.3697852,
+    "summary": "L'estimation simultanée et la sélection de jeux de données pour l'apprentissage transféré en haute dimensionnalité sont possibles avec une pénalité non-convexe."
+  },
+  {
+    "title": "Uncertainty Quantification for Large-Scale Deep Neural Networks via Post-StoNet Modeling",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202024.0294",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.3656153,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "Hierarchical Planning with Latent World Models",
+    "abstract": "Model predictive control (MPC) with learned world models has emerged as a promising paradigm for embodied control, particularly for its ability to generalize zero-shot when deployed in new environments. However, learned world models often struggle with long-horizon control due to the accumulation of prediction errors and the exponentially growing search space. In this work, we address these challenges by learning latent world models at multiple temporal scales and performing hierarchical planning across these scales, enabling long-horizon reasoning while substantially reducing inference-time planning complexity. Our approach serves as a modular planning abstraction that applies across diverse latent world-model architectures and domains. We demonstrate that this hierarchical approach enables zero-shot control on real-world non-greedy robotic tasks, achieving a 70% success rate on pick-&-place using only a final goal specification, compared to 0% for a single-level world model. In addition, across physics-based simulated environments including push manipulation and maze navigation, hierarchical planning achieves higher success while requiring up to 4x less planning-time compute.",
+    "url": "http://arxiv.org/abs/2604.03208v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Methods",
+    "score": 0.3631915,
+    "summary": "Les plateformes mobiles peuvent être utilisées pour enseigner les Qira'at au cours d'une période de temps."
+  },
+  {
+    "title": "Cubic Discrete Diffusion: Discrete Visual Generation on High-Dimensional Representation Tokens",
+    "abstract": "Visual generation with discrete tokens has gained significant attention as it enables a unified token prediction paradigm shared with language models, promising seamless multimodal architectures. However, current discrete generation methods remain limited to low-dimensional latent tokens (typically 8-32 dims), sacrificing the semantic richness essential for understanding. While high-dimensional pretrained representations (768-1024 dims) could bridge this gap, their discrete generation poses fundamental challenges. In this paper, we present Cubic Discrete Diffusion (CubiD), the first discrete generation model for high-dimensional representations. CubiD performs fine-grained masking throughout the high-dimensional discrete representation -- any dimension at any position can be masked and predicted from partial observations. This enables the model to learn rich correlations both within and across spatial positions, with the number of generation steps fixed at $T$ regardless of feature dimensionality, where $T \\ll hwd$. On ImageNet-256, CubiD achieves state-of-the-art discrete generation with strong scaling behavior from 900M to 3.7B parameters. Crucially, we validate that these discretized tokens preserve original representation capabilities, demonstrating that the same discrete tokens can effectively serve both understanding and generation tasks. We hope this work will inspire future research toward unified multimodal architectures. Code is available at: https://github.com/YuqingWang1029/CubiD.",
+    "url": "http://arxiv.org/abs/2603.19232v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Generative Computer Vision",
+    "score": 0.3597457,
+    "summary": "Nous présentons Cubic Discrete Diffusion (CubiD), le premier modèle de génération discrete pour les représentations à haute dimensionnalité."
+  },
+  {
+    "title": "Message passing and cyclicity transition",
+    "abstract": "Message passing, also known as belief propagation, is a versatile framework for analyzing models defined on networks. Its most prototypical application is percolation; yet, the interpretation of the message passing formulation of percolation remains elusive. We show that the message passing solutions commonly associated with the probability of belonging to the giant component actually identify reachability from cycles. This interpretation applies to bond and site percolation on arbitrary undirected or directed networks. Our findings emphasize the distinction between transition in cyclicity and the emergence of the giant component.",
+    "url": "http://arxiv.org/abs/2604.01201v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.3584606,
+    "summary": "Les estimations d'une méthode d'avertage pour des modèles à grande dimension sont étudiées."
+  },
+  {
+    "title": "Online Learning and Equilibrium Computation with Ranking Feedback",
+    "abstract": "Online learning in arbitrary, and possibly adversarial, environments has been extensively studied in sequential decision-making, and it is closely connected to equilibrium computation in game theory. Most existing online learning algorithms rely on \\emph{numeric} utility feedback from the environment, which may be unavailable in human-in-the-loop applications and/or may be restricted by privacy concerns. In this paper, we study an online learning model in which the learner only observes a \\emph{ranking} over a set of proposed actions at each timestep. We consider two ranking mechanisms: rankings induced by the \\emph{instantaneous} utility at the current timestep, and rankings induced by the \\emph{time-average} utility up to the current timestep, under both \\emph{full-information} and \\emph{bandit} feedback settings. Using the standard external-regret metric, we show that sublinear regret is impossible with instantaneous-utility ranking feedback in general. Moreover, when the ranking model is relatively deterministic, \\emph{i.e.}, under the Plackett-Luce model with a temperature that is sufficiently small, sublinear regret is also impossible with time-average utility ranking feedback. We then develop new algorithms that achieve sublinear regret under the additional assumption that the utility sequence has sublinear total variation. Notably, for full-information time-average utility ranking feedback, this additional assumption can be removed. As a consequence, when all players in a normal-form game follow our algorithms, repeated play yields an approximate coarse correlated equilibrium. We also demonstrate the effectiveness of our algorithms in an online large-language-model routing task.",
+    "url": "http://arxiv.org/abs/2603.19221v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.3578694,
+    "summary": "Résumé de l'article 3 : Étude d'un modèle d'apprentissage en ligne qui utilise des rankings pour prendre des décisions, avec un regret externe sous-jacent et une équilibre approximatif dans les jeux à normal-forme."
+  },
+  {
+    "title": "Dancing in the Rain: The Effectiveness of Mobile Platform for Learning Ten Qira’at",
+    "abstract": "",
+    "url": "https://doi.org/10.6007/ijarbss/v14-i5/21493",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Applications",
+    "score": 0.3551491,
+    "summary": "L'utilisation de plates-formes mobiles pour apprendre les 10 Qira'at est efficace dans la pluie."
+  },
+  {
+    "title": "Programmable Signal Design for Quantum Phase Estimation via Quantum Signal Processing",
+    "abstract": "Quantum phase estimation is a central primitive in quantum algorithms and sensing, where performance is governed by the sensitivity of measurement signals to the target parameter. While existing methods have developed increasingly sophisticated inference and adaptive design strategies, the signal family used for phase learning is often largely pre-specified. Here we propose a programmable signal design framework for quantum phase estimation based on quantum signal processing, which enables the measurement signal to be tailored to the current uncertainty region. We cast phase estimation as a max-min optimization problem over admissible signals and introduce a sensitivity efficiency parameter that quantifies information gain per query depth. The resulting iterative algorithm combines optimized quantum signal transformations with structured classical inference, retaining Heisenberg-limited scaling while improving sensitivity efficiency and practical resource prefactors. Numerical results show reduced estimation variance compared with standard protocols such as robust phase estimation. Our framework also extends to Hamiltonian eigenvalue estimation in higher dimensions and establishes a quantum-classical co-design paradigm through programmable signal shaping.",
+    "url": "http://arxiv.org/abs/2604.01205v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Applications",
+    "score": 0.3539639,
+    "summary": "\"Aucun modèle linguistique ne peut améliorer sa génération de code sans vérificateur, modèle enseignant ou apprentissage par renforcement. Nous répondons positivement avec une simple distillation automatique : échantillonnent des solutions à partir du modèle et ajustez-les à l'aide d'une formation standard.\","
+  },
+  {
+    "title": "A Convex Formulation of the Multi-Commodity Dynamic Traffic Assignment",
+    "abstract": "We consider a multi-commodity Dynamic Traffic Assignment (DTA) problem formulated as a network flow control problem on the Cell Transmission Model (CTM). The objective is to design optimal control policies using variable speed limits, ramp metering, and dynamic routing to regulate traffic evolution over time on a given limited-capacity transportation network. Even simple instances of DTA problems on the CTM are known to give rise to non-convex optimal control formulations. Nevertheless, a single-commodity DTA formulation has recently been proposed that admits a tight convex relaxation, thereby enabling tractable optimal control synthesis. The single-commodity formulation, however, is structurally restrictive, as it effectively allows only a single destination. To address this limitation, we develop a multi-commodity CTM model in which each commodity is associated with potentially distinct sets of off-ramps. By extending the convexification approach developed for the single-commodity case, we establish a tight convex relaxation of the multi-commodity DTA problem on the CTM model. This relaxation relies on concave, commodity-specific demand functions and concave aggregate supply functions for every cell, which ensure convexity of the resulting optimal control problem. Our proposed formulation requires commodity-dependent implementation of variable speed limits and dynamic routing policies.",
+    "url": "http://arxiv.org/abs/2603.17981v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.3521579,
+    "summary": "Résumé de l'article 4 : Nous développons un modèle de circulation dynamique multi-commodity sur la base du modèle de transmission cellulaires. Nous établissons une relaxation convexe étroite du problème de contrôle optimal sur ce modèle."
+  },
+  {
+    "title": "Enhancing Real Time Decision Intelligence through Federated Learning Integration in Edge Computing Networks",
+    "abstract": "",
+    "url": "https://doi.org/10.1504/ijcis.2028.10073919",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.3499585,
+    "summary": "L'intégration de l'apprentissage fédéré dans les réseaux de calcul à bord améliore l'intelligibilité des décisions en temps réel."
+  },
+  {
+    "title": "Embarrassingly Simple Self-Distillation Improves Code Generation",
+    "abstract": "Can a large language model (LLM) improve at code generation using only its own raw outputs, without a verifier, a teacher model, or reinforcement learning? We answer in the affirmative with simple self-distillation (SSD): sample solutions from the model with certain temperature and truncation configurations, then fine-tune on those samples with standard supervised fine-tuning. SSD improves Qwen3-30B-Instruct from 42.4% to 55.3% pass@1 on LiveCodeBench v6, with gains concentrating on harder problems, and it generalizes across Qwen and Llama models at 4B, 8B, and 30B scale, including both instruct and thinking variants. To understand why such a simple method can work, we trace these gains to a precision-exploration conflict in LLM decoding and show that SSD reshapes token distributions in a context-dependent way, suppressing distractor tails where precision matters while preserving useful diversity where exploration matters. Taken together, SSD offers a complementary post-training direction for improving LLM code generation.",
+    "url": "http://arxiv.org/abs/2604.01193v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Applications",
+    "score": 0.3496236,
+    "summary": "\"Nous intégrons l'apprentissage fédéré dans les réseaux d'informatique à l'égout pour améliorer l'intelligence décisionnelle en temps réel.\","
+  },
+  {
+    "title": "Distributed Algorithms for High-Dimensional Statistical Inference and Structure Learning with Heterogeneous Data",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0087",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.3462068,
+    "summary": "Les algorithmes distribués pour l'inference statistique et l'apprentissage d'une structure avec des données hétérogènes sont proposés."
+  },
+  {
+    "title": "Gradient Boosting within a Single Attention Layer",
+    "abstract": "Transformer attention computes a single softmax-weighted average over values -- a one-pass estimate that cannot correct its own errors. We introduce \\emph{gradient-boosted attention}, which applies the principle of gradient boosting \\emph{within} a single attention layer: a second attention pass, with its own learned projections, attends to the prediction error of the first and applies a gated correction. Under a squared reconstruction objective, the construction maps onto Friedman's gradient boosting machine, with each attention pass as a base learner and the per-dimension gate as the shrinkage parameter. We show that a single Hopfield-style update erases all query information orthogonal to the stored-pattern subspace, and that further iteration under local contraction can collapse distinct queries in the same region to the same fixed point. We also show that separate projections for the correction pass can recover residual information inaccessible to the shared-projection approach of Tukey's twicing. On a 10M-token subset of WikiText-103, gradient-boosted attention achieves a test perplexity of $67.9$ compared to $72.2$ for standard attention, $69.6$ for Twicing Attention, and $69.0$ for a parameter-matched wider baseline, with two rounds capturing most of the benefit.",
+    "url": "http://arxiv.org/abs/2604.03190v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Methods",
+    "score": 0.345773,
+    "summary": "Le framework HyperCT propose une adaptation dynamique d'un transformateur de vision via un hyper-réseau pour modéliser les pathologies distinctes."
+  },
+  {
+    "title": "Generation Models Know Space: Unleashing Implicit 3D Priors for Scene Understanding",
+    "abstract": "While Multimodal Large Language Models demonstrate impressive semantic capabilities, they often suffer from spatial blindness, struggling with fine-grained geometric reasoning and physical dynamics. Existing solutions typically rely on explicit 3D modalities or complex geometric scaffolding, which are limited by data scarcity and generalization challenges. In this work, we propose a paradigm shift by leveraging the implicit spatial prior within large-scale video generation models. We posit that to synthesize temporally coherent videos, these models inherently learn robust 3D structural priors and physical laws. We introduce VEGA-3D (Video Extracted Generative Awareness), a plug-and-play framework that repurposes a pre-trained video diffusion model as a Latent World Simulator. By extracting spatiotemporal features from intermediate noise levels and integrating them with semantic representations via a token-level adaptive gated fusion mechanism, we enrich MLLMs with dense geometric cues without explicit 3D supervision. Extensive experiments across 3D scene understanding, spatial reasoning, and embodied manipulation benchmarks demonstrate that our method outperforms state-of-the-art baselines, validating that generative priors provide a scalable foundation for physical-world understanding. Code is publicly available at https://github.com/H-EmbodVis/VEGA-3D.",
+    "url": "http://arxiv.org/abs/2603.19235v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Generative Computer Vision",
+    "score": 0.3419084,
+    "summary": "VEGA-3D est un framework plug-and-play qui réutilise un modèle de diffusion vidéo prédéfini en tant que simulateur du monde latent."
+  },
+  {
+    "title": "On min-Storey estimators for multiple testing and conformal novelty detection",
+    "abstract": "In a multiple testing task, finding an appropriate estimator of the proportion $π_0$ of non-signal in the data to boost power of false discovery rate (FDR) controlling procedures is a long-standing research theme, sometimes referred to as 'adaptive FDR control'. The interest in this theme has been reinforced in the recent years with conformal novelty detection, for which it turns out that similar tools can be used in combination with any 'blackbox' machine learning algorithm. Nevertheless, perhaps surprisingly, finding a solution for 'adaptive FDR control' that is optimal in a broad sense is still an open problem. This paper fills this gap by introducing new $π_0$-estimators, referred to as min-Storey (MS) and interval-min-Storey (IMS), which are built upon the so-called 'Storey estimator'. Plugging these estimators in the adaptive Benjamini-Hochberg (BH) procedure is shown to deliver FDR control both in the independent and conformal settings. In addition, these methods satisfy an optimal power property over any (regular) alternative distribution. The excellent behaviors of the new adaptive procedures are illustrated with numerical experiments both in the independent and conformal models for various distribution structures.",
+    "url": "http://arxiv.org/abs/2603.17984v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.3414443,
+    "summary": "Résumé de l'article 7 : Nous introduisons de nouveaux estimateurs de la proportion de non-signaux dans les données pour améliorer le contrôle de la fonction de découverte fausse et booster le pouvoir."
+  },
+  {
+    "title": "The Exponentially Weighted Signature",
+    "abstract": "The signature is a canonical representation of a multidimensional path over an interval. However, it treats all historical information uniformly, offering no intrinsic mechanism for contextualising the relevance of the past. To address this, we introduce the Exponentially Weighted Signature (EWS), generalising the Exponentially Fading Memory (EFM) signature from diagonal to general bounded linear operators. These operators enable cross-channel coupling at the level of temporal weighting together with richer memory dynamics including oscillatory, growth, and regime-dependent behaviour, while preserving the algebraic strengths of the classical signature. We show that the EWS is the unique solution to a linear controlled differential equation on the tensor algebra, and that it generalises both state-space models and the Laplace and Fourier transforms of the path. The group-like structure of the EWS enables efficient computation and makes the framework amenable to gradient-based learning, with the full semigroup action parametrised by and learned through its generator. We use this framework to empirically demonstrate the expressivity gap between the EWS and both the signature and EFM on two SDE-based regression tasks.",
+    "url": "http://arxiv.org/abs/2603.19198v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.3404877,
+    "summary": "Résumé de l'article 7 : Nouvelle signature temporelle qui combine le passé et le présent, permettant une plus grande contextualisation."
+  },
+  {
+    "title": "HyperCT: Low-Rank Hypernet for Unified Chest CT Analysis",
+    "abstract": "Non-contrast chest CTs offer a rich opportunity for both conventional pulmonary and opportunistic extra-pulmonary screening. While Multi-Task Learning (MTL) can unify these diverse tasks, standard hard-parameter sharing approaches are often suboptimal for modeling distinct pathologies. We propose HyperCT, a framework that dynamically adapts a Vision Transformer backbone via a Hypernetwork. To ensure computational efficiency, we integrate Low-Rank Adaptation (LoRA), allowing the model to regress task-specific low-rank weight updates rather than full parameters. Validated on a large-scale dataset of radiological and cardiological tasks, \\method{} outperforms various strong baselines, offering a unified, parameter-efficient solution for holistic patient assessment. Our code is available at https://github.com/lfb-1/HyperCT.",
+    "url": "http://arxiv.org/abs/2604.03224v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Methods",
+    "score": 0.3389044,
+    "summary": "Les images CT sans contraste du thorax offrent une opportunité riche pour la détection conventionnelle des pathologies pulmonaires et extra-pulmonaires."
+  },
+  {
+    "title": "Network Traffic Classification and QoS Optimisation Method based on Deep Learning",
+    "abstract": "",
+    "url": "https://doi.org/10.1504/ijwet.2027.10076621",
+    "source": "Crossref",
+    "cluster": 3,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.3373625,
+    "summary": "Résumé non disponible."
+  },
+  {
+    "title": "FASTER: Rethinking Real-Time Flow VLAs",
+    "abstract": "Real-time execution is crucial for deploying Vision-Language-Action (VLA) models in the physical world. Existing asynchronous inference methods primarily optimize trajectory smoothness, but neglect the critical latency in reacting to environmental changes. By rethinking the notion of reaction in action chunking policies, this paper presents a systematic analysis of the factors governing reaction time. We show that reaction time follows a uniform distribution determined jointly by the Time to First Action (TTFA) and the execution horizon. Moreover, we reveal that the standard practice of applying a constant schedule in flow-based VLAs can be inefficient and forces the system to complete all sampling steps before any movement can start, forming the bottleneck in reaction latency. To overcome this issue, we propose Fast Action Sampling for ImmediaTE Reaction (FASTER). By introducing a Horizon-Aware Schedule, FASTER adaptively prioritizes near-term actions during flow sampling, compressing the denoising of the immediate reaction by tenfold (e.g., in $π_{0.5}$ and X-VLA) into a single step, while preserving the quality of long-horizon trajectory. Coupled with a streaming client-server pipeline, FASTER substantially reduces the effective reaction latency on real robots, especially when deployed on consumer-grade GPUs. Real-world experiments, including a highly dynamic table tennis task, prove that FASTER unlocks unprecedented real-time responsiveness for generalist policies, enabling rapid generation of accurate and smooth trajectories.",
+    "url": "http://arxiv.org/abs/2603.19199v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.3349751,
+    "summary": "Résumé de l'article 8 : Méthode d'inference rapide pour les modèles de vision-langage-action, réduisant la latence de réaction."
+  },
+  {
+    "title": "Inference for High-dimensional Model Averaging Estimators",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0211",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.3293583,
+    "summary": "Résumé : estimeurs d'incidence pour modèles de moyenne haute-dimension."
+  },
+  {
+    "title": "Universal Skeleton Understanding via Differentiable Rendering and MLLMs",
+    "abstract": "Multimodal large language models (MLLMs) exhibit strong visual-language reasoning, yet remain confined to their native modalities and cannot directly process structured, non-visual data such as human skeletons. Existing methods either compress skeleton dynamics into lossy feature vectors for text alignment, or quantize motion into discrete tokens that generalize poorly across heterogeneous skeleton formats. We present SkeletonLLM, which achieves universal skeleton understanding by translating arbitrary skeleton sequences into the MLLM's native visual modality. At its core is DrAction, a differentiable, format-agnostic renderer that converts skeletal kinematics into compact image sequences. Because the pipeline is end-to-end differentiable, MLLM gradients can directly guide the rendering to produce task-informative visual tokens. To further enhance reasoning capabilities, we introduce a cooperative training strategy: Causal Reasoning Distillation transfers structured, step-by-step reasoning from a teacher model, while Discriminative Finetuning sharpens decision boundaries between confusable actions. SkeletonLLM demonstrates strong generalization on diverse tasks including recognition, captioning, reasoning, and cross-format transfer -- suggesting a viable path for applying MLLMs to non-native modalities. Code will be released upon acceptance.",
+    "url": "http://arxiv.org/abs/2603.18003v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.3283269,
+    "summary": "Les modèles linguistiques à grande échelle (MLLM) montrent une raisonnelle en visuo-langage, mais restent confinés à leurs modalités natives et ne peuvent pas traiter directement des données non-visuelles structurées telles que les squelettes humains."
+  },
+  {
+    "title": "Matryoshka Gaussian Splatting",
+    "abstract": "The ability to render scenes at adjustable fidelity from a single model, known as level of detail (LoD), is crucial for practical deployment of 3D Gaussian Splatting (3DGS). Existing discrete LoD methods expose only a limited set of operating points, while concurrent continuous LoD approaches enable smoother scaling but often suffer noticeable quality degradation at full capacity, making LoD a costly design decision. We introduce Matryoshka Gaussian Splatting (MGS), a training framework that enables continuous LoD for standard 3DGS pipelines without sacrificing full-capacity rendering quality. MGS learns a single ordered set of Gaussians such that rendering any prefix, the first k splats, produces a coherent reconstruction whose fidelity improves smoothly with increasing budget. Our key idea is stochastic budget training: each iteration samples a random splat budget and optimises both the corresponding prefix and the full set. This strategy requires only two forward passes and introduces no architectural modifications. Experiments across four benchmarks and six baselines show that MGS matches the full-capacity performance of its backbone while enabling a continuous speed-quality trade-off from a single model. Extensive ablations on ordering strategies, training objectives, and model capacity further validate the designs.",
+    "url": "http://arxiv.org/abs/2603.19234v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Generative Computer Vision",
+    "score": 0.3226448,
+    "summary": "MGS apprend un ensemble unique d'échantillons gaussiens tels que la reconstruction cohérente améliore progressivement avec le budget accrue."
+  },
+  {
+    "title": "The specificity of the image-sense in translating film titles (based on the English and Korean languages)",
+    "abstract": "",
+    "url": "https://doi.org/10.17223/18137083/55/20",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.3205267,
+    "summary": "Résumé : la spécificité du sens-image lors de la traduction de titres de film (basée sur les langues anglaise et coréenne)."
+  },
+  {
+    "title": "Identification and Estimation of General Nonlinear Structured Latent Factor Model for Functional Data",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0148",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.3196047,
+    "summary": "Résumé : identification et estimation d'un modèle de facteur latent non linéaire pour des données fonctionnelles."
+  },
+  {
+    "title": "Interpretable Traffic Responsibility from Dashcam Video via Legal Multi Agent Reasoning",
+    "abstract": "The widespread adoption of dashcams has made video evidence in traffic accidents increasingly abundant, yet transforming \"what happened in the video\" into \"who is responsible under which legal provisions\" still relies heavily on human experts. Existing ego-view traffic accident studies mainly focus on perception and semantic understanding, while LLM-based legal methods are mostly built on textual case descriptions and rarely incorporate video evidence, leaving a clear gap between the two. We first propose C-TRAIL, a multimodal legal dataset that, under the Chinese traffic regulation system, explicitly aligns dashcam videos and textual descriptions with a closed set of responsibility modes and their corresponding Chinese traffic statutes. On this basis, we introduce a two-stage framework: (1) a traffic accident understanding module that generates textual video descriptions; and (2) a legal multi-agent framework that outputs responsibility modes, statute sets, and complete judgment reports. Experimental results on C-TRAIL and MM-AU show that our method outperforms general and legal LLMs, as well as existing agent-based approaches, while providing a transparent and interpretable legal reasoning process.",
+    "url": "http://arxiv.org/abs/2603.17930v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.3169794,
+    "summary": "Résumé de l'article 8 : Nous proposons un framework multimodal pour transformer les vidéos d'accidents routiers en responsabilité légale, alignant les descriptions vidéo avec des modes de responsabilité spécifiques et des statues du code de la route chinois."
+  },
+  {
+    "title": "Nemotron-Cascade 2: Post-Training LLMs with Cascade RL and Multi-Domain On-Policy Distillation",
+    "abstract": "We introduce Nemotron-Cascade 2, an open 30B MoE model with 3B activated parameters that delivers best-in-class reasoning and strong agentic capabilities. Despite its compact size, its mathematical and coding reasoning performance approaches that of frontier open models. It is the second open-weight LLM, after DeepSeekV3.2-Speciale-671B-A37B, to achieve Gold Medal-level performance in the 2025 International Mathematical Olympiad (IMO), the International Olympiad in Informatics (IOI), and the ICPC World Finals, demonstrating remarkably high intelligence density with 20x fewer parameters. In contrast to Nemotron-Cascade 1, the key technical advancements are as follows. After SFT on a meticulously curated dataset, we substantially expand Cascade RL to cover a much broader spectrum of reasoning and agentic domains. Furthermore, we introduce multi-domain on-policy distillation from the strongest intermediate teacher models for each domain throughout the Cascade RL process, allowing us to efficiently recover benchmark regressions and sustain strong performance gains along the way. We release the collection of model checkpoint and training data.",
+    "url": "http://arxiv.org/abs/2603.19220v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.3107687,
+    "summary": "Résumé de l'article 9 : Modèle de MoE ouvert de 30B avec des performances exceptionnelles en raisonnement et en capacité agente."
+  },
+  {
+    "title": "Matrix Autoregressive Model with Vector Time Series Covariates for Spatiotemporal Data",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0029",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.309241,
+    "summary": "Résumé : modèle autoregressive de matrice avec des covariates de série chronologique vectorielle pour les données spatiotemporelles."
+  },
+  {
+    "title": "Versatile Editing of Video Content, Actions, and Dynamics without Training",
+    "abstract": "Controlled video generation has seen drastic improvements in recent years. However, editing actions and dynamic events, or inserting contents that should affect the behaviors of other objects in real-world videos, remains a major challenge. Existing trained models struggle with complex edits, likely due to the difficulty of collecting relevant training data. Similarly, existing training-free methods are inherently restricted to structure- and motion-preserving edits and do not support modification of motion or interactions. Here, we introduce DynaEdit, a training-free editing method that unlocks versatile video editing capabilities with pretrained text-to-video flow models. Our method relies on the recently introduced inversion-free approach, which does not intervene in the model internals, and is thus model-agnostic. We show that naively attempting to adapt this approach to general unconstrained editing results in severe low-frequency misalignment and high-frequency jitter. We explain the sources for these phenomena and introduce novel mechanisms for overcoming them. Through extensive experiments, we show that DynaEdit achieves state-of-the-art results on complex text-based video editing tasks, including modifying actions, inserting objects that interact with the scene, and introducing global effects.",
+    "url": "http://arxiv.org/abs/2603.17989v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.3045897,
+    "summary": "La génération de vidéos contrôlée a vu des améliorations importantes ces dernières années, mais l'insertion de contenus qui devraient affecter le comportement d'autres objets dans des vidéos réalistes restent un défi majeur."
+  },
+  {
+    "title": "The extreme statistics of some noncolliding Brownian processes",
+    "abstract": "We consider certain noncolliding interacting particle systems driven by Brownian noise. A key example is drifted Brownian motions conditioned not to intersect and related models of eigenvalues of Hermitian random matrices. We establish limit theorems for the extremal particle. We find: (i) the scaling limit of the largest eigenvalue of Brownian motion over Hermitian, positive-definite matrices, (ii) Airy process limit for the largest eigenvalue of Dyson's Brownian motion for GUE started from generic initial conditions, and (iii) a Fredholm determinant formula for the running maximum of the top path among noncolliding Brownian bridges and, as a byproduct, a new formula for the law of largest eigenvalue in the Laguerre Orthogonal Ensemble as well as for a related point-to-line last passage percolation model.",
+    "url": "http://arxiv.org/abs/2604.03206v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.3020855,
+    "summary": "Un framework d'apprentissage fusionnel est proposé pour les modèles de vision-langage."
+  },
+  {
+    "title": "RoboForge: Physically Optimized Text-guided Whole-Body Locomotion for Humanoids",
+    "abstract": "While generative models have become effective at producing human-like motions from text, transferring these motions to humanoid robots for physical execution remains challenging. Existing pipelines are often limited by retargeting, where kinematic quality is undermined by physical infeasibility, contact-transition errors, and the high cost of real-world dynamical data. We present a unified latent-driven framework that bridges natural language and whole-body humanoid locomotion through a retarget-free, physics-optimized pipeline. Rather than treating generation and control as separate stages, our key insight is to couple them bidirectionally under physical constraints.We introduce a Physical Plausibility Optimization (PP-Opt) module as the coupling interface. In the forward direction, PP-Opt refines a teacher-student distillation policy with a plausibility-centric reward to suppress artifacts such as floating, skating, and penetration. In the backward direction, it converts reward-optimized simulation rollouts into high-quality explicit motion data, which is used to fine-tune the motion generator toward a more physically plausible latent distribution. This bidirectional design forms a self-improving cycle: the generator learns a physically grounded latent space, while the controller learns to execute latent-conditioned behaviors with dynamical integrity.Extensive experiments on the Unitree G1 humanoid show that our bidirectional optimization improves tracking accuracy and success rates. Across IsaacLab and MuJoCo, the implicit latent-driven pipeline consistently outperforms conventional explicit retargeting baselines in both precision and stability. By coupling diffusion-based motion generation with physical plausibility optimization, our framework provides a practical path toward deployable text-guided humanoid intelligence.",
+    "url": "http://arxiv.org/abs/2603.17927v1",
+    "source": "arXiv",
+    "cluster": 2,
+    "cluster_title": "Machine Learning Algorithms",
+    "score": 0.3007827,
+    "summary": "Résumé de l'article 9 : Le framework latent-driven nous permet de produire des mouvements humanoïdes plus stables et précis à partir de textes en utilisant une optimisation physique sans retargeting."
+  },
+  {
+    "title": "CoME-VL: Scaling Complementary Multi-Encoder Vision-Language Learning",
+    "abstract": "Recent vision-language models (VLMs) typically rely on a single vision encoder trained with contrastive image-text objectives, such as CLIP-style pretraining. While contrastive encoders are effective for cross-modal alignment and retrieval, self-supervised visual encoders often capture richer dense semantics and exhibit stronger robustness on recognition and understanding tasks. In this work, we investigate how to scale the fusion of these complementary visual representations for vision-language modeling. We propose CoME-VL: Complementary Multi-Encoder Vision-Language, a modular fusion framework that integrates a contrastively trained vision encoder with a self-supervised DINO encoder. Our approach performs representation-level fusion by (i) entropy-guided multi-layer aggregation with orthogonality-constrained projections to reduce redundancy, and (ii) RoPE-enhanced cross-attention to align heterogeneous token grids and produce compact fused visual tokens. The fused tokens can be injected into a decoder-only LLM with minimal changes to standard VLM pipelines. Extensive experiments across diverse vision-language benchmarks demonstrate that CoME-VL consistently outperforms single-encoder baselines. In particular, we observe an average improvement of 4.9% on visual understanding tasks and 5.4% on grounding tasks. Our method achieves state-of-the-art performance on RefCOCO for detection while improving over the baseline by a large margin. Finally, we conduct ablation studies on layer merging, non-redundant feature mixing, and fusion capacity to evaluate how complementary contrastive and self-supervised signals affect VLM performance.",
+    "url": "http://arxiv.org/abs/2604.03231v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.2922257,
+    "summary": "Des procédures d'estimation et de sélection de modèle sont développées pour un modèle hybride fonctionnel."
+  },
+  {
+    "title": "Estimation and Model Selection Procedures in Generalized Functional Partially Additive Hybrid Model with Diverging Number of Covariates",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202024.0358",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.2837075,
+    "summary": "Résumé : estimation d'une fonction de régression continue à piècewise en dimension finie utilisant un arbre de régession oblique avec des applications dans la dénoissance d'images."
+  },
+  {
+    "title": "Cyber Defense Digital Twins: A Federated Learning and Zero-Trust AI Architecture for Autonomous Threat Prediction and Response",
+    "abstract": "<jats:p>Modern enterprise networks operate under persistent threats that exploit cloud-native misconfigurations, identity sprawl, and API vulnerabilities at machine speed. Existing security operations center (SOC) architectures remain largely reactive, signature-dependent, and incapable of predicting multi-stage lateral movement. This paper proposes the Cognitive Cyber Defense Digital Twin (CCDT), a unified architecture integrating federated learning (FL), graph neural network (GNN)-based attack-path forecasting, adversarially hardened detection models, and autonomous Security Orchestration, Automation, and Response (SOAR) with deception engineering. The CCDT constructs a continuously synchronized digital replica of organizational assets and employs reinforcement learning-based red agents to stress-test detection models. A federated intelligence mesh enables cross-organizational privacy-preserving gradient sharing. Experimental evaluations against CICIDS-2018 and LANL datasets demonstrate 52% faster attack-path detection, 41% reduction in false positive rate, and 60% reduction in mean-time-to-respond (MTTR) compared to traditional SOC baselines. Integrated Explainable AI (XAI) modules using SHAP values enable audit-ready compliance reporting. The CCDT represents a paradigm shift from reactive monitoring to predictive, autonomous, and privacy-preserving cyber defense for hybrid cloud environments.</jats:p>",
+    "url": "https://doi.org/10.32628/cseit251116279",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.2683204,
+    "summary": "Le CCDT propose une architecture unifiée pour la défense cybernétique, intégrant l'apprentissage fédéré, les réseaux de neurones graphiques et l'orchestration automatique."
+  },
+  {
+    "title": "Sparsity Learning via Structured Functional Factor Augmentation",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0205",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.2672567,
+    "summary": "L'apprentissage par sparsity via l'augmentation factorisée fonctionnelle est étudié."
+  },
+  {
+    "title": "PR3DICTR: A modular AI framework for medical 3D image-based detection and outcome prediction",
+    "abstract": "Three-dimensional medical image data and computer-aided decision making, particularly using deep learning, are becoming increasingly important in the medical field. To aid in these developments we introduce PR3DICTR: Platform for Research in 3D Image Classification and sTandardised tRaining. Built using community-standard distributions (PyTorch and MONAI), PR3DICTR provides an open-access, flexible and convenient framework for prediction model development, with an explicit focus on classification using three-dimensional medical image data. By combining modular design principles and standardization, it aims to alleviate developmental burden whilst retaining adjustability. It provides users with a wealth of pre-established functionality, for instance in model architecture design options, hyper-parameter solutions and training methodologies, but still gives users the opportunity and freedom to ``plug in'' their own solutions or modules. PR3DICTR can be applied to any binary or event-based three-dimensional classification task and can work with as little as two lines of code.",
+    "url": "http://arxiv.org/abs/2604.03203v1",
+    "source": "arXiv",
+    "cluster": 1,
+    "cluster_title": "Machine Learning Models",
+    "score": 0.2663628,
+    "summary": "Les performances de reconnaissances et d'entraînement dans les modèles de génération d'images haute qualité sont étudiées."
+  },
+  {
+    "title": "Estimation of Piecewise Continuous Regression Function in Finite Dimension using Oblique-axis Regression Tree with Applications in Image Denoising",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0120",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.2654012,
+    "summary": "Résumé : l'image du personnage principal du roman de D. S. Merezhkovsky «Les Dieux ressuscités. Léonard de Vinci»."
+  },
+  {
+    "title": "The mirror two-faced image of the protagonist of the novel by D. S. Merezhkovsky «Resurrected Gods. Leonardo da Vinci»",
+    "abstract": "",
+    "url": "https://doi.org/10.17223/18137083/55/7",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.2478398,
+    "summary": "Résumé : présentation d'un modèle pour évaluer les performances des universités et institutions supérieures en utilisant un patron hybride (étude de cas : Hérat, Afghanistan)."
+  },
+  {
+    "title": "Robust Jackknife Model Averaging",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0057",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Machine Learning",
+    "score": 0.2475448,
+    "summary": "\"L'algorithme d'ajustement robuste pour les modèles hybrides permet une estimation fiable.\","
+  },
+  {
+    "title": "Left Ventricle Extraction Using a DENSENET-U-Net Integrated Deep Learning Approach",
+    "abstract": "",
+    "url": "https://doi.org/10.1504/ijims.2028.10076630",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.2462837,
+    "summary": "L'extraction du ventricule gauche utilise une approche d'apprentissage profond intégrant un réseau dense U-Net."
+  },
+  {
+    "title": "Learner profiles and the process of Learning in the Higher Educational Context",
+    "abstract": "",
+    "url": "https://doi.org/10.15556/ijiim.02.01.003",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.2364097,
+    "summary": "Les profils des apprenants et le processus d'apprentissage dans le contexte éducatif supérieur sont examinés."
+  },
+  {
+    "title": "Zero-Day Intrusion Detection System: Training on Small Datasets with Advanced Data Augmentation and Ensemble Learning",
+    "abstract": "",
+    "url": "https://doi.org/10.1504/ijims.2028.10075219",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.235977,
+    "summary": "Un système de détection d'intrusion à jour zéro est proposé, entraîné sur de petits jeux de données avec une augmentation de données avancée et un apprentissage en ensemble."
+  },
+  {
+    "title": "Doubly Robust Transfer Learning Under Sub-group Shift for Cohort-level Missing Indicator Covariates",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0245",
+    "source": "Crossref",
+    "cluster": 2,
+    "cluster_title": "Artificial Intelligence Research",
+    "score": 0.2343158,
+    "summary": "L'apprentissage transféré sous-shift pour les indicateurs manquants de groupe cohorte est étudié."
+  },
+  {
+    "title": "Presentation of a model for evaluating the performance of universities and higher education institutions based on a hybrid pattern (case study: Herat, Afghanistan)",
+    "abstract": "",
+    "url": "https://doi.org/10.1504/ijbpm.2028.10073153",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.2337481,
+    "summary": "Résumé : inférence causale conforme pour les essais randomisés par cluster : estimation robuste sans approximation asymptotique."
+  },
+  {
+    "title": "Conformal Causal Inference for Cluster Randomized Trials: Model-robust Inference Without Asymptotic Approximations",
+    "abstract": "",
+    "url": "https://doi.org/10.5705/ss.202025.0476",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.2242512,
+    "summary": "Résumé : un framework hybride Huffman-CNN-AES d'apprentissage automatique profond pour la stéganographie médicale sécurisée : H-CADStego."
+  },
+  {
+    "title": "A Hybrid Huffman-CNN-AES Deep Learning Framework for Secure Medical Image Steganography: H-CADStego",
+    "abstract": "",
+    "url": "https://doi.org/10.1504/ijims.2028.10076831",
+    "source": "Crossref",
+    "cluster": 1,
+    "cluster_title": "Statistical Modeling Methods",
+    "score": 0.1998312,
+    "summary": "Résumé non disponible."
+  }
+]

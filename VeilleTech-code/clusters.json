@@ -1,0 +1,62 @@
+[
+  {
+    "id": 0,
+    "keywords": [
+      "large language model",
+      "LLM",
+      "GPT",
+      "transformer",
+      "instruction tuning",
+      "RLHF",
+      "fine-tuning",
+      "prompt",
+      "tokenizer"
+    ],
+    "label": "Large Language Models",
+    "query_str": "large language model OR LLM OR GPT OR transformer OR instruction tuning OR RLHF OR fine-tuning"
+  },
+  {
+    "id": 1,
+    "keywords": [
+      "diffusion model",
+      "generative model",
+      "GAN",
+      "VAE",
+      "image synthesis",
+      "text-to-image",
+      "latent diffusion",
+      "score matching"
+    ],
+    "label": "Machine Learning Models",
+    "query_str": "diffusion model OR generative model OR GAN OR VAE OR image synthesis OR text-to-image OR latent diffusion"
+  },
+  {
+    "id": 2,
+    "keywords": [
+      "reinforcement learning",
+      "reward",
+      "policy gradient",
+      "Q-learning",
+      "actor critic",
+      "multi-agent",
+      "offline RL",
+      "model-based RL"
+    ],
+    "label": "Machine Learning Algorithms",
+    "query_str": "reinforcement learning OR reward shaping OR policy gradient OR Q-learning OR actor critic OR multi-agent reinforcement"
+  },
+  {
+    "id": 3,
+    "keywords": [
+      "Full Matrix Capture (FMC)",
+      "Total Focusing Method (TFM)",
+      "Sparse FMC acquisition",
+      "Adaptive TFM",
+      "Synthetic Aperture Focusing Technique (SAFT)",
+      "Advanced ultrasonic imaging",
+      "FMC-TFM imaging"
+    ],
+    "label": "Ultrasons",
+    "query_str": "(\"full matrix capture\" OR FMC OR \"total focusing method\" OR TFM OR \"ultrasonic imaging\" OR \"advanced beamforming\" OR SAFT OR \"synthetic aperture focusing\")"
+  }
+]
