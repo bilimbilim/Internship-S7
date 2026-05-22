@@ -23,6 +23,9 @@ from annotator         import annoter_image, annoter_reference, image_to_base64
 from webhook           import envoyer_rapport
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from pathlib import Path
+
+BASE_DIR = Path(__file__).parent
 
 app = FastAPI(
     title       = "PCB Inspector API",
@@ -210,7 +213,7 @@ async def analyze(
 
 @app.get("/")
 async def frontend():
-    return FileResponse("../frontend/index.html")
+    return FileResponse(BASE_DIR / "../frontend/index.html")
 
 if __name__ == "__main__":
     import uvicorn

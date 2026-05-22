@@ -7,28 +7,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:      #080b0f;
-    --bg2:     #0e1217;
-    --bg3:     #141920;
-    --bg4:     #1a2028;
-    --border:  #1c2330;
-    --border2: #243040;
-    --border3: #2e3d50;
-    --green:   #00e5a0;
-    --green2:  #00ffc0;
-    --green-dim:  #00e5a010;
-    --green-dim2: #00e5a020;
-    --red:     #ff3b4e;
-    --red-dim: #ff3b4e10;
-    --red-dim2:#ff3b4e20;
-    --amber:   #f59e0b;
-    --amber-dim:#f59e0b10;
+    --bg:      #f0f9ff;
+    --bg2:     #ffffff;
+    --bg3:     #f1f5f9;
+    --bg4:     #e2e8f0;
+    --border:  #e2e8f0;
+    --border2: #cbd5e1;
+    --border3: #94a3b8;
+    --green:   #00b87a;
+    --green2:  #00d490;
+    --green-dim:  #00b87a15;
+    --green-dim2: #00b87a25;
+    --red:     #ef4444;
+    --red-dim: #ef444412;
+    --red-dim2:#ef444425;
+    --amber:   #d97706;
+    --amber-dim:#d9770615;
     --blue:    #3b82f6;
-    --blue-dim:#3b82f610;
-    --cyan:    #06b6d4;
-    --text:    #dde4f0;
-    --text2:   #6b7a99;
-    --text3:   #2e3d50;
+    --blue-dim:#3b82f615;
+    --cyan:    #0891b2;
+    --text:    #0f172a;
+    --text2:   #475569;
+    --text3:   #94a3b8;
     --mono:    'Space Mono', monospace;
     --sans:    'DM Sans', sans-serif;
     --radius:  10px;
@@ -189,7 +189,7 @@
     display:flex; align-items:center; gap:6px;
     font-family:var(--mono); font-size:10px;
     color:var(--green); background:var(--green-dim);
-    border:1px solid #00e5a040; border-radius:20px; padding:4px 12px;
+    border:1px solid #00b87a40; border-radius:20px; padding:4px 12px;
   }
   .status-pill::before {
     content:''; width:5px; height:5px; background:var(--green);
@@ -480,23 +480,23 @@
     <div class="sidebar-section">
       <div class="sidebar-section-title">Configuration</div>
       <div class="config-field">
-        <label>URL BACKEND</label>
+        <label for="backend-url">URL BACKEND</label>
         <input type="text" id="backend-url" value="http://localhost:8000" />
       </div>
       <div class="config-field">
-        <label>CLE GEMINI</label>
+        <label for="gemini-key">CLE GEMINI</label>
         <input type="password" id="gemini-key" placeholder="AIza..." />
       </div>
       <div class="config-field">
-        <label>WEBHOOK MAKE</label>
+        <label for="webhook-url">WEBHOOK MAKE</label>
         <input type="text" id="webhook-url" placeholder="https://hook.make.com/..." />
       </div>
       <div class="config-field">
-        <label>ID LOT</label>
+        <label for="batch-id">ID LOT</label>
         <input type="text" id="batch-id" placeholder="LOT-2024-001" />
       </div>
       <div class="config-field">
-        <label>CONTEXTE CHAINE (optionnel)</label>
+        <label for="chain-context">CONTEXTE CHAINE (optionnel)</label>
         <input type="text" id="chain-context" placeholder="ex: ASUS B550, Shift matin..." />
       </div>
     </div>
@@ -528,13 +528,13 @@
     <!-- Upload -->
     <div class="upload-grid" id="upload-grid">
       <div class="upload-card" id="drop-ref">
-        <input type="file" id="file-ref" accept="image/*">
+        <input type="file" id="file-ref" accept="image/*" aria-label="Image de reference PCB">
         <span class="upload-card-icon">REF</span>
         <div class="upload-card-title">Carte de reference</div>
         <div class="upload-card-sub">Image conforme de reference</div>
       </div>
       <div class="upload-card" id="drop-insp">
-        <input type="file" id="file-insp" accept="image/*">
+        <input type="file" id="file-insp" accept="image/*" aria-label="Image PCB a inspecter">
         <span class="upload-card-icon">PCB</span>
         <div class="upload-card-title">Carte a inspecter</div>
         <div class="upload-card-sub">Photo a analyser</div>
@@ -546,23 +546,23 @@
       <div class="preview-card" id="preview-ref">
         <div class="preview-card-header">
           <span>REFERENCE</span>
-          <button onclick="resetRef()">Supprimer</button>
+          <button type="button" onclick="resetRef()">Supprimer</button>
         </div>
         <div class="img-container">
           <img id="ref-img" src="" alt="Reference">
           <img id="ref-annotated" class="annotated-img" src="" alt="Reference annotee">
-          <button class="img-toggle-btn" id="ref-toggle" onclick="toggleAnnotated('ref')" style="display:none">Voir annotations</button>
+          <button type="button" class="img-toggle-btn" id="ref-toggle" onclick="toggleAnnotated('ref')" style="display:none">Voir annotations</button>
         </div>
       </div>
       <div class="preview-card" id="preview-insp">
         <div class="preview-card-header">
           <span id="insp-filename">A INSPECTER</span>
-          <button onclick="resetInsp()">Supprimer</button>
+          <button type="button" onclick="resetInsp()">Supprimer</button>
         </div>
         <div class="img-container">
           <img id="insp-img" src="" alt="Inspection">
           <img id="insp-annotated" class="annotated-img" src="" alt="Inspection annotee">
-          <button class="img-toggle-btn" id="insp-toggle" onclick="toggleAnnotated('insp')" style="display:none">Voir annotations</button>
+          <button type="button" class="img-toggle-btn" id="insp-toggle" onclick="toggleAnnotated('insp')" style="display:none">Voir annotations</button>
         </div>
       </div>
     </div>
@@ -587,7 +587,7 @@
       </div>
     </div>
 
-    <button class="analyze-btn" id="analyze-btn" disabled onclick="lancerPipeline()">
+    <button type="button" class="analyze-btn" id="analyze-btn" disabled onclick="lancerPipeline()">
       <span class="spinner"></span>
       <span class="btn-text">Lancer l'inspection</span>
     </button>
@@ -612,7 +612,7 @@
     <div class="log-block">
       <div class="log-header">
         <span>LOG PIPELINE</span>
-        <button onclick="document.getElementById('log').innerHTML=''">effacer</button>
+        <button type="button" onclick="document.getElementById('log').innerHTML=''">effacer</button>
       </div>
       <div class="log-lines" id="log"></div>
     </div>
@@ -1039,9 +1039,7 @@ function log(type, msg) {
 setStep('upload', 'active');
 log('dim', 'Systeme initialise — YOLO + OpenCV + Gemini');
 log('dim', 'En attente des images...');
-// Applique l'état initial du toggle REF
-toggleRef();
-toggleRef(); // double appel pour rester dans l'état ON par défaut
+updateUploadGrid();
 </script>
 </body>
 </html>
